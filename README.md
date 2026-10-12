@@ -4,10 +4,29 @@ TurboCopy is a Linux command-line file copier with bounded file and chunk
 parallelism and atomic destination replacement. This repository implements
 **Phases 1–4** of [project.md](project.md).
 
-## Build and use
+## Requirements
 
 Requires Rust 1.75+, Linux x86-64 or AArch64, and mounted `/proc/self/fd`.
 There are no third-party Rust dependencies.
+
+## Linux prereleases
+
+The [Linux build and prerelease workflow](.github/workflows/preview-release.yml)
+checks formatting, Clippy and tests on Linux x86-64 and AArch64, then packages
+static musl binaries as `tcopy-linux-x86_64.tar.gz` and
+`tcopy-linux-aarch64.tar.gz`. No Windows or macOS builds are produced.
+Download the matching archive from [GitHub Releases](https://github.com/Ewave267/TurboCopy/releases),
+extract it and run `./tcopy --help`; `SHA256SUMS` is attached for verification.
+
+Pushes to `main`/`master` and manual runs build both architectures. Only successful
+builds of the current default-branch commit publish. Pull requests only build
+and test. Publication uploads to a draft before making it a prerelease, then
+deletes **every other release**, including older stable releases and failed
+drafts. Existing Git tags are retained. Publishing is serialized, and superseded
+builds are skipped. Failed publication preserves the previous public release.
+These are development prereleases, not stable releases.
+
+## Build from source
 
 ```bash
 cargo build --release
