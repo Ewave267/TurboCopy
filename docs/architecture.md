@@ -1,6 +1,6 @@
 # Architecture
 
-`main → cli / scanner::plan → scheduler::run → scanner::scan → copy_engine → fsutil`
+`main → cli / scanner::plan → scheduler::run → scanner::scan → copy_engine → fsutil / metadata / sparse / resume`
 
 The scanner plans source/destination roots before any mutation. An iterative
 depth-first walk holds one directory iterator per depth and sends file/link
@@ -26,11 +26,20 @@ existing bind-mount aliases that ordinary path-prefix checks would miss.
 Regular source files are opened without following their final symlink and
 with nonblocking mode, then validated as regular files. Copying uses bounded
 buffered reads and partial-write loops, retries interrupted I/O, and checks
-cancellation between operations. No reflinks or copy-offload syscalls are used.
+cancellation between operations. `--reflink` explicitly tries `FICLONE` and
+falls back on unsupported clone errors; `--sparse` uses extent seeking where
+available. The ordinary default uses neither.
 The source's observed length limits the read so continuous growth cannot make
 the copy unbounded. File identity, size, mtime and ctime are checked before
 publication. Atomic rename happens only after metadata and file fsync succeed;
 parent fsync completes durability where supported.
+
+`--resume` stages sequential regular-file data under a private destination
+checkpoint directory. Its source identity sidecar and full retained-prefix
+comparison prevent stale or corrupt partials from being published. The
+checkpoint file is locked during use and publication still uses atomic rename.
+`metadata` applies basic mode/mtime or, with `--preserve-extended`, owner/group
+and xattrs including ACLs. Directory metadata is finalized after descendants.
 
 Explicit chunk controls add positioned [Rust FileExt I/O](https://doc.rust-lang.org/std/os/unix/fs/trait.FileExt.html)
 for eligible large local files. The parent worker reserves idle permits, sizes
@@ -66,7 +75,7 @@ sync skips and dry-run previews. Reports distinguish the configured worker
 ceiling from the final admission limit and expose insufficient calibration data.
 The root chunk-size hint can differ from automatically selected per-file sizes.
 
-See [Phase 1 contract](phase1.md), [Phase 2 contract](phase2.md), [Phase 3 contract](phase3.md), [adaptation decision](decisions/003-workload-adaptation.md), [decisions](decisions/001-correctness-first.md)
+See [Phase 1 contract](phase1.md), [Phase 2 contract](phase2.md), [Phase 3 contract](phase3.md), [Phase 4 contract](phase4.md), [adaptation decision](decisions/003-workload-adaptation.md), [Phase 4 decision](decisions/004-phase4-opt-ins.md), [decisions](decisions/001-correctness-first.md)
 and [benchmark methodology](performance.md) for acceptance criteria and limits.
 
 The implementation uses stable [Rust FileTimes](https://doc.rust-lang.org/std/fs/struct.FileTimes.html)

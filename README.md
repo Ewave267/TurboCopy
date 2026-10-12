@@ -2,7 +2,7 @@
 
 TurboCopy is a Linux command-line file copier with bounded file and chunk
 parallelism and atomic destination replacement. This repository implements
-**Phases 1 and 2 — Correctness-first MVP and Performance** of [project.md](project.md).
+**Phases 1–4** of [project.md](project.md).
 
 ## Build and use
 
@@ -20,6 +20,11 @@ cargo build --release
 ./target/release/tcopy source_dir/ destination_dir/ --auto --progress
 ./target/release/tcopy source_dir/ destination_dir/ --tune --json
 ./target/release/tcopy source_dir/ destination_dir/ --auto --no-tune
+./target/release/tcopy source_dir/ destination_dir/ --sync --checksum
+./target/release/tcopy sparse.bin backup.bin --sparse
+./target/release/tcopy image.bin clone.bin --reflink
+./target/release/tcopy large.bin backup.bin --resume
+./target/release/tcopy source_dir/ destination_dir/ --preserve-extended
 ./target/release/tcopy --help
 ```
 
@@ -38,13 +43,23 @@ fail explicitly. A regular-file path must not end in `/`.
 
 `--sync` skips regular files at the corresponding path when their sizes match.
 **Matching sizes do not guarantee matching contents.** It does not compare
-timestamps or hashes, and it never deletes extra destination files.
+timestamps or hashes, and it never deletes extra destination files. Add
+`--checksum` to compare every byte before skipping; it requires `--sync`.
 `--dry-run` reports planned files, bytes and skips without destination writes.
 
 Regular files and directories retain permission bits and modification times;
 links retain their targets and modification times. Hard links become independent
-files. Sparse-file contents are retained, but holes may expand. Ownership, ACLs
-and extended attributes are reserved for Phase 4.
+files. Sparse-file contents are retained, but holes may expand unless `--sparse`
+preserves reported data extents. `--reflink` explicitly tries a copy-on-write
+clone and falls back to ordinary copying if the filesystem does not support it.
+`--preserve-extended` requests owner/group and Linux extended attributes,
+including ACLs; a preservation error fails the affected copy.
+
+`--resume` retains private regular-file partials in `.tcopy-resume` on transfer
+failure. A retry checks source identity and every retained byte before copying
+the remainder. Stale or tampered checkpoints fail safely and require manual
+removal to restart. The `.tcopy-resume` entry is reserved while resume is used;
+`--resume` cannot be combined with `--sparse` or `--reflink`.
 
 The default uses up to four file workers and a 64-entry queue. `--workers N`
 sets a shared limit of 1–128 active file/chunk slots. `--chunk-size SIZE` opts
@@ -116,7 +131,8 @@ Failures appear on stderr and in the final summary. Exit statuses: 0 success,
 
 File data and metadata are synced before atomic rename, and the parent directory
 is synced after publication. A failed transfer preserves the previous destination
-and removes its temporary file. A parent-sync error is reported even if the new
+and removes its temporary file unless `--resume` retains a validated partial.
+A parent-sync error is reported even if the new
 file was already published. Guarantees depend on filesystem behavior; a whole
 directory copy is not transactional. Finished files survive cancellation.
 
@@ -124,6 +140,8 @@ SIGINT and SIGTERM stop copying at buffer boundaries and clean up temporary
 files. A blocking filesystem syscall can delay cancellation. Crashes, power loss
 and SIGKILL can leave `.tcopy-*.tmp` files; these are never presented as completed
 destination files. Temporary names are never automatically swept on startup.
+`--resume` can leave stale checkpoint files after a crash; retained progress is
+verified on retry but is not guaranteed durable.
 Source identity, size, mtime and ctime changes are checked, but copying a live
 source is not a filesystem snapshot. Keep source data stable for consistent copies.
 
@@ -135,6 +153,7 @@ cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 python3 benches/compare.py --binary target/release/tcopy --output /tmp/tcopy-benchmark.json
 python3 benches/io_methods.py --directory . --output /tmp/tcopy-io-benchmark.json
+python3 benches/phase4.py --binary target/release/tcopy --directory . --output /tmp/tcopy-phase4.json
 graphify extract . --code-only --max-workers 1
 ```
 
@@ -146,10 +165,10 @@ The benchmark harness requires Python 3.11+.
 The checked-in [Graphify index](graphify-out/GRAPH_REPORT.md) records code
 relationships; [graph.html](graphify-out/graph.html) provides an interactive view.
 
-See [Phase 1 specification](docs/phase1.md), [Phase 2 specification](docs/phase2.md), [Phase 3 specification](docs/phase3.md),
+See [Phase 1 specification](docs/phase1.md), [Phase 2 specification](docs/phase2.md), [Phase 3 specification](docs/phase3.md), [Phase 4 specification](docs/phase4.md),
 [architecture](docs/architecture.md), [atomic copy decision](docs/decisions/001-correctness-first.md),
 [chunk scheduling decision](docs/decisions/002-manual-chunks.md),
-[adaptation decision](docs/decisions/003-workload-adaptation.md), and
+[adaptation decision](docs/decisions/003-workload-adaptation.md), [Phase 4 decision](docs/decisions/004-phase4-opt-ins.md), and
 [benchmark methodology/results](docs/performance.md).
 
 ## Roadmap
@@ -163,6 +182,5 @@ See [Phase 1 specification](docs/phase1.md), [Phase 2 specification](docs/phase2
 4. **Advanced functionality:** sparse optimization, reflinks, advanced Linux I/O,
    resume, extended metadata and extensive filesystem benchmarks.
 
-Phases 1–3 are implemented. `--checksum` remains unimplemented and returns a CLI
-error. Experimental copy syscalls are benchmarked
-separately; production copying does not implicitly clone or offload files.
+Phases 1–4 are implemented. Experimental copy syscalls are benchmarked
+separately; production copying clones only with `--reflink`.

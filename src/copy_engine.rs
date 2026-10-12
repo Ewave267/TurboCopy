@@ -9,8 +9,9 @@ use std::{
     ffi::OsString,
     fs::{self, File, Metadata, OpenOptions},
     io::{self, Read, Seek, SeekFrom, Write},
+    os::fd::AsRawFd,
     os::unix::fs::{symlink, FileExt, MetadataExt, OpenOptionsExt},
-    path::PathBuf,
+    path::{Path, PathBuf},
     sync::{
         atomic::{AtomicBool, AtomicU64, Ordering},
         Mutex,
@@ -18,6 +19,25 @@ use std::{
 };
 
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(0);
+
+extern "C" {
+    fn ioctl(fd: i32, request: u64, arg: i32) -> i32;
+}
+
+fn reflink(input: &File, output: &File) -> io::Result<bool> {
+    // FICLONE is _IOW(0x94, 9, int) on supported Linux targets.
+    let result = unsafe { ioctl(output.as_raw_fd(), 0x4004_9409, input.as_raw_fd()) };
+    if result == 0 {
+        Ok(true)
+    } else {
+        let error = io::Error::last_os_error();
+        if matches!(error.raw_os_error(), Some(18 | 22 | 25 | 38 | 95)) {
+            Ok(false)
+        } else {
+            Err(error)
+        }
+    }
+}
 
 pub struct Task {
     pub source_parent: Directory,
@@ -34,9 +54,78 @@ pub enum Outcome {
     Skipped,
 }
 
+pub fn checksum_matches(source: &File, destination: &Path, length: u64) -> io::Result<bool> {
+    let other = match OpenOptions::new()
+        .read(true)
+        .custom_flags(fsutil::NOFOLLOW | fsutil::NONBLOCK)
+        .open(destination)
+    {
+        Ok(file) => file,
+        Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(false),
+        Err(error) => return Err(error),
+    };
+    let source_before = source.metadata()?;
+    let other_before = other.metadata()?;
+    if !source_before.is_file()
+        || source_before.len() != length
+        || !other_before.is_file()
+        || other_before.len() != length
+    {
+        return Ok(false);
+    }
+    let mut left = [0; 128 * 1024];
+    let mut right = [0; 128 * 1024];
+    let mut offset = 0;
+    while offset < length {
+        fsutil::check_cancelled()?;
+        let take = (length - offset).min(left.len() as u64) as usize;
+        source.read_exact_at(&mut left[..take], offset)?;
+        other.read_exact_at(&mut right[..take], offset)?;
+        if left[..take] != right[..take] {
+            return Ok(false);
+        }
+        offset += take as u64;
+    }
+    Ok(fsutil::unchanged(&source_before, &source.metadata()?)
+        && fsutil::unchanged(&other_before, &other.metadata()?)
+        && fsutil::optional_metadata(destination)?
+            .as_ref()
+            .is_some_and(|current| fsutil::same_file(current, &other_before)))
+}
+
 struct Temporary {
     path: PathBuf,
     published: bool,
+}
+
+enum Stage {
+    Temporary(Temporary, File),
+    Partial(crate::resume::Partial, u64),
+}
+impl Stage {
+    fn file(&mut self) -> &mut File {
+        match self {
+            Self::Temporary(_, file) => file,
+            Self::Partial(partial, _) => &mut partial.file,
+        }
+    }
+    fn offset(&self) -> u64 {
+        match self {
+            Self::Temporary(_, _) => 0,
+            Self::Partial(_, offset) => *offset,
+        }
+    }
+    fn discard_on_drop(&mut self) {
+        if let Self::Partial(partial, _) = self {
+            partial.discard_on_drop();
+        }
+    }
+    fn publish(self, destination: &Path) -> io::Result<()> {
+        match self {
+            Self::Temporary(mut temporary, _) => temporary.publish(destination),
+            Self::Partial(partial, _) => partial.publish(destination),
+        }
+    }
 }
 impl Temporary {
     fn publish(&mut self, destination: &std::path::Path) -> io::Result<()> {
@@ -115,8 +204,14 @@ pub fn copy(
     if task.metadata.file_type().is_symlink() {
         let target = fs::read_link(&source)?;
         let (mut temporary, _) = temporary(&task.parent, Some(&target))?;
-        task.parent
-            .link_mtime(temporary.path.file_name().unwrap(), &task.metadata)?;
+        crate::metadata::preserve_link(
+            &task.source_parent,
+            &task.source_name,
+            &task.parent,
+            temporary.path.file_name().unwrap(),
+            &task.metadata,
+            options.preserve_extended,
+        )?;
         if !fsutil::unchanged(&task.metadata, &fs::symlink_metadata(&source)?) {
             return Err(fsutil::invalid("source link changed during copying"));
         }
@@ -142,11 +237,25 @@ pub fn copy(
         && existing
             .as_ref()
             .is_some_and(|m| m.is_file() && m.len() == before.len())
+        && (!options.checksum || checksum_matches(&input, &destination, before.len())?)
     {
+        if !fsutil::unchanged(&before, &input.metadata()?)
+            || !fsutil::unchanged(&before, &fs::symlink_metadata(&source)?)
+        {
+            return Err(fsutil::invalid("source changed during sync comparison"));
+        }
         return Ok(Outcome::Skipped);
     }
-    let (mut temporary, output) = temporary(&task.parent, None)?;
-    let mut output = output.unwrap();
+    let mut stage = if options.resume {
+        let (partial, offset) =
+            crate::resume::Partial::open(&task.parent, &task.name, &input, &before)?;
+        Stage::Partial(partial, offset)
+    } else {
+        let (temporary, output) = temporary(&task.parent, None)?;
+        Stage::Temporary(temporary, output.unwrap())
+    };
+    let resume_offset = stage.offset();
+    let output = stage.file();
     let chunk_size =
         if (options.chunk_size.is_some() || options.auto) && before.len() >= 64 * 1024 * 1024 {
             let source_path = task.source_parent.real_path()?.join(&task.source_name);
@@ -164,9 +273,39 @@ pub fn copy(
     drop(metadata_timer);
     {
         let _timer = Timer::new(&summary.transfer_ns);
-        let chunked = match chunk_size.filter(|_| options.worker_count() > 1) {
+        let cloned = if options.reflink {
+            let cloned = reflink(&input, output)?;
+            if !cloned {
+                output.set_len(0)?;
+                input.seek(SeekFrom::Start(0))?;
+                output.seek(SeekFrom::Start(0))?;
+            }
+            cloned
+        } else {
+            false
+        };
+        let sparse = if options.sparse && !cloned {
+            match crate::sparse::copy(&input, output, before.len(), buffer, |n| {
+                summary.transferred.fetch_add(n, Ordering::Relaxed);
+            })? {
+                true => true,
+                false => {
+                    summary.fallbacks.fetch_add(1, Ordering::Relaxed);
+                    output.set_len(0)?;
+                    input.seek(SeekFrom::Start(0))?;
+                    output.seek(SeekFrom::Start(0))?;
+                    false
+                }
+            }
+        } else {
+            false
+        };
+        // shortcut: resume uses a sequential prefix; add chunk checkpointing before combining them.
+        let chunked = match chunk_size
+            .filter(|_| !options.resume && !cloned && !sparse && options.worker_count() > 1)
+        {
             Some(size) if before.len() > size => {
-                match transfer_chunks(&input, &output, before.len(), size, buffer, budget) {
+                match transfer_chunks(&input, output, before.len(), size, buffer, budget) {
                     Err(error) if unsupported_positioned(&error) => {
                         summary.fallbacks.fetch_add(1, Ordering::Relaxed);
                         output.set_len(0)?;
@@ -179,10 +318,18 @@ pub fn copy(
             }
             _ => false,
         };
-        if !chunked {
-            transfer(&mut input, &mut output, before.len(), buffer, |n| {
-                summary.transferred.fetch_add(n, Ordering::Relaxed);
-            })?;
+        if !cloned && !sparse && !chunked {
+            input.seek(SeekFrom::Start(resume_offset))?;
+            output.seek(SeekFrom::Start(resume_offset))?;
+            transfer(
+                &mut input,
+                output,
+                before.len() - resume_offset,
+                buffer,
+                |n| {
+                    summary.transferred.fetch_add(n, Ordering::Relaxed);
+                },
+            )?;
         }
     }
     let _metadata_timer = Timer::new(&summary.metadata_ns);
@@ -193,9 +340,18 @@ pub fn copy(
             "source changed during copying; no consistent snapshot",
         ));
     }
-    fsutil::preserve_metadata(&output, &before)?;
+    stage.discard_on_drop();
+    let output = stage.file();
+    crate::metadata::preserve_file(&input, output, &before, options.preserve_extended)?;
+    if !fsutil::unchanged(&before, &input.metadata()?)
+        || !fsutil::unchanged(&before, &fs::symlink_metadata(&source)?)
+    {
+        return Err(fsutil::invalid(
+            "source changed during metadata preservation",
+        ));
+    }
     fsutil::check_cancelled()?;
-    temporary.publish(&destination)?;
+    stage.publish(&destination)?;
     task.parent.sync()?;
     Ok(Outcome::Copied(before.len()))
 }

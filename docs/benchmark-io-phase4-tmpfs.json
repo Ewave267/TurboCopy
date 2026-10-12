@@ -1,0 +1,95 @@
+{
+  "platform": "Linux-6.19.14-108.fc42.x86_64-x86_64-with-glibc2.41",
+  "python": "3.13.13",
+  "cache": "warm: source read before every sample",
+  "runs": 3,
+  "durability": "create, transfer, mode/mtime, file fsync, directory fsync included",
+  "caveats": [
+    "Python loop overhead included",
+    "copy_file_range may clone/offload; not a physical-copy speed comparison"
+  ],
+  "buffer_bytes": 131072,
+  "samples": [
+    {
+      "method": "pread_pwrite",
+      "run": 1,
+      "seconds": 0.011625800019828603,
+      "status": "verified"
+    },
+    {
+      "method": "sendfile",
+      "run": 1,
+      "seconds": 0.009605900006135926,
+      "status": "verified"
+    },
+    {
+      "method": "copy_file_range",
+      "run": 1,
+      "seconds": 0.010108565009431913,
+      "status": "verified"
+    },
+    {
+      "method": "read_write",
+      "run": 1,
+      "seconds": 0.010822715994436294,
+      "status": "verified"
+    },
+    {
+      "method": "pread_pwrite",
+      "run": 2,
+      "seconds": 0.010848231002455577,
+      "status": "verified"
+    },
+    {
+      "method": "read_write",
+      "run": 2,
+      "seconds": 0.010935461992630735,
+      "status": "verified"
+    },
+    {
+      "method": "copy_file_range",
+      "run": 2,
+      "seconds": 0.009572351002134383,
+      "status": "verified"
+    },
+    {
+      "method": "sendfile",
+      "run": 2,
+      "seconds": 0.009327845007646829,
+      "status": "verified"
+    },
+    {
+      "method": "sendfile",
+      "run": 3,
+      "seconds": 0.009674477012595162,
+      "status": "verified"
+    },
+    {
+      "method": "pread_pwrite",
+      "run": 3,
+      "seconds": 0.011143263021949679,
+      "status": "verified"
+    },
+    {
+      "method": "copy_file_range",
+      "run": 3,
+      "seconds": 0.009673155000200495,
+      "status": "verified"
+    },
+    {
+      "method": "read_write",
+      "run": 3,
+      "seconds": 0.010893757978919894,
+      "status": "verified"
+    }
+  ],
+  "bytes": 33554449,
+  "dataset": "repeated seeded random 1 MiB block plus 17-byte tail",
+  "filesystem": "tmpfs tmpfs\ntmpfs tmpfs",
+  "medians_seconds": {
+    "read_write": 0.010893757978919894,
+    "pread_pwrite": 0.011143263021949679,
+    "sendfile": 0.009605900006135926,
+    "copy_file_range": 0.009673155000200495
+  }
+}

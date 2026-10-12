@@ -8,6 +8,11 @@ An existing destination directory receives each source basename.
 
   --sync       Skip regular files with matching path and size.
                Matching sizes do not guarantee matching contents.
+  --checksum   With --sync, compare all bytes before skipping.
+  --sparse     Preserve sparse holes where Linux reports them.
+  --reflink    Try copy-on-write clone; fall back if unsupported.
+  --resume     Keep and validate sequential partials for retry (no sparse/reflink).
+  --preserve-extended  Preserve owner, group, xattrs and ACLs where supported.
   --dry-run    Preview without changing destination data or metadata.
   --workers N  Concurrent I/O slots (1..128; default up to 4).
   --chunk-size SIZE  Opt into chunks for local large files (1K..64M, binary units).
@@ -20,12 +25,16 @@ An existing destination directory receives each source basename.
   --version    Show the version.
   --           Treat remaining arguments as paths.
 
-Destination directory symlinks are refused; source links are recreated.
-Checksum verification is a later phase.";
+Destination directory symlinks are refused; source links are recreated.";
 
 #[derive(Clone, Copy, Default)]
 pub struct Options {
     pub sync: bool,
+    pub checksum: bool,
+    pub sparse: bool,
+    pub reflink: bool,
+    pub resume: bool,
+    pub preserve_extended: bool,
     pub dry_run: bool,
     pub workers: Option<usize>,
     pub chunk_size: Option<u64>,
@@ -66,6 +75,26 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
                 Some("--version") => return Ok(Action::Version),
                 Some("--sync") => {
                     options.sync = true;
+                    continue;
+                }
+                Some("--checksum") => {
+                    options.checksum = true;
+                    continue;
+                }
+                Some("--sparse") => {
+                    options.sparse = true;
+                    continue;
+                }
+                Some("--reflink") => {
+                    options.reflink = true;
+                    continue;
+                }
+                Some("--resume") => {
+                    options.resume = true;
+                    continue;
+                }
+                Some("--preserve-extended") => {
+                    options.preserve_extended = true;
                     continue;
                 }
                 Some("--dry-run") => {
@@ -135,6 +164,12 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
     }
     if options.tune && options.no_tune {
         return Err("--tune and --no-tune cannot be combined".into());
+    }
+    if options.checksum && !options.sync {
+        return Err("--checksum requires --sync".into());
+    }
+    if options.resume && (options.sparse || options.reflink) {
+        return Err("--resume cannot be combined with --sparse or --reflink".into());
     }
     if paths.len() < 2 {
         return Err("expected SOURCE... DESTINATION (use --help for usage)".into());

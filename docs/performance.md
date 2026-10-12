@@ -261,3 +261,56 @@ and tuned-mode cancellation, source-change, parent-swap and write-failure
 regressions. Real independent NVMe/HDD pairs, NFS, cold caches, cgroup v1, hidden
 cgroup ancestors, real device exhaustion and Rust 1.75/AArch64 execution remain
 unmeasured. Persistent tuning caches remain deferred.
+
+## Phase 4 measurement
+
+[benchmark-phase4.json](benchmark-phase4.json) records a warm-cache matrix on
+the available Btrfs and tmpfs mounts: four source/destination pairs, three runs
+per tool/scenario, 198 verified copies and nine explicitly unsupported GNU `cp`
+reflink attempts. Each source has 100 seeded 4 KiB files, a 4 MiB dense file,
+an approximately 32 MiB sparse file, an empty directory and a user xattr. The
+harness verifies SHA-256 content, mode, nanosecond mtime, xattrs where requested,
+sparse allocation, JSON counters and a common final file/directory fsync. It
+randomizes tool order and records first-copy and unchanged-incremental samples.
+The table shows selected first-copy medians in seconds; full samples and all
+incremental medians remain in the JSON artifact.
+
+| Source → destination | `tcopy` | `tcopy --sparse` | `tcopy --reflink --sparse` | GNU `cp -a --sparse=always` | `rsync -aXS` |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Btrfs → Btrfs | 0.157 | 0.136 | 0.129 | 0.085 | 0.175 |
+| Btrfs → tmpfs | 0.017 | 0.006 | 0.006 | 0.007 | 0.084 |
+| tmpfs → Btrfs | 0.148 | 0.138 | 0.137 | 0.091 | 0.183 |
+| tmpfs → tmpfs | 0.011 | 0.005 | 0.005 | 0.007 | 0.082 |
+
+The reflink flag falls back to sparse transfer when cloning is unsupported;
+GNU `cp --reflink=always` succeeded only on Btrfs → Btrfs (0.071 seconds median).
+For this source, `tcopy --sparse` and reflink allocated 8,192 bytes for the
+32 MiB logical sparse file, versus 33,558,528 bytes for ordinary `tcopy`.
+On Btrfs → Btrfs, unchanged incremental `tcopy --sparse --sync` took 0.067
+seconds and content-checking `--checksum` took 0.077 seconds; the latter reads
+every byte. These small warm-cache samples do not establish general speed
+rankings, especially for cold cache, HDD, NVMe, NFS or device contention.
+
+[benchmark-io-phase4-btrfs.json](benchmark-io-phase4-btrfs.json) and
+[benchmark-io-phase4-tmpfs.json](benchmark-io-phase4-tmpfs.json) repeat the
+verified 32 MiB syscall experiment (three runs each). Btrfs medians were
+0.0289 s buffered read/write, 0.0297 s positioned I/O, 0.0261 s `sendfile`
+and 0.00387 s `copy_file_range`; the latter may use filesystem cloning/offload.
+On tmpfs, the same methods ranged from 0.00961 to 0.0111 s. The runtime keeps
+its buffered/positioned paths by default because the Btrfs offload result does
+not imply equivalent physical-copy semantics or portable performance.
+
+```bash
+python3 benches/phase4.py --binary target/release/tcopy \
+  --directory . --directory /tmp --runs 3 --output docs/benchmark-phase4.json
+python3 benches/io_methods.py --directory . --runs 3 \
+  --output docs/benchmark-io-phase4-btrfs.json
+python3 benches/io_methods.py --directory /tmp --runs 3 \
+  --output docs/benchmark-io-phase4-tmpfs.json
+```
+
+These directories were the available Btrfs and tmpfs mounts, not controlled
+hardware classes. `setfacl` returned `EINVAL` during ACL source setup on this
+host, and symlink `user.*` xattrs were unsupported; their conditional tests did
+not verify preservation at runtime here. The ownership-failure test runs only
+as root. No privileged cache drop or unavailable filesystem mount was attempted.

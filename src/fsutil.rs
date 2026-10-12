@@ -1,6 +1,6 @@
 use std::{
     ffi::{c_char, c_int, c_long, CString, OsStr},
-    fs::{self, File, FileTimes, Metadata, OpenOptions},
+    fs::{self, File, Metadata, OpenOptions},
     io,
     os::{
         fd::AsRawFd,
@@ -116,16 +116,14 @@ pub fn unchanged(a: &Metadata, b: &Metadata) -> bool {
         && a.ctime_nsec() == b.ctime_nsec()
 }
 
-pub fn preserve_metadata(file: &File, metadata: &Metadata) -> io::Result<()> {
-    file.set_times(FileTimes::new().set_modified(metadata.modified()?))?;
-    file.set_permissions(metadata.permissions())?;
-    file.sync_all()
-}
-
 #[derive(Clone)]
 pub struct Directory(Arc<File>);
 
 impl Directory {
+    pub fn as_file(&self) -> &File {
+        &self.0
+    }
+
     pub fn available_bytes(&self) -> Option<u64> {
         let mut stat = Statvfs::default();
         // SAFETY: live fd and Linux 64-bit statvfs layout with writable storage.
@@ -206,10 +204,6 @@ impl Directory {
     pub fn sync(&self) -> io::Result<()> {
         self.0.sync_all()
     }
-    pub fn preserve(&self, metadata: &Metadata) -> io::Result<()> {
-        preserve_metadata(&self.0, metadata)
-    }
-
     pub fn link_mtime(&self, name: &OsStr, metadata: &Metadata) -> io::Result<()> {
         let name = CString::new(name.as_bytes()).map_err(|_| invalid("NUL in filename"))?;
         let times = [

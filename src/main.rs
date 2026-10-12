@@ -8,9 +8,12 @@ mod cli;
 mod copy_engine;
 mod fsutil;
 mod hardware;
+mod metadata;
 mod progress;
+mod resume;
 mod scanner;
 mod scheduler;
+mod sparse;
 mod storage_detect;
 mod tuner;
 
@@ -26,7 +29,7 @@ fn main() {
         }
         Ok(cli::Action::Copy(command)) => {
             let start = std::time::Instant::now();
-            if command.options.sync {
+            if command.options.sync && !command.options.checksum {
                 eprintln!("tcopy: --sync compares size only; matching sizes do not guarantee matching contents");
             }
             let summary = match fsutil::install_signals().and_then(|_| scanner::plan(&command)) {

@@ -4,6 +4,7 @@ use std::{
     os::unix::{
         ffi::OsStringExt,
         fs::{symlink, MetadataExt, PermissionsExt},
+        io::AsRawFd,
     },
     path::{Path, PathBuf},
     process::{Command, Output},
@@ -11,6 +12,9 @@ use std::{
 };
 
 static NEXT: AtomicU64 = AtomicU64::new(0);
+extern "C" {
+    fn flock(fd: i32, operation: i32) -> i32;
+}
 struct Fixture(PathBuf);
 impl Fixture {
     fn new() -> Self {
@@ -129,6 +133,167 @@ fn sync_skips_same_size_different_contents_and_retains_extras() {
     assert_eq!(fs::read(f.path("dest/source/extra")).unwrap(), b"keep");
     success(f.copy(&["source", "dest"]));
     assert_eq!(fs::read(f.path("dest/source/same")).unwrap(), b"abcd");
+}
+
+#[test]
+fn checksum_sync_compares_contents_even_in_dry_run() {
+    let f = Fixture::new();
+    fs::write(f.path("source"), b"abcd").unwrap();
+    fs::write(f.path("dest"), b"wxyz").unwrap();
+    assert_eq!(
+        f.copy(&["source", "dest", "--checksum"]).status.code(),
+        Some(2)
+    );
+    let preview = success(f.copy(&["source", "dest", "--sync", "--checksum", "--dry-run"]));
+    assert!(preview.contains("copy "));
+    assert_eq!(fs::read(f.path("dest")).unwrap(), b"wxyz");
+    success(f.copy(&["source", "dest", "--sync", "--checksum"]));
+    assert_eq!(fs::read(f.path("dest")).unwrap(), b"abcd");
+    let skipped = success(f.copy(&["source", "dest", "--sync", "--checksum"]));
+    assert!(skipped.contains("Skipped: 1"));
+}
+
+#[test]
+fn sparse_and_reflink_options_copy_exact_data() {
+    let f = Fixture::new();
+    let source = fs::File::create(f.path("source")).unwrap();
+    use std::os::unix::fs::FileExt;
+    source.write_all_at(b"head", 0).unwrap();
+    source.write_all_at(b"tail", 4 * 1024 * 1024).unwrap();
+    source.set_len(8 * 1024 * 1024).unwrap();
+    for (flag, dest) in [("--sparse", "sparse"), ("--reflink", "reflink")] {
+        success(f.copy(&["source", dest, flag]));
+        assert_eq!(
+            fs::read(f.path(dest)).unwrap(),
+            fs::read(f.path("source")).unwrap()
+        );
+        assert_eq!(fs::metadata(f.path(dest)).unwrap().len(), 8 * 1024 * 1024);
+    }
+}
+
+#[test]
+fn resume_retains_valid_partial_and_rejects_changed_source() {
+    let f = Fixture::new();
+    fs::write(f.path("source"), vec![42; 1024 * 1024]).unwrap();
+    fs::write(f.path("dest"), b"keep").unwrap();
+    let failed = Command::new("sh")
+        .current_dir(&f.0)
+        .args([
+            "-c",
+            "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest --resume",
+            "sh",
+            env!("CARGO_BIN_EXE_tcopy"),
+        ])
+        .output()
+        .unwrap();
+    assert_eq!(failed.status.code(), Some(1));
+    assert_eq!(fs::read(f.path("dest")).unwrap(), b"keep");
+    assert!(f.path(".tcopy-resume").is_dir());
+    success(f.copy(&["source", "dest", "--resume"]));
+    assert_eq!(
+        fs::read(f.path("dest")).unwrap(),
+        fs::read(f.path("source")).unwrap()
+    );
+
+    fs::write(f.path("source"), vec![43; 1024 * 1024]).unwrap();
+    let failed = Command::new("sh")
+        .current_dir(&f.0)
+        .args([
+            "-c",
+            "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest --resume",
+            "sh",
+            env!("CARGO_BIN_EXE_tcopy"),
+        ])
+        .output()
+        .unwrap();
+    assert_eq!(failed.status.code(), Some(1));
+    fs::write(f.path("source"), vec![44; 1024 * 1024]).unwrap();
+    assert_eq!(
+        f.copy(&["source", "dest", "--resume"]).status.code(),
+        Some(1)
+    );
+    assert_eq!(fs::read(f.path("dest")).unwrap(), vec![42; 1024 * 1024]);
+}
+
+#[test]
+fn resume_rejects_tampered_symlinked_hardlinked_and_locked_checkpoints() {
+    let f = Fixture::new();
+    fs::write(f.path("source"), vec![42; 1024 * 1024]).unwrap();
+    fs::write(f.path("dest"), b"keep").unwrap();
+    let failed = Command::new("sh")
+        .current_dir(&f.0)
+        .args([
+            "-c",
+            "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest --resume",
+            "sh",
+            env!("CARGO_BIN_EXE_tcopy"),
+        ])
+        .output()
+        .unwrap();
+    assert_eq!(failed.status.code(), Some(1));
+    let checkpoint = f.path(".tcopy-resume");
+    let entries: Vec<_> = fs::read_dir(&checkpoint)
+        .unwrap()
+        .map(|e| e.unwrap().path())
+        .collect();
+    let part = entries
+        .iter()
+        .find(|p| p.extension() == Some(OsStr::new("part")))
+        .unwrap();
+    let state = entries
+        .iter()
+        .find(|p| p.extension() == Some(OsStr::new("state")))
+        .unwrap();
+    let file = fs::OpenOptions::new().write(true).open(part).unwrap();
+    use std::os::unix::fs::FileExt;
+    file.write_all_at(b"X", 0).unwrap();
+    assert_eq!(
+        f.copy(&["source", "dest", "--resume"]).status.code(),
+        Some(1)
+    );
+    file.write_all_at(b"*", 0).unwrap();
+    fs::hard_link(part, f.path("alias")).unwrap();
+    assert_eq!(
+        f.copy(&["source", "dest", "--resume"]).status.code(),
+        Some(1)
+    );
+    fs::remove_file(f.path("alias")).unwrap();
+    fs::rename(state, f.path("saved-state")).unwrap();
+    symlink(f.path("source"), state).unwrap();
+    assert_eq!(
+        f.copy(&["source", "dest", "--resume"]).status.code(),
+        Some(1)
+    );
+    fs::remove_file(state).unwrap();
+    fs::rename(f.path("saved-state"), state).unwrap();
+    let held = fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(part)
+        .unwrap();
+    // SAFETY: live fd and Linux LOCK_EX | LOCK_NB / LOCK_UN constants.
+    assert_eq!(unsafe { flock(held.as_raw_fd(), 2 | 4) }, 0);
+    assert_eq!(
+        f.copy(&["source", "dest", "--resume"]).status.code(),
+        Some(1)
+    );
+    assert_eq!(unsafe { flock(held.as_raw_fd(), 8) }, 0);
+    success(f.copy(&["source", "dest", "--resume"]));
+    assert_eq!(fs::read(f.path("dest")).unwrap(), vec![42; 1024 * 1024]);
+}
+
+#[test]
+fn resume_refuses_reserved_destination_name_before_mutation() {
+    let f = Fixture::new();
+    fs::write(f.path("source"), b"data").unwrap();
+    symlink("source", f.path("source-link")).unwrap();
+    for source in ["source", "source-link"] {
+        assert_eq!(
+            f.copy(&[source, ".tcopy-resume", "--resume"]).status.code(),
+            Some(1)
+        );
+        assert!(!f.path(".tcopy-resume").exists());
+    }
 }
 
 #[test]

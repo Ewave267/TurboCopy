@@ -6,9 +6,12 @@ use crate::{
 };
 use std::{
     ffi::{OsStr, OsString},
-    fs::{self, Metadata, ReadDir},
+    fs::{self, Metadata, OpenOptions, ReadDir},
     io,
-    os::unix::ffi::{OsStrExt, OsStringExt},
+    os::unix::{
+        ffi::{OsStrExt, OsStringExt},
+        fs::OpenOptionsExt,
+    },
     path::{Path, PathBuf},
 };
 
@@ -94,6 +97,11 @@ pub fn plan(command: &Command) -> io::Result<Vec<Task>> {
                     .to_os_string(),
             ),
         };
+        if command.options.resume && name == ".tcopy-resume" {
+            return Err(fsutil::invalid(
+                ".tcopy-resume is reserved for resume checkpoints",
+            ));
+        }
         let dest_path = if name == "." {
             dest_parent.real_path()?
         } else {
@@ -242,9 +250,25 @@ fn preview(
         None => None,
     };
     fsutil::validate_destination(metadata, existing.as_ref())?;
-    let skip = options.sync
+    let size_matches = options.sync
         && metadata.is_file()
         && existing.is_some_and(|m| m.is_file() && m.len() == metadata.len());
+    let skip = if size_matches && options.checksum {
+        let input = OpenOptions::new()
+            .read(true)
+            .custom_flags(fsutil::NOFOLLOW | fsutil::NONBLOCK)
+            .open(source)?;
+        if !fsutil::unchanged(metadata, &input.metadata()?) {
+            return Err(fsutil::invalid("source changed before checksum preview"));
+        }
+        crate::copy_engine::checksum_matches(
+            &input,
+            &parent.unwrap().path().join(name),
+            metadata.len(),
+        )?
+    } else {
+        size_matches
+    };
     options.preview(format_args!(
         "{} {source:?} -> {destination:?}",
         if skip { "skip" } else { "copy" }
@@ -301,10 +325,14 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
                 let frame = stack.pop().unwrap();
                 if !options.dry_run {
                     pool.drain();
-                    if let Err(error) = pool
-                        .summary
-                        .metadata(|| frame.destination.unwrap().preserve(&frame.metadata))
-                    {
+                    if let Err(error) = pool.summary.metadata(|| {
+                        crate::metadata::preserve_directory(
+                            &frame.source,
+                            &frame.destination.unwrap(),
+                            &frame.metadata,
+                            options.preserve_extended,
+                        )
+                    }) {
                         pool.summary
                             .fail(format!("{:?}: metadata: {error}", frame.destination_path));
                     }
@@ -313,6 +341,11 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
             }
         };
         let name = entry.file_name();
+        if options.resume && name == OsStr::new(".tcopy-resume") {
+            pool.summary
+                .fail(".tcopy-resume is reserved for resume checkpoints");
+            continue;
+        }
         let source_path = frame.source_path.join(&name);
         let destination = frame.destination_path.join(&name);
         let metadata = match pool
