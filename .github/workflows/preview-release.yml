@@ -35,6 +35,9 @@ jobs:
           rustup default stable
           rustup target add "${{ matrix.target }}"
       - name: Check and test
+        env:
+          # Chunking tests need supported storage independent of the runner's disk type.
+          TMPDIR: /dev/shm
         run: |
           cargo fmt --check
           cargo clippy --locked --all-targets --target "${{ matrix.target }}" -- -D warnings

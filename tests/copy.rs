@@ -192,7 +192,7 @@ fn gpfs_profile_chunks_large_files_with_exact_partial_tail() {
         "source",
         "dest",
     ]));
-    assert!(report.contains("\"chunked_files\":1"));
+    assert!(report.contains("\"chunked_files\":1"), "{report}");
     assert!(report.contains("\"buffer_size\":1048576"));
     assert_eq!(
         fs::read(f.path("source")).unwrap(),
