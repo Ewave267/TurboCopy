@@ -1,10 +1,10 @@
 # Benchmark methodology and results
 
-The measurements below predate the removal of PSI-based admission throttling
-and automatic GPFS detection. Current CLI defaults select storage automatically
+The historical Phase 1–5 measurements predate the removal of PSI-based admission
+throttling and automatic GPFS detection. The Phase 5 follow-up below measures
+the revised policy. Current CLI defaults select storage automatically
 and retain the selected admission limit unless explicit tuning is requested.
-Historical automatic-mode slowdowns remain recorded; they are not measurements
-of the revised policy. See [GPFS guide](gpfs.md) for cluster verification.
+Historical automatic-mode slowdowns remain recorded for comparison. See [GPFS guide](gpfs.md) for cluster verification.
 
 Run a release binary with Python 3.11+:
 
@@ -332,6 +332,19 @@ on 2026-10-12 UTC, with three randomized iterations per configuration/workload:
 96 verified dense copies and 96 empty-file companion copies for separate
 creation/metadata overhead measurements.
 
+To repeat the full test with the current release build, run:
+
+```bash
+bash tools/benchmark.sh
+```
+
+Each run saves `benchmark.json`, `benchmark.md`, SVG graphs, `run.log`, and
+`exit-status` in a unique `target/performance/run-*` folder, preserving the
+historical reports. An exit status of `0` means the command succeeded; check
+the JSON report's `status` is `completed` before using it to update these docs.
+The script prints a prompt for a later session to compare and update the results.
+This runs the original full workloads and may take as long as the previous test.
+
 The table shows median durable MiB/s, including a common final file/directory
 fsync. Sources contain fresh incompressible random data; reflinks and sparse
 copies are disabled. Every copy verifies SHA-256, file set, size, ownership,
@@ -371,3 +384,56 @@ are configurable for reproducing the measurements on other hosts:
 cargo build --release
 python3 benches/phase5.py --directory . --runs 3 --output docs/benchmark-phase5
 ```
+
+## Phase 5 follow-up measurement
+
+[benchmark-phase5-20261012T213109Z.md](benchmark-phase5-20261012T213109Z.md) contains the full report and graphs;
+[benchmark-phase5-20261012T213109Z.json](benchmark-phase5-20261012T213109Z.json) preserves the raw results from
+`run-20261012T213109Z-FHMDaB`. The run started at 2026-10-12 21:31:09 UTC
+on the same Btrfs/encrypted-NVMe storage pair, using revision
+`dd778d0f70f590674b82162e6fb96bf936f4a8ec`. All 96 dense and 96
+empty-file companion copies were verified; the report status is `completed`.
+The earlier Phase 5 report above remains the historical baseline.
+
+Median durable MiB/s, with the same common final fsync endpoint:
+
+| Workload | GNU `cp -a` | `rsync -a` | `tcopy --auto` | Workers 1 | Best parallel setting | Gain over workers 1 |
+| --- | ---: | ---: | ---: | ---: | --- | ---: |
+| 1 × 10 GiB | 718.8 | 622.0 | 652.0 | 654.5 | 16 workers: 686.5 | 1.05× |
+| 10 × 1 GiB | 667.4 | 603.4 | 749.9 | 630.4 | 16 workers: 770.5 | 1.22× |
+| 100 × 100 MiB | 673.5 | 609.0 | 684.8 | 603.2 | 8 workers: 730.3 | 1.21× |
+| 10,000 × 1 MiB | 287.7 | 335.1 | 221.8 | 110.6 | 16 workers: 464.6 | 4.20× |
+
+Changes from the original Phase 5 medians (positive means higher throughput):
+
+| Workload | GNU `cp -a` | `rsync -a` | `tcopy --auto` | Workers 1 | Workers 4 | Workers 8 | Workers 16 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 × 10 GiB | +1.5% | +11.4% | +2.7% | -0.1% | +5.7% | -2.9% | +4.4% |
+| 10 × 1 GiB | -4.4% | +6.9% | +14.4% | -3.5% | -14.4% | -4.4% | +3.5% |
+| 100 × 100 MiB | +2.0% | +12.5% | +12.9% | +11.2% | +4.3% | +8.5% | -2.8% |
+| 10,000 × 1 MiB | +14.2% | +33.5% | +110.4% | +12.0% | +4.9% | +5.3% | +3.3% |
+
+Automatic mode retained **4 → 4** workers with zero concurrency adjustments
+in all 12 dense copies, compared with **4 → 1** previously. No dense TurboCopy
+sample used chunks. At 10,000 files, auto rose from 105.4 to 221.8 MiB/s
+(2.10×), close to manual four workers at 224.1 MiB/s, but below both baseline
+tools. Sixteen workers reached 464.6 MiB/s, 4.20× workers 1; its observed
+303.9–505.1 MiB/s range overlaps rsync’s 270.1–410.8 MiB/s range.
+The best median manual setting changed to 16 workers for ten files and eight
+workers for 100 files. These three-sample rankings do not establish optimal
+settings; the single-file workload still exposes only one active file worker.
+
+Empty-file companion medians for 10,000 files changed from 50.379 to 30.085 s
+for auto, 29.485 to 29.724 s for four workers, and 21.690 to 13.100 s for
+16 workers. GNU cp changed from 7.086 to 13.738 s and rsync from 13.859 to
+1.004 s. The new rsync samples span 0.623–18.022 s, illustrating substantial
+variability. These measure creation and metadata durability, not unchanged
+incremental copies or data-transfer throughput.
+
+The binaries differ between runs. The retained worker telemetry is consistent
+with removal of admission throttling, but this is not a controlled isolation
+of that change: available memory and host/cache conditions also differ, and
+the baseline tools improved by up to 33.5%. All dense source-residency checks
+were 0%; device/controller and metadata caches, host activity and temperature
+remain uncontrolled. Warm-cache and cross-device tests remain unsupported.
+TurboCopy’s per-file durability and atomic publication costs remain included.

@@ -1,5 +1,6 @@
 """Small checks for Phase 5 safety, cache residency and subprocess accounting."""
 import os
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -9,6 +10,27 @@ import phase5
 
 
 class Phase5Tests(unittest.TestCase):
+    def test_btrfs_device_discovery_uses_mount_point(self):
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            mount = {"target": "/home", "source": "/dev/mapper/test[/home]",
+                     "fstype": "btrfs", "maj:min": "0:36"}
+
+            def capture(command):
+                output = ""
+                if command[0] == "findmnt":
+                    output = json.dumps({"filesystems": [mount]})
+                elif command[1:3] == ["filesystem", "show"]:
+                    self.assertEqual(command[-1], "/home")
+                    output = f"Total devices 1\n devid 1 size 1 used 1 path {parent}\n"
+                return {"returncode": 0, "stdout": output, "stderr": ""}
+
+            with patch.object(phase5, "capture", side_effect=capture), \
+                 patch.object(phase5, "physical_devices", return_value=["nvme0n1"]):
+                fs = phase5.filesystem(parent)
+            self.assertEqual(fs["physical_devices"], ["nvme0n1"])
+            self.assertEqual(fs["path"], str(parent))
+
     def test_same_device_space_is_added_before_reserve(self):
         with tempfile.TemporaryDirectory() as directory:
             parent = Path(directory)

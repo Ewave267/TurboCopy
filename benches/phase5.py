@@ -97,7 +97,7 @@ def filesystem(path):
               free_bytes=usage.free, physical_devices=physical_devices(fs["maj:min"]))
     if fs["fstype"] == "btrfs":
         fs["btrfs_usage"] = capture(["btrfs", "filesystem", "usage", "-b", str(path)])
-        fs["btrfs_devices"] = capture(["btrfs", "filesystem", "show", "--raw", str(path)])
+        fs["btrfs_devices"] = capture(["btrfs", "filesystem", "show", "--raw", fs["target"]])
         paths = re.findall(r" path (.+?)(?: MISSING)?$", fs["btrfs_devices"]["stdout"], re.M)
         names = []
         resolved = 0
