@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="265" viewBox="0 0 1000 265" role="img"><title>ten-thousand-1mib, pair 0, storage: durable MiB/s (median and observed range)</title><rect width="100%" height="100%" fill="white"/><g font-family="sans-serif" font-size="12" fill="#172033">
+<text x="15" y="25">ten-thousand-1mib, pair 0, storage: durable MiB/s (median and observed range)</text>
+<text x="15" y="63">GNU cp -a</text>
+<rect x="350" y="50" width="154.5" height="17" fill="#64748b"/>
+<path d="M 499.9 58 H 567.9 M 499.9 54 V 62 M 567.9 54 V 62" stroke="#172033" fill="none"/>
+<text x="880" y="63">252.0</text>
+<text x="15" y="88">rsync -a</text>
+<rect x="350" y="75" width="154.0" height="17" fill="#64748b"/>
+<path d="M 503.5 83 H 540.5 M 503.5 79 V 87 M 540.5 79 V 87" stroke="#172033" fill="none"/>
+<text x="880" y="88">251.1</text>
+<text x="15" y="113">tcopy auto</text>
+<rect x="350" y="100" width="64.6" height="17" fill="#2563eb"/>
+<path d="M 414.1 108 H 416.6 M 414.1 104 V 112 M 416.6 104 V 112" stroke="#172033" fill="none"/>
+<text x="880" y="113">105.4</text>
+<text x="15" y="138">tcopy workers 1</text>
+<rect x="350" y="125" width="60.5" height="17" fill="#2563eb"/>
+<path d="M 410.3 133 H 416.2 M 410.3 129 V 137 M 416.2 129 V 137" stroke="#172033" fill="none"/>
+<text x="880" y="138">98.7</text>
+<text x="15" y="163">tcopy workers 2</text>
+<rect x="350" y="150" width="78.7" height="17" fill="#2563eb"/>
+<path d="M 426.6 158 H 430.1 M 426.6 154 V 162 M 430.1 154 V 162" stroke="#172033" fill="none"/>
+<text x="880" y="163">128.3</text>
+<text x="15" y="188">tcopy workers 4</text>
+<rect x="350" y="175" width="131.0" height="17" fill="#2563eb"/>
+<path d="M 473.5 183 H 483.9 M 473.5 179 V 187 M 483.9 179 V 187" stroke="#172033" fill="none"/>
+<text x="880" y="188">213.6</text>
+<text x="15" y="213">tcopy workers 8</text>
+<rect x="350" y="200" width="202.6" height="17" fill="#2563eb"/>
+<path d="M 551.9 208 H 561.6 M 551.9 204 V 212 M 561.6 204 V 212" stroke="#172033" fill="none"/>
+<text x="880" y="213">330.5</text>
+<text x="15" y="238">tcopy workers 16</text>
+<rect x="350" y="225" width="275.7" height="17" fill="#2563eb"/>
+<path d="M 624.1 233 H 639.2 M 624.1 229 V 237 M 639.2 229 V 237" stroke="#172033" fill="none"/>
+<text x="880" y="238">449.7</text>
+</g></svg>

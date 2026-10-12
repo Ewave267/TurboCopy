@@ -314,3 +314,54 @@ hardware classes. `setfacl` returned `EINVAL` during ACL source setup on this
 host, and symlink `user.*` xattrs were unsupported; their conditional tests did
 not verify preservation at runtime here. The ownership-failure test runs only
 as root. No privileged cache drop or unavailable filesystem mount was attempted.
+
+## Phase 5 measurement
+
+Phase 5 is complete. [benchmark-phase5.md](benchmark-phase5.md) contains the
+throughput graphs, full eight-configuration comparison and methodology;
+[benchmark-phase5.json](benchmark-phase5.json) retains storage inventory,
+individual timings, CPU utilization, read/write bytes and worker telemetry.
+The unchanged copy engine was measured on Btrfs over an encrypted NVMe device
+on 2026-10-12 UTC, with three randomized iterations per configuration/workload:
+96 verified dense copies and 96 empty-file companion copies for separate
+creation/metadata overhead measurements.
+
+The table shows median durable MiB/s, including a common final file/directory
+fsync. Sources contain fresh incompressible random data; reflinks and sparse
+copies are disabled. Every copy verifies SHA-256, file set, size, ownership,
+mode and nanosecond mtime against the same source metadata contract.
+
+| Workload | GNU `cp -a` | `rsync -a` | `tcopy --auto` | Workers 1 | Best parallel setting | Gain over workers 1 |
+| --- | ---: | ---: | ---: | ---: | --- | ---: |
+| 1 × 10 GiB | 708.1 | 558.1 | 634.7 | 654.9 | 16 workers: 657.8 | 1.00× |
+| 10 × 1 GiB | 698.3 | 564.6 | 655.7 | 653.2 | 4 workers: 807.2 | 1.24× |
+| 100 × 100 MiB | 660.1 | 541.1 | 606.7 | 542.4 | 16 workers: 698.9 | 1.29× |
+| 10,000 × 1 MiB | 252.0 | 251.1 | 105.4 | 98.7 | 16 workers: 449.7 | 4.56× |
+
+One file showed no clear parallel gain: without explicit chunks, additional
+workers cannot split its transfer. Multiple files benefited, most strongly
+at 10,000 files where overlapping metadata/sync waits helped throughput.
+More workers were not always faster: four workers gave the highest median
+for ten files. Automatic mode reduced its worker limit from four to one in
+all 12 dense runs under the existing pressure policy; preparation and
+verification I/O can influence that policy's recent pressure window.
+
+These are same-device storage measurements with verified 0% source-page
+residency immediately before each dense copy. Device/controller and metadata
+caches, other host activity and SSD temperature remain uncontrolled.
+Full warm-cache datasets exceeded available memory, and no independent
+writable mounted physical-device pair was available for cross-device runs.
+The final durability endpoint is common, but TurboCopy's stronger intermediate
+per-file sync and atomic publication remain part of its measured tool time.
+The report separates copy time, final sync time and empty-file overhead;
+three-run observed ranges are not confidence intervals.
+
+The harness uses isolated temporary trees, checks space and storage pressure,
+and stops before configured safety thresholds are exceeded. No storage
+configuration or user data was changed. Dataset sizes and benchmark parents
+are configurable for reproducing the measurements on other hosts:
+
+```bash
+cargo build --release
+python3 benches/phase5.py --directory . --runs 3 --output docs/benchmark-phase5
+```
