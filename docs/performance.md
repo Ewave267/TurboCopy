@@ -1,5 +1,11 @@
 # Benchmark methodology and results
 
+The measurements below predate the removal of PSI-based admission throttling
+and automatic GPFS detection. Current CLI defaults select storage automatically
+and retain the selected admission limit unless explicit tuning is requested.
+Historical automatic-mode slowdowns remain recorded; they are not measurements
+of the revised policy. See [GPFS guide](gpfs.md) for cluster verification.
+
 Run a release binary with Python 3.11+:
 
 ```bash

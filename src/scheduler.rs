@@ -136,11 +136,12 @@ pub fn run(roots: Vec<Task>, options: Options, start: std::time::Instant) -> Arc
     let mut summary = Summary::new(options, storage, start);
     let options = crate::tuner::select(options, &summary.hardware, &summary.storage);
     summary.options = options;
-    let adaptive = options.auto && !options.no_tune && !options.manual_workers && !options.dry_run;
-    let mut controller = crate::tuner::Controller::new(options.worker_count(), options.tune);
-    if adaptive && summary.hardware.pressured() {
-        controller.sample(0.0, false, true);
-    }
+    let adaptive = options.tune
+        && !options.gpfs
+        && !options.no_tune
+        && !options.manual_workers
+        && !options.dry_run;
+    let controller = crate::tuner::Controller::new(options.worker_count(), options.tune);
     summary.limit.store(
         if adaptive {
             controller.limit

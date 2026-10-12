@@ -894,6 +894,13 @@ fn json_number(summary: &str, name: &str) -> f64 {
 fn adaptive_flags_preserve_manual_controls_and_dry_run() {
     let f = Fixture::new();
     fs::write(f.path("source"), b"adaptive copy").unwrap();
+    let default = success(f.copy(&["--json", "source", "default-dest"]));
+    assert!(default.contains("\"auto\":true"));
+    assert_eq!(json_number(&default, "concurrency_adjustments"), 0.0);
+    assert_eq!(
+        json_number(&default, "final_workers"),
+        json_number(&default, "workers")
+    );
     for flag in ["--auto", "--tune"] {
         let output = success(f.copy(&[
             flag,

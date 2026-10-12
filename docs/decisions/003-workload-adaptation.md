@@ -1,5 +1,10 @@
 # 003 — Calibrate on real work, adjust admission
 
+Current policy update: PSI is diagnostic and no longer reduces admission. CLI
+storage selection is enabled by default; detected native GPFS selects its fixed
+profile. Only explicit `--tune` calibrates non-GPFS workload concurrency. The
+pressure-feedback design below records the original Phase 3 behavior.
+
 Phase 3 keeps hardware adaptation opt-in and reuses the safe Phase 2 copy paths.
 Hardware classification establishes a conservative ceiling; explicit worker and
 chunk overrides retain precedence. Unknown topology never establishes physical

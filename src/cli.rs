@@ -14,13 +14,13 @@ An existing destination directory receives each source basename.
   --resume     Keep and validate sequential partials for retry (no sparse/reflink).
   --preserve-extended  Preserve owner, group, xattrs and ACLs where supported.
   --dry-run    Preview without changing destination data or metadata.
-  --workers N  Concurrent I/O slots (1..128; default up to 4).
+  --workers N  Concurrent I/O slots (1..128; selected from storage).
   --chunk-size SIZE  Opt into chunks for local large files (1K..64M, binary units).
-  --auto       Select workers/chunks from hardware; react to pressure.
+  --auto       Select workers/chunks from storage and memory (default).
   --tune       Calibrate concurrency on the real copy workload (implies --auto).
   --no-tune    Keep the selected configuration fixed.
   --gpfs       GPFS profile: up to 32 fixed slots, 16 MiB chunks, 1 MiB buffers.
-               Overrides via --workers/--chunk-size; incompatible with --auto/--tune.
+               Overrides via --workers/--chunk-size; incompatible with --tune.
   --no-fsync   Skip durability barriers; retain atomic replacement.
                Completed copies are not guaranteed durable after a crash.
   --progress   Print live progress to stderr.
@@ -66,7 +66,10 @@ pub enum Action {
 }
 
 pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String> {
-    let mut options = Options::default();
+    let mut options = Options {
+        auto: true,
+        ..Options::default()
+    };
     let mut paths = Vec::new();
     let mut operands_only = false;
     let mut args = args.into_iter();
@@ -179,8 +182,8 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
     if options.tune && options.no_tune {
         return Err("--tune and --no-tune cannot be combined".into());
     }
-    if options.gpfs && options.auto {
-        return Err("--gpfs cannot be combined with --auto or --tune".into());
+    if options.gpfs && options.tune {
+        return Err("--gpfs cannot be combined with --tune".into());
     }
     if options.resume && options.no_fsync {
         return Err("--resume cannot be combined with --no-fsync".into());
@@ -250,6 +253,11 @@ mod tests {
             _ => panic!("expected copy"),
         }
     }
+    #[test]
+    fn storage_selection_is_enabled_without_extra_arguments() {
+        assert!(options(&["a", "b"]).unwrap().auto);
+        assert!(!options(&["a", "b"]).unwrap().no_fsync);
+    }
 
     #[test]
     fn validates_worker_and_chunk_controls() {
@@ -267,7 +275,6 @@ mod tests {
         assert_eq!(parsed.chunk_size, Some(8 * 1024 * 1024));
         assert!(parsed.json && parsed.progress);
         for args in [
-            vec!["--gpfs", "--auto", "a", "b"],
             vec!["--tune", "--gpfs", "a", "b"],
             vec!["--no-fsync", "--resume", "a", "b"],
             vec!["--workers", "0", "a", "b"],

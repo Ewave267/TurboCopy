@@ -41,9 +41,6 @@ impl Hardware {
             }
         }
     }
-    pub fn pressured(&self) -> bool {
-        self.cpu_pressure.is_some_and(|p| p >= 25.0) || self.io_pressure.is_some_and(|p| p >= 10.0)
-    }
 }
 
 fn read(path: impl AsRef<Path>) -> String {
@@ -56,19 +53,6 @@ fn cgroup() -> Option<(PathBuf, PathBuf)> {
         .lines()
         .find_map(|line| line.strip_prefix("0::").map(str::to_owned))?;
     crate::storage_detect::Detector::load().cgroup_path(Path::new(&group))
-}
-
-pub fn current_pressure() -> bool {
-    let mut cpu = pressure(&read("/proc/pressure/cpu"));
-    let mut io = pressure(&read("/proc/pressure/io"));
-    if let Some((path, _)) = cgroup() {
-        for (value, name) in [(&mut cpu, "cpu.pressure"), (&mut io, "io.pressure")] {
-            if let Some(group) = pressure(&read(path.join(name))) {
-                *value = Some(value.map_or(group, |system| system.max(group)));
-            }
-        }
-    }
-    cpu.is_some_and(|p| p >= 25.0) || io.is_some_and(|p| p >= 10.0)
 }
 
 fn physical_cores(text: &str) -> Option<usize> {

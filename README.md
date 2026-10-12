@@ -62,29 +62,35 @@ the remainder. Stale or tampered checkpoints fail safely and require manual
 removal to restart. The `.tcopy-resume` entry is reserved while resume is used;
 `--resume` cannot be combined with `--sparse` or `--reflink`.
 
-The default uses up to four file workers and a 64-entry queue. `--workers N`
+The default selects workers and chunks from storage with a 64-entry queue. `--workers N`
 sets a shared limit of 1–128 active file/chunk slots. `--chunk-size SIZE` opts
 into parallel positioned copying for files at least 64 MiB with multiple chunks
 and idle slots. Sizes accept bytes or binary K/M/G and KiB/MiB/GiB suffixes,
 from 1 KiB to 64 MiB. Known HDDs and network/unsupported filesystems retain
 buffered copying; unavailable helpers also use that path. Extra workers can make copying slower.
 
-`--auto` selects a CPU/memory-bounded worker ceiling from storage profiles: one
+Storage selection is enabled by default; `--auto` remains accepted. It selects
+a CPU/memory-bounded worker ceiling for non-GPFS storage: one
 slot for shared or unknown-topology HDDs, two for independent HDDs, network or
 unknown storage, four for shared fast storage, and up to eight for independent
 fast storage. Automatic chunks require known SSD/NVMe/memory local storage,
 confirmed independence, and files at least 256 MiB; each file selects 4–16 MiB
 ranges from its length. A manual `--chunk-size` retains the 64 MiB threshold and
-Phase 2 storage guards. Mounted subdirectories are checked per file.
+Phase 2 storage guards. Detected native GPFS mounts select the GPFS profile
+automatically, including 32 memory-bounded slots, larger buffers and directory
+batching. Mounted subdirectories are checked per file for chunk eligibility.
 
 `--tune` implies `--auto`, starts at one slot and observes the real copy workload
 in up to eight one-second windows (about eight seconds, subject to scheduling). It tries increasing limits,
 requires occupied slots and meaningful work, and stops when a candidate gains
 less than 5%. It creates no extra benchmark files. Short copies can finish before
 calibration; `insufficient-work` means no measurement was made.
-`--auto` and `--tune` reduce admission under CPU/I/O pressure and recover gradually
-after pressure subsides. Running files/helpers finish with their existing permits,
-so a single large file is not repartitioned mid-copy. `--no-tune` fixes the selected
+CPU/I/O PSI is reported for diagnosis and never halves worker admission. Its
+stall averages can reflect our own useful I/O and earlier activity, not a measured
+benefit from fewer workers. Default concurrency stays at the selected ceiling;
+only explicit `--tune` changes admission based on measured workload scores.
+Running files/helpers finish with their existing permits, so a single large file
+is not repartitioned mid-copy. `--no-tune` fixes the selected
 configuration; combining it with `--tune` is an error. Explicit `--workers` fixes
 the admission limit and explicit `--chunk-size` fixes range size.
 
@@ -153,8 +159,10 @@ up to 32 file/chunk slots, 1 MiB transfer buffers and 16 MiB positioned ranges
 for eligible files at least 64 MiB. The default slot count is bounded by available
 memory (all file/helper buffers budgeted at 1/64 of available memory); it is not
 capped by local CPU count. `--workers` and `--chunk-size` override these defaults.
-This is an explicit profile, not a claim that 32 workers is optimal on every
-cluster. It is incompatible with `--auto` and `--tune` and does not use local PSI
+This profile is automatically selected when a root storage pair includes native
+GPFS; `--gpfs` also forces it explicitly. This is not a claim that 32 workers is
+optimal on every cluster. Explicit `--gpfs` is incompatible with `--tune`;
+automatically detected GPFS uses fixed concurrency even with `--tune`. It does not use local PSI
 to throttle remote storage concurrency. It does not change cluster settings.
 
 GPFS mounts permit explicit positioned chunks without requiring visible local
@@ -177,7 +185,7 @@ is no implicit final filesystem flush. It cannot be combined with `--resume`.
 Without this flag, the existing durability behavior remains the default,
 including with `--gpfs`.
 
-Start with `--gpfs --no-fsync --workers=32` for bulk datasets when that durability
+Start with just `--no-fsync` on native GPFS for bulk datasets when that durability
 tradeoff is acceptable; compare 8, 16, 32 and 64 workers on the actual cluster.
 The JSON report includes `gpfs`, `fsync` and `buffer_size`. See the
 [GPFS measurement guide](docs/gpfs.md) for commands and limitations. No GPFS

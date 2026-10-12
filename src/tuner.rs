@@ -5,6 +5,10 @@ fn fast(storage: &Storage) -> bool {
 }
 
 pub fn select(mut options: Options, hardware: &Hardware, pairs: &[StoragePair]) -> Options {
+    options.gpfs |= options.auto
+        && pairs
+            .iter()
+            .any(|p| p.source.filesystem == "gpfs" || p.destination.filesystem == "gpfs");
     if options.gpfs {
         if !options.manual_workers {
             // Remote I/O waits can overlap beyond the local CPU count.
@@ -17,7 +21,7 @@ pub fn select(mut options: Options, hardware: &Hardware, pairs: &[StoragePair]) 
             options.chunk_size = Some(16 << 20);
         }
     }
-    if options.auto {
+    if options.auto && !options.gpfs {
         if !options.manual_workers {
             let storage_limit = pairs
                 .iter()
@@ -77,7 +81,7 @@ pub fn chunk_size(
     if !source.chunks_allowed() || !destination.chunks_allowed() {
         return None;
     }
-    if !options.auto || options.manual_chunks {
+    if options.gpfs || !options.auto || options.manual_chunks {
         return options.chunk_size;
     }
     if length < 256 << 20
@@ -99,7 +103,6 @@ pub struct Controller {
     pub best_rate: f64,
     pub samples: usize,
     windows: usize,
-    quiet: usize,
     calibrating: bool,
 }
 impl Controller {
@@ -107,29 +110,17 @@ impl Controller {
         let limit = if tune { 1 } else { maximum };
         Self {
             limit,
-            state: if tune {
-                "insufficient-work"
-            } else {
-                "pressure-only"
-            },
+            state: if tune { "insufficient-work" } else { "fixed" },
             maximum,
             best_limit: limit,
             best_rate: 0.0,
             samples: 0,
             windows: 0,
-            quiet: 0,
             calibrating: tune,
         }
     }
-    pub fn sample(&mut self, rate: f64, saturated: bool, pressured: bool) {
+    pub fn sample(&mut self, rate: f64, saturated: bool) {
         self.windows += 1;
-        if pressured {
-            self.limit = (self.limit / 2).max(1);
-            self.quiet = 0;
-            self.calibrating = false;
-            self.state = "pressure";
-            return;
-        }
         if self.calibrating {
             if rate > 0.0 && saturated {
                 self.samples += 1;
@@ -158,14 +149,9 @@ impl Controller {
                     "insufficient-work"
                 };
             }
-        } else {
-            self.quiet += 1;
-            if self.quiet >= 3 && saturated && self.limit < self.best_limit {
-                self.limit += 1;
-                self.quiet = 0;
-            }
         }
     }
+
     fn finish(&mut self) {
         if self.calibrating {
             self.limit = self.best_limit;
@@ -216,7 +202,7 @@ pub fn monitor(
         } else {
             0.0
         };
-        controller.sample(rate, saturated, crate::hardware::current_pressure());
+        controller.sample(rate, saturated);
         budget.resize(controller.limit);
         *summary.tuning_state.lock().unwrap() = controller.state;
         summary
@@ -238,6 +224,47 @@ pub fn monitor(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn auto_detects_gpfs_and_preserves_concurrency_under_reported_pressure() {
+        let mut remote = storage("unknown", 1);
+        remote.filesystem = "gpfs".into();
+        let pair = StoragePair {
+            source: remote.clone(),
+            destination: remote,
+            available_bytes: None,
+        };
+        let mut host = hardware();
+        host.cpu_pressure = Some(90.0);
+        host.io_pressure = Some(90.0);
+        let selected = select(
+            Options {
+                auto: true,
+                ..Options::default()
+            },
+            &host,
+            &[pair],
+        );
+        assert!(selected.gpfs);
+        assert_eq!(selected.worker_count(), 32);
+        assert_eq!(selected.buffer_size(), 1 << 20);
+        assert_eq!(
+            chunk_size(
+                selected,
+                &storage("nvme", 1),
+                &storage("nvme", 1),
+                64 << 20,
+                32
+            ),
+            Some(16 << 20)
+        );
+        let mut fixed = Controller::new(selected.worker_count(), false);
+        for _ in 0..20 {
+            fixed.sample(100.0, true);
+        }
+        fixed.finish();
+        assert_eq!(fixed.limit, 32);
+        assert_eq!(fixed.samples, 0);
+    }
     #[test]
     fn gpfs_profile_overlaps_remote_io_without_assuming_local_topology() {
         let profile = Options {
@@ -365,29 +392,23 @@ mod tests {
         assert_eq!(ordinary.chunk_size, None);
     }
     #[test]
-    fn calibration_requires_work_stops_on_plateau_and_reacts_to_pressure() {
+    fn calibration_requires_work_and_stops_on_measured_plateau() {
         let mut tuner = Controller::new(8, true);
         assert_eq!(tuner.limit, 1);
-        tuner.sample(0.0, false, false);
+        tuner.sample(0.0, false);
         assert_eq!(tuner.limit, 1);
-        tuner.sample(100.0, true, false);
+        tuner.sample(100.0, true);
         assert_eq!(tuner.limit, 2);
-        tuner.sample(150.0, true, false);
+        tuner.sample(150.0, true);
         assert_eq!(tuner.limit, 4);
-        tuner.sample(200.0, true, false);
+        tuner.sample(200.0, true);
         assert_eq!(tuner.limit, 8);
-        tuner.sample(201.0, true, false);
+        tuner.sample(201.0, true);
         assert_eq!(tuner.limit, 4);
         assert_eq!(tuner.state, "plateau");
-        tuner.sample(100.0, true, true);
-        assert_eq!(tuner.limit, 2);
-        for _ in 0..3 {
-            tuner.sample(100.0, true, false);
-        }
-        assert_eq!(tuner.limit, 3);
         let mut idle = Controller::new(8, true);
         for _ in 0..8 {
-            idle.sample(0.0, false, false);
+            idle.sample(0.0, false);
         }
         assert_eq!(idle.state, "insufficient-work");
         assert_eq!(idle.limit, 1);
@@ -396,21 +417,21 @@ mod tests {
     #[test]
     fn short_calibration_retains_observed_setting_and_caps_trials() {
         let mut tuner = Controller::new(8, true);
-        tuner.sample(100.0, true, false);
+        tuner.sample(100.0, true);
         assert_eq!(tuner.limit, 2);
         tuner.finish();
         assert_eq!(tuner.limit, 1);
         assert_eq!(tuner.state, "short-workload");
         let mut tuner = Controller::new(8, true);
         for _ in 0..7 {
-            tuner.sample(0.0, false, false);
+            tuner.sample(0.0, false);
         }
-        tuner.sample(100.0, true, false);
+        tuner.sample(100.0, true);
         assert_eq!(tuner.limit, 1);
         assert_eq!(tuner.state, "complete");
         assert_eq!(tuner.samples, 1);
         let mut fixed = Controller::new(1, true);
-        fixed.sample(100.0, true, false);
+        fixed.sample(100.0, true);
         assert_eq!(fixed.limit, 1);
         assert_eq!(fixed.state, "complete");
     }

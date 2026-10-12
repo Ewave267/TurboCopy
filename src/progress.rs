@@ -127,7 +127,7 @@ impl Summary {
                 count(&self.transferred), count(&self.chunked), count(&self.fallbacks), elapsed, throughput, utilization,
                 count(&self.peak), count(&self.metadata_ns) as f64 / 1e9, count(&self.transfer_ns) as f64 / 1e9, storage,
                 self.options.auto, count(&self.limit), count(&self.adjustments), quote(&self.tuning_state.lock().unwrap()), count(&self.tuning_samples), *self.tuning_rate.lock().unwrap(),
-                quote(if self.options.auto && !self.options.manual_chunks { "automatic" } else if self.options.chunk_size.is_some() { "manual" } else { "streaming" }), self.hardware_json(),
+                quote(if self.options.gpfs && !self.options.manual_chunks { "gpfs" } else if self.options.auto && !self.options.manual_chunks { "automatic" } else if self.options.chunk_size.is_some() { "manual" } else { "streaming" }), self.hardware_json(),
                 count(&self.small_files), count(&self.medium_files), count(&self.large_files));
         } else {
             println!("{}: {}  Skipped: {}  Bytes: {}  Failures: {}  Elapsed: {:.3}s  Throughput: {:.2} MiB/s",

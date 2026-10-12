@@ -11,7 +11,7 @@ cluster configuration can be inferred from this development filesystem.
 
 ```bash
 cargo build --release
-./target/release/tcopy /gpfs/source/. /gpfs/destination/ --gpfs --no-fsync --workers=32 --progress --json
+./target/release/tcopy /gpfs/source/. /gpfs/destination/ --no-fsync --progress --json
 ```
 
 The destination directory must already exist when using `source/.` to copy its
@@ -19,6 +19,11 @@ contents. Use `source` without `/.` to retain ordinary basename mapping.
 Keep sources stable. Existing destination files are atomically replaced;
 extra destination entries are retained. Add `--preserve-extended` if owner/group,
 xattrs and ACL preservation is required; preservation failures are copy errors.
+
+Native GPFS is detected by default; no `--auto`, `--gpfs` or worker count is
+required. `--gpfs` remains available to force the profile. Omit `--no-fsync` for
+the existing durability barriers. Pressure readings are diagnostic and do not
+reduce admission. Non-GPFS storage retains its own conservative selection.
 
 For many small files, compare fixed worker counts first. Directory batching
 allows work from up to 64 completed directories to overlap before metadata

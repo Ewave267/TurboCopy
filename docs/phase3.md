@@ -1,5 +1,10 @@
 # Phase 3 specification
 
+Current policy update: PSI is diagnostic and no longer reduces admission. CLI
+storage selection is enabled by default; detected native GPFS selects its fixed
+profile. Only explicit `--tune` calibrates non-GPFS workload concurrency. The
+pressure-feedback design below records the original Phase 3 behavior.
+
 Implement hardware adaptation from `project.md` on the Phase 2 engine, with no
 new Rust dependencies and no changes to atomic replacement or destination mapping.
 

@@ -70,10 +70,12 @@ also bounded by CPU and buffer budgets. `copy_engine` selects automatic range
 sizes from each eligible file's length and rechecks its storage pair, including
 mounted subdirectories. Explicit worker/chunk overrides retain precedence.
 
-The same scoped reporter performs opt-in calibration and pressure feedback.
+The same scoped reporter performs opt-in calibration. PSI remains diagnostic:
+stall averages do not establish that reducing concurrency improves throughput.
 It samples attempted bytes, committed files and slot occupancy once per second;
-eight windows bound calibration. `Concurrency::resize` changes admission under
-the permit mutex, wakes waiters on growth and lets existing work drain on shrink.
+eight windows bound calibration. Only explicit `--tune` starts the controller;
+default storage selection has fixed admission. `Concurrency::resize` changes
+admission under the permit mutex, wakes waiters on growth and lets work drain on shrink.
 The thread count, queue capacity and buffer ceiling stay fixed. Helpers never
 wait for additional permits, so reducing admission does not add nested deadlocks.
 Workload counters classify regular files during streaming discovery, including
@@ -81,9 +83,12 @@ sync skips and dry-run previews. Reports distinguish the configured worker
 ceiling from the final admission limit and expose insufficient calibration data.
 The root chunk-size hint can differ from automatically selected per-file sizes.
 
-`--gpfs` is a separate fixed profile: memory-bounded 32 slots, 16 MiB chunks,
+Storage selection is enabled by default in CLI parsing. Native GPFS in a root
+storage pair automatically selects the fixed profile, also available via
+`--gpfs`: memory-bounded 32 slots, 16 MiB chunks,
 1 MiB buffers and no local CPU/PSI admission policy. Manual worker/chunk controls
-take precedence. It forbids auto/tune rather than mixing the two policies.
+take precedence. Explicit GPFS forbids tune; detected GPFS retains fixed
+admission. Durability is never weakened implicitly by storage selection.
 
 See [Phase 1 contract](phase1.md), [Phase 2 contract](phase2.md), [Phase 3 contract](phase3.md), [Phase 4 contract](phase4.md), [adaptation decision](decisions/003-workload-adaptation.md), [Phase 4 decision](decisions/004-phase4-opt-ins.md), [decisions](decisions/001-correctness-first.md)
 and [benchmark methodology](performance.md) for acceptance criteria and limits.
