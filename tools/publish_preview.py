@@ -1,4 +1,4 @@
-"""Publish tested Linux packages, then remove every superseded GitHub release."""
+"""Publish tested Linux packages, then remove superseded releases and their tags."""
 import hashlib
 import json
 import os
@@ -41,7 +41,7 @@ def publish(folder, repository, branch, sha, run_id, attempt):
     for page in pages:
         for release in page:
             if release["tag_name"] != tag:
-                gh("release", "delete", release["tag_name"], "--yes")
+                gh("release", "delete", release["tag_name"], "--yes", "--cleanup-tag")
     print(f"Published https://github.com/{repository}/releases/tag/{tag}")
 
 

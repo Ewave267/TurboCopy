@@ -33,6 +33,8 @@ class PublishTests(unittest.TestCase):
                 preview.publish(folder, "owner/repo", "master", "abc", "2", "1")
             self.assertEqual([call[2] for call in calls if call[:2] == ("release", "delete")],
                              ["stable", "preview-1-1"])
+            self.assertTrue(all("--cleanup-tag" in call for call in calls
+                                if call[:2] == ("release", "delete")))
             edit = next(i for i, call in enumerate(calls) if call[:2] == ("release", "edit"))
             self.assertTrue(all(i > edit for i, call in enumerate(calls)
                                 if call[:2] == ("release", "delete")))
