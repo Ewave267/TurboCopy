@@ -1,0 +1,62 @@
+{
+  "Cargo.toml": {
+    "mtime": 1791765278.0499415,
+    "seen": 1791765893.2987628,
+    "ast_hash": "103f499b60048a648779202ee5757590",
+    "semantic_hash": "103f499b60048a648779202ee5757590"
+  },
+  "benches/compare.py": {
+    "mtime": 1791766124.0493164,
+    "seen": 1791766152.702401,
+    "ast_hash": "bcb6b1d40db2f7efa27a1d76764fcd9c",
+    "semantic_hash": "bcb6b1d40db2f7efa27a1d76764fcd9c"
+  },
+  "docs/benchmark-phase1.json": {
+    "mtime": 1791766189.426618,
+    "seen": 1791766402.3583946,
+    "ast_hash": "fa49d6b4d0ee66731392abe3b15f27c8",
+    "semantic_hash": "fa49d6b4d0ee66731392abe3b15f27c8"
+  },
+  "src/cli.rs": {
+    "mtime": 1791765914.462171,
+    "seen": 1791766152.7024057,
+    "ast_hash": "5d6c55dbb17d6a307ac6fd4a39846eae",
+    "semantic_hash": "5d6c55dbb17d6a307ac6fd4a39846eae"
+  },
+  "src/copy_engine.rs": {
+    "mtime": 1791766124.2873154,
+    "seen": 1791766152.7024071,
+    "ast_hash": "246acb02ae6211ccfca2f9e5f0b62e2b",
+    "semantic_hash": "246acb02ae6211ccfca2f9e5f0b62e2b"
+  },
+  "src/fsutil.rs": {
+    "mtime": 1791766367.1012433,
+    "seen": 1791766402.3584547,
+    "ast_hash": "795ede41446e6ab2b326f887dc23d55a",
+    "semantic_hash": "795ede41446e6ab2b326f887dc23d55a"
+  },
+  "src/main.rs": {
+    "mtime": 1791765914.466171,
+    "seen": 1791766152.70241,
+    "ast_hash": "db794c8f4c235c41115bb1a687742719",
+    "semantic_hash": "db794c8f4c235c41115bb1a687742719"
+  },
+  "src/scanner.rs": {
+    "mtime": 1791766367.1052432,
+    "seen": 1791766402.358478,
+    "ast_hash": "9b0ae71b906736b66050da1321c3b097",
+    "semantic_hash": "9b0ae71b906736b66050da1321c3b097"
+  },
+  "src/scheduler.rs": {
+    "mtime": 1791765961.6479785,
+    "seen": 1791766152.7024128,
+    "ast_hash": "36a8f282bb68e88a792726a22a7f5352",
+    "semantic_hash": "36a8f282bb68e88a792726a22a7f5352"
+  },
+  "tests/copy.rs": {
+    "mtime": 1791766123.9773169,
+    "seen": 1791766152.702414,
+    "ast_hash": "ef1d6a042dc579780122290a7a1cc628",
+    "semantic_hash": "ef1d6a042dc579780122290a7a1cc628"
+  }
+}

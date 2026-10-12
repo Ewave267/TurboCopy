@@ -1,0 +1,6 @@
+/target/
+/graphify-out/.graphify_*
+/graphify-out/.cache/
+/graphify-out/cache/
+/tcopy-bench-*/
+__pycache__/

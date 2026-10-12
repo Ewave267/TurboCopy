@@ -1,0 +1,224 @@
+{
+  "platform": "Linux-6.19.14-108.fc42.x86_64-x86_64-with-glibc2.41",
+  "cpus": 8,
+  "cache": "warm (source read before each sample)",
+  "durability": "tool completion plus file and directory fsync for every tool",
+  "runs": 3,
+  "tools": {
+    "tcopy": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy"
+    ],
+    "tcopy --sync": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--sync"
+    ],
+    "cp": [
+      "cp",
+      "-rp",
+      "--reflink=never",
+      "--sparse=never"
+    ],
+    "rsync": [
+      "rsync",
+      "-rltp"
+    ]
+  },
+  "samples": [
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.6315182280086447,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 1.9137865229859017,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.9101085750153288,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.9684378799865954,
+      "stdout": "Copied: 0  Skipped: 1017  Bytes: 0  Failures: 0"
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.2578226730111055,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 1.1238891719840467,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.446916698012501,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.9096742639958393,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.885935172002064,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 1.9586350799945649,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.4278137500223238,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.9686067010043189,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.3539304370060563,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 1.0856589449977037,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.835397754010046,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.9319224679784384,
+      "stdout": "Copied: 0  Skipped: 1017  Bytes: 0  Failures: 0"
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.3241133179981261,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 1.119434383988846,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.9281409140094183,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 1.9255932529922575,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.8750174790038727,
+      "stdout": "Copied: 1017  Skipped: 0  Bytes: 87982080  Failures: 0"
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.971962622978026,
+      "stdout": "Copied: 0  Skipped: 1017  Bytes: 0  Failures: 0"
+    },
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.4647197620070074,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.9781348599935882,
+      "stdout": ""
+    }
+  ],
+  "tool_versions": {
+    "tcopy": "TurboCopy 0.1.0",
+    "tcopy --sync": "TurboCopy 0.1.0",
+    "cp": "cp (GNU coreutils) 9.6",
+    "rsync": "rsync  version 3.4.1  protocol version 32"
+  },
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14) (Fedora 1.95.0-5.fc42)",
+  "files": 1017,
+  "bytes": 87982080,
+  "filesystem": "btrfs /dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941[/home/ewave/projects/turboCopy]",
+  "medians_seconds": {
+    "tcopy": {
+      "first-copy": 1.885935172002064,
+      "unchanged-incremental": 1.9255932529922575
+    },
+    "tcopy --sync": {
+      "first-copy": 1.8750174790038727,
+      "unchanged-incremental": 0.9684378799865954
+    },
+    "cp": {
+      "first-copy": 1.3241133179981261,
+      "unchanged-incremental": 1.119434383988846
+    },
+    "rsync": {
+      "first-copy": 1.446916698012501,
+      "unchanged-incremental": 0.9686067010043189
+    }
+  }
+}

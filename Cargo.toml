@@ -1,0 +1,15 @@
+[package]
+name = "turbocopy"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Correctness-first parallel file copier for Linux"
+license = "MIT"
+
+[[bin]]
+name = "tcopy"
+path = "src/main.rs"
+
+[profile.release]
+lto = "thin"
+strip = true
