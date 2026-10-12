@@ -82,10 +82,12 @@ cache or guarantee of optimal throughput.
 Each file worker and temporary chunk helper uses a 128 KiB buffer; at most
 `2 * workers - 1` such buffers exist. Chunk size does not allocate a chunk-sized
 buffer. Directory traversal streams instead of retaining the entire tree.
-Storage reporting identifies filesystem, mount device, visible backing devices
-and SSD/NVMe/HDD/memory/unknown classification. Detection is advisory: missing
-sysfs/device access produces unknown; a Btrfs mount source may expose only one
-member, so disjoint Btrfs devices do not prove physical independence.
+Storage reporting identifies filesystem, mount device, visible physical backing
+disks and SSD/NVMe/HDD/memory/unknown classification. Device-mapper layers and
+partitions are traced through sysfs, including mapper names whose `/dev` nodes
+are unavailable. Btrfs independence is reported only when sysfs exposes every
+member and confirms none are missing. Incomplete topology cannot prove physical
+independence; detection is advisory.
 
 `--progress` prints live write counts and throughput to stderr every 250 ms.
 Traversal discovers files as it runs, so no total-size estimate or ETA is shown.
