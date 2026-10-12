@@ -47,13 +47,20 @@ def main():
     parser.add_argument("--directory", type=Path, help="Parent filesystem for owned temporary dataset")
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--small-files", type=int, default=1000)
+    parser.add_argument("--medium-files", type=int, default=16)
     parser.add_argument("--large-mib", type=int, default=64)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    if args.runs < 1 or args.small_files < 0 or args.large_mib < 1:
-        parser.error("runs and large-mib must be positive; small-files must be nonnegative")
+    if args.runs < 1 or min(args.small_files, args.medium_files) < 0 or args.large_mib < 1:
+        parser.error("runs and large-mib must be positive; file counts must be nonnegative")
     binary = args.binary.resolve(strict=True)
-    tools = {"tcopy": [str(binary)], "tcopy --sync": [str(binary), "--sync"]}
+    tools = {"tcopy": [str(binary), "--json"], "tcopy --sync": [str(binary), "--sync", "--json"],
+             "tcopy chunks": [str(binary), "--workers=4", "--chunk-size=8M", "--json"],
+             "tcopy chunks --sync": [str(binary), "--workers=4", "--chunk-size=8M", "--sync", "--json"],
+             "tcopy auto": [str(binary), "--auto", "--json"],
+             "tcopy auto --sync": [str(binary), "--auto", "--sync", "--json"],
+             "tcopy tune": [str(binary), "--tune", "--json"],
+             "tcopy tune --sync": [str(binary), "--tune", "--sync", "--json"]}
     if shutil.which("cp"):
         tools["cp"] = ["cp", "-rp", "--reflink=never", "--sparse=never"]
     if shutil.which("rsync"):
@@ -75,7 +82,7 @@ def main():
         block = rng.randbytes(1024 * 1024)
         for index in range(args.small_files):
             (source / f"small-{index:06d}").write_bytes(rng.randbytes(4096))
-        for index in range(16):
+        for index in range(args.medium_files):
             (source / f"medium-{index:02d}").write_bytes(block)
         with (source / "large").open("wb") as handle:
             for _ in range(args.large_mib):
@@ -108,6 +115,15 @@ def main():
                     assert manifest(destination / "source") == expected, f"{name}: content/metadata mismatch"
                     sample = {"tool": name, "scenario": scenario, "run": run + 1,
                               "seconds": elapsed, "stdout": completed.stdout.strip()}
+                    if tools[name][0] == str(binary):
+                        metrics = json.loads(completed.stdout)
+                        assert metrics["failures"] == 0
+                        assert metrics["peak_active_workers"] <= metrics["workers"]
+                        if "--sync" in tools[name] and scenario == "unchanged-incremental":
+                            assert metrics["skipped"] == len(files) and metrics["transferred_bytes"] == 0
+                        else:
+                            assert metrics["bytes"] == result["bytes"] == metrics["transferred_bytes"]
+                        sample["metrics"] = metrics
                     result["samples"].append(sample)
                 shutil.rmtree(destination)
     result["medians_seconds"] = {

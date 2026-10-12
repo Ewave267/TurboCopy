@@ -49,7 +49,7 @@ explicit chunk requests on otherwise unknown devices.
 experiment, never used implicitly in production copying. Syscall benchmarks include
 Python overhead and are not direct measurements of the Rust engine.
 
-Timers are accumulated worker wall time, not CPU time, and can exceed elapsed
+Timers accumulate operation wall time across workers and traversal, not CPU time, and can exceed elapsed
 time under concurrency. Utilization measures occupied permit time, including
 waiting for a file's chunk helpers and durability operations. Failed attempts may
 increase transferred bytes without increasing committed bytes.
@@ -61,3 +61,16 @@ increase transferred bytes without increasing committed bytes.
 `python3 benches/compare.py --directory . --output docs/benchmark-phase2.json`,
 `python3 benches/io_methods.py --directory . --output docs/benchmark-io-phase2.json`.
 Retain honest limitations for untested hardware, NFS and real device exhaustion.
+
+## Completed verification
+
+Phase 2 retains all 21 Phase 1 integration cases, extends cancellation,
+source-change, parent-swap and write-limit cases to chunk configurations, and
+adds two integration cases plus focused unit checks (34 tests total).
+Formatting, strict Clippy and release build pass on Rust 1.95.0/x86-64.
+
+The mixed-tree and single-large-file comparisons each verify 36 samples; the
+syscall experiment verifies 12. Results and limits are in [performance.md](performance.md).
+A separate 1 GiB smoke copy observed live transfer updates before publication.
+Unknown backing devices in this sandbox and multi-device Btrfs remain advisory
+limitations. No automatic tuning or implicit reflinks were introduced.

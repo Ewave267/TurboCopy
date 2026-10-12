@@ -68,7 +68,7 @@ fn cli_help_version_and_invalid_arguments() {
     for args in [
         vec![],
         vec!["one"],
-        vec!["--workers", "8"],
+        vec!["--workers", "0"],
         vec!["", "dest"],
     ] {
         assert_eq!(f.copy(&args).status.code(), Some(2));
@@ -397,27 +397,39 @@ fn permission_failure_keeps_existing_destination() {
 
 #[test]
 fn write_failure_cleans_temporary_and_keeps_existing_destination() {
-    let f = Fixture::new();
-    fs::write(f.path("source"), vec![42; 1024 * 1024]).unwrap();
-    fs::write(f.path("dest"), b"keep").unwrap();
-    let output = Command::new("sh")
-        .current_dir(&f.0)
-        .args([
-            "-c",
-            "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest",
-            "sh",
-            env!("CARGO_BIN_EXE_tcopy"),
-        ])
-        .output()
-        .unwrap();
-    assert_eq!(
-        output.status.code(),
-        Some(1),
-        "{}",
-        String::from_utf8_lossy(&output.stderr)
-    );
-    assert_eq!(fs::read(f.path("dest")).unwrap(), b"keep");
-    no_temporaries(&f.0);
+    for mode in ["buffered", "chunks", "tune"] {
+        let f = Fixture::new();
+        fs::write(f.path("source"), vec![42; 1024 * 1024]).unwrap();
+        if mode == "chunks" {
+            fs::OpenOptions::new()
+                .write(true)
+                .open(f.path("source"))
+                .unwrap()
+                .set_len(64 * 1024 * 1024)
+                .unwrap();
+        }
+        fs::write(f.path("dest"), b"keep").unwrap();
+        let script = if mode == "chunks" {
+            "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest --workers=4 --chunk-size=8M"
+        } else if mode == "tune" {
+            "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest --tune --json"
+        } else {
+            "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest"
+        };
+        let output = Command::new("sh")
+            .current_dir(&f.0)
+            .args(["-c", script, "sh", env!("CARGO_BIN_EXE_tcopy")])
+            .output()
+            .unwrap();
+        assert_eq!(
+            output.status.code(),
+            Some(1),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        assert_eq!(fs::read(f.path("dest")).unwrap(), b"keep");
+        no_temporaries(&f.0);
+    }
 }
 
 struct Running(Option<std::process::Child>);
@@ -447,7 +459,7 @@ impl Running {
             if fs::read_dir(directory).is_ok_and(|entries| {
                 entries.flatten().any(|entry| {
                     entry.file_name().as_encoded_bytes().starts_with(b".tcopy-")
-                        && entry.metadata().is_ok_and(|m| m.len() > 0)
+                        && entry.metadata().is_ok_and(|m| m.blocks() > 0)
                 })
             }) {
                 return;
@@ -470,14 +482,28 @@ fn sigint_and_sigterm_keep_old_destination_and_clean_up() {
     extern "C" {
         fn kill(pid: i32, signal: i32) -> i32;
     }
-    for signal in [2, 15] {
+    for (signal, mode) in [
+        (2, "buffered"),
+        (15, "buffered"),
+        (2, "chunks"),
+        (15, "chunks"),
+        (2, "tune"),
+        (15, "tune"),
+    ] {
         let f = Fixture::new();
         fs::File::create(f.path("source"))
             .unwrap()
             .set_len(2 * 1024 * 1024 * 1024)
             .unwrap();
         fs::write(f.path("dest"), b"keep").unwrap();
-        let mut child = Running::start(&f, &["source", "dest"]);
+        let args = if mode == "chunks" {
+            vec!["source", "dest", "--workers=4", "--chunk-size=8M", "--json"]
+        } else if mode == "tune" {
+            vec!["source", "dest", "--tune", "--json"]
+        } else {
+            vec!["source", "dest"]
+        };
+        let mut child = Running::start(&f, &args);
         child.wait_for_data(&f.0);
         // SAFETY: sends a supported signal to our own live child process.
         assert_eq!(
@@ -493,41 +519,56 @@ fn sigint_and_sigterm_keep_old_destination_and_clean_up() {
 
 #[test]
 fn changing_source_is_reported_without_publishing_partial_data() {
-    let f = Fixture::new();
-    let source = fs::File::create(f.path("source")).unwrap();
-    source.set_len(2 * 1024 * 1024 * 1024).unwrap();
-    fs::write(f.path("dest"), b"keep").unwrap();
-    let mut child = Running::start(&f, &["source", "dest"]);
-    child.wait_for_data(&f.0);
-    source.set_len(0).unwrap();
-    let output = child.finish();
-    assert_eq!(output.status.code(), Some(1));
-    assert!(String::from_utf8_lossy(&output.stderr).contains("source"));
-    assert_eq!(fs::read(f.path("dest")).unwrap(), b"keep");
-    no_temporaries(&f.0);
+    for mode in ["buffered", "chunks", "tune"] {
+        let f = Fixture::new();
+        let source = fs::File::create(f.path("source")).unwrap();
+        source.set_len(2 * 1024 * 1024 * 1024).unwrap();
+        fs::write(f.path("dest"), b"keep").unwrap();
+        let args = if mode == "chunks" {
+            vec!["source", "dest", "--workers=4", "--chunk-size=8M", "--json"]
+        } else if mode == "tune" {
+            vec!["source", "dest", "--tune", "--json"]
+        } else {
+            vec!["source", "dest"]
+        };
+        let mut child = Running::start(&f, &args);
+        child.wait_for_data(&f.0);
+        source.set_len(0).unwrap();
+        let output = child.finish();
+        assert_eq!(output.status.code(), Some(1));
+        assert!(String::from_utf8_lossy(&output.stderr).contains("source"));
+        assert_eq!(fs::read(f.path("dest")).unwrap(), b"keep");
+        no_temporaries(&f.0);
+    }
 }
 
 #[test]
 fn destination_parent_symlink_swap_cannot_redirect_opened_directory() {
-    let f = Fixture::new();
-    fs::File::create(f.path("source"))
-        .unwrap()
-        .set_len(64 * 1024 * 1024)
-        .unwrap();
-    fs::create_dir(f.path("dest")).unwrap();
-    fs::create_dir(f.path("outside")).unwrap();
-    fs::write(f.path("outside/source"), b"keep").unwrap();
-    let mut child = Running::start(&f, &["source", "dest"]);
-    child.wait_for_data(&f.path("dest"));
-    fs::rename(f.path("dest"), f.path("moved")).unwrap();
-    symlink("outside", f.path("dest")).unwrap();
-    success(child.finish());
-    assert_eq!(fs::read(f.path("outside/source")).unwrap(), b"keep");
-    assert_eq!(
-        fs::metadata(f.path("moved/source")).unwrap().len(),
-        64 * 1024 * 1024
-    );
-    no_temporaries(&f.path("moved"));
+    for args in [
+        vec!["source", "dest"],
+        vec!["source", "dest", "--workers=4", "--chunk-size=8M"],
+        vec!["source", "dest", "--tune", "--json"],
+    ] {
+        let f = Fixture::new();
+        fs::File::create(f.path("source"))
+            .unwrap()
+            .set_len(64 * 1024 * 1024)
+            .unwrap();
+        fs::create_dir(f.path("dest")).unwrap();
+        fs::create_dir(f.path("outside")).unwrap();
+        fs::write(f.path("outside/source"), b"keep").unwrap();
+        let mut child = Running::start(&f, &args);
+        child.wait_for_data(&f.path("dest"));
+        fs::rename(f.path("dest"), f.path("moved")).unwrap();
+        symlink("outside", f.path("dest")).unwrap();
+        success(child.finish());
+        assert_eq!(fs::read(f.path("outside/source")).unwrap(), b"keep");
+        assert_eq!(
+            fs::metadata(f.path("moved/source")).unwrap().len(),
+            64 * 1024 * 1024
+        );
+        no_temporaries(&f.path("moved"));
+    }
 }
 
 #[test]
@@ -554,4 +595,181 @@ fn refuses_special_destinations_and_file_paths_with_trailing_slashes() {
         .file_type()
         .is_fifo());
     assert!(!f.path("dest").exists());
+}
+
+fn json_number(summary: &str, name: &str) -> f64 {
+    let key = format!("\"{name}\":");
+    summary
+        .split_once(&key)
+        .unwrap()
+        .1
+        .split([',', '}'])
+        .next()
+        .unwrap()
+        .parse()
+        .unwrap()
+}
+
+#[test]
+fn adaptive_flags_preserve_manual_controls_and_dry_run() {
+    let f = Fixture::new();
+    fs::write(f.path("source"), b"adaptive copy").unwrap();
+    for flag in ["--auto", "--tune"] {
+        let output = success(f.copy(&[
+            flag,
+            "--workers=1",
+            "--chunk-size=4M",
+            "--json",
+            "source",
+            "dest",
+        ]));
+        assert_eq!(json_number(&output, "workers"), 1.0);
+        assert_eq!(json_number(&output, "chunk_size"), 4194304.0);
+        assert_eq!(json_number(&output, "final_workers"), 1.0);
+        assert_eq!(fs::read(f.path("dest")).unwrap(), b"adaptive copy");
+        no_temporaries(&f.0);
+    }
+    let output = success(f.copy(&[
+        "--auto",
+        "--no-tune",
+        "--dry-run",
+        "--json",
+        "source",
+        "preview",
+    ]));
+    assert!(!f.path("preview").exists());
+    assert!(output.contains("\"tuning_state\":\"disabled\""));
+    assert!(output.contains("\"hardware\":{") && output.contains("\"workload\":{"));
+    let bad = f.copy(&["--tune", "--no-tune", "source", "bad"]);
+    assert_eq!(bad.status.code(), Some(2));
+    assert!(!f.path("bad").exists());
+    let skip = success(f.copy(&["--tune", "--sync", "--json", "source", "dest"]));
+    assert_eq!(json_number(&skip, "skipped"), 1.0);
+    assert_eq!(json_number(&skip, "transferred_bytes"), 0.0);
+    let failure = f.copy(&["--auto", "--json", "missing", "dest"]);
+    assert_eq!(failure.status.code(), Some(1));
+    assert_eq!(String::from_utf8_lossy(&failure.stdout).lines().count(), 1);
+}
+
+#[test]
+fn chunk_controls_copy_partial_tail_and_share_budget_across_files() {
+    use std::io::Write;
+    let f = Fixture::new();
+    fs::create_dir(f.path("source")).unwrap();
+    let mut input = fs::File::create(f.path("source/large")).unwrap();
+    let mut block = vec![0; 1024 * 1024];
+    for index in 0..64 {
+        for (offset, byte) in block.iter_mut().enumerate() {
+            *byte = ((offset * 17 + index * 31) % 251) as u8;
+        }
+        input.write_all(&block).unwrap();
+    }
+    input.write_all(b"partial last tail").unwrap();
+    input
+        .set_permissions(fs::Permissions::from_mode(0o640))
+        .unwrap();
+    input
+        .set_times(
+            fs::FileTimes::new().set_modified(
+                std::time::UNIX_EPOCH + std::time::Duration::new(1_600_000_001, 1234),
+            ),
+        )
+        .unwrap();
+    drop(input);
+    for flag in ["--auto", "--tune"] {
+        let dest = format!("adaptive-{}", &flag[2..]);
+        let summary = success(f.copy(&["source/large", &dest, flag, "--json"]));
+        assert_eq!(
+            json_number(&summary, "bytes"),
+            (64 * 1024 * 1024 + 17) as f64
+        );
+        assert_eq!(json_number(&summary, "large_files"), 1.0);
+        assert!(json_number(&summary, "peak_active_workers") <= json_number(&summary, "workers"));
+        assert_eq!(
+            fs::read(f.path(&dest)).unwrap(),
+            fs::read(f.path("source/large")).unwrap()
+        );
+    }
+    fs::copy(f.path("source/large"), f.path("source/other")).unwrap();
+    fs::write(f.path("source/small"), b"small").unwrap();
+    for workers in [1, 4] {
+        let dest = format!("dest-{workers}");
+        let output = f.copy(&[
+            "source",
+            &dest,
+            &format!("--workers={workers}"),
+            "--chunk-size=8M",
+            "--json",
+            "--progress",
+        ]);
+        assert!(String::from_utf8_lossy(&output.stderr).contains("discovered"));
+        let summary = success(output);
+        assert_eq!(summary.lines().count(), 1);
+        assert_eq!(json_number(&summary, "workers"), workers as f64);
+        assert_eq!(json_number(&summary, "copied"), 3.0);
+        assert_eq!(json_number(&summary, "failures"), 0.0);
+        assert!(json_number(&summary, "peak_active_workers") <= workers as f64);
+        assert!(json_number(&summary, "worker_utilization") <= 1.0);
+        assert_eq!(
+            json_number(&summary, "bytes"),
+            json_number(&summary, "transferred_bytes")
+        );
+        if workers == 1 {
+            assert_eq!(json_number(&summary, "chunked_files"), 0.0);
+        }
+        for name in ["large", "other", "small"] {
+            let source = f.path(format!("source/{name}"));
+            let destination = f.path(format!("{dest}/{name}"));
+            assert_eq!(fs::read(&destination).unwrap(), fs::read(&source).unwrap());
+            let before = fs::metadata(source).unwrap();
+            let after = fs::metadata(destination).unwrap();
+            assert_eq!(before.mode() & 0o7777, after.mode() & 0o7777);
+            assert_eq!(
+                (before.mtime(), before.mtime_nsec()),
+                (after.mtime(), after.mtime_nsec())
+            );
+        }
+        no_temporaries(&f.path(dest));
+    }
+    let single = success(f.copy(&[
+        "source/large",
+        "single",
+        "--workers=4",
+        "--chunk-size=8M",
+        "--json",
+    ]));
+    // On recognized local storage a lone large file has idle slots to use.
+    if ["btrfs", "ext4", "xfs", "tmpfs", "ramfs", "f2fs", "zfs"]
+        .iter()
+        .any(|fs| single.contains(&format!("\"filesystem\":\"{fs}\"")))
+        && !single.contains("\"kind\":\"hdd\"")
+    {
+        assert_eq!(json_number(&single, "chunked_files"), 1.0);
+        assert_eq!(json_number(&single, "peak_active_workers"), 4.0);
+    }
+}
+
+#[test]
+fn json_dry_run_sync_and_failure_keep_stdout_machine_readable() {
+    let f = Fixture::new();
+    fs::create_dir(f.path("source")).unwrap();
+    fs::write(f.path("source/a\"\n"), b"data").unwrap();
+    let output = f.copy(&["source", "dest", "--dry-run", "--json"]);
+    assert!(String::from_utf8_lossy(&output.stderr).contains("mkdir"));
+    let summary = success(output);
+    assert_eq!(summary.lines().count(), 1);
+    assert!(summary.starts_with('{') && summary.trim_end().ends_with('}'));
+    assert_eq!(json_number(&summary, "bytes"), 4.0);
+    assert_eq!(json_number(&summary, "transferred_bytes"), 0.0);
+    assert_eq!(json_number(&summary, "throughput_bytes_per_second"), 0.0);
+    assert!(!f.path("dest").exists());
+    success(f.copy(&["source", "dest"]));
+    let summary = success(f.copy(&["source/.", "dest", "--sync", "--json"]));
+    assert_eq!(json_number(&summary, "skipped"), 1.0);
+    assert_eq!(json_number(&summary, "transferred_bytes"), 0.0);
+    let output = f.copy(&["missing", "dest", "--json"]);
+    assert_eq!(output.status.code(), Some(1));
+    let summary = String::from_utf8(output.stdout).unwrap();
+    assert_eq!(summary.lines().count(), 1);
+    assert_eq!(json_number(&summary, "failures"), 1.0);
 }

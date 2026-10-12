@@ -1,0 +1,3375 @@
+{
+  "platform": "Linux-6.19.14-108.fc42.x86_64-x86_64-with-glibc2.41",
+  "cpus": 8,
+  "cache": "warm (source read before each sample)",
+  "durability": "tool completion plus file and directory fsync for every tool",
+  "runs": 3,
+  "tools": {
+    "tcopy": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--json"
+    ],
+    "tcopy --sync": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--sync",
+      "--json"
+    ],
+    "tcopy chunks": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--workers=4",
+      "--chunk-size=8M",
+      "--json"
+    ],
+    "tcopy chunks --sync": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--workers=4",
+      "--chunk-size=8M",
+      "--sync",
+      "--json"
+    ],
+    "tcopy auto": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--auto",
+      "--json"
+    ],
+    "tcopy auto --sync": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--auto",
+      "--sync",
+      "--json"
+    ],
+    "tcopy tune": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--tune",
+      "--json"
+    ],
+    "tcopy tune --sync": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--tune",
+      "--sync",
+      "--json"
+    ],
+    "cp": [
+      "cp",
+      "-rp",
+      "--reflink=never",
+      "--sparse=never"
+    ],
+    "rsync": [
+      "rsync",
+      "-rltp"
+    ]
+  },
+  "samples": [
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.6886289910180494,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.878535,\"throughput_bytes_per_second\":100146307.701,\"worker_utilization\":0.927749,\"peak_active_workers\":4,\"metadata_seconds\":3.171192,\"transfer_seconds\":0.096021,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587943333888}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6563848192,\"cpu_pressure_avg10\":0.01,\"io_pressure_avg10\":0},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.878535,
+        "throughput_bytes_per_second": 100146307.701,
+        "worker_utilization": 0.927749,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.171192,
+        "transfer_seconds": 0.096021,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587943333888
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6563848192,
+          "cpu_pressure_avg10": 0.01,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.8378367649856955,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.008163,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.183693,\"peak_active_workers\":4,\"metadata_seconds\":0.012477,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587943333888}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6465355776,\"cpu_pressure_avg10\":0.19,\"io_pressure_avg10\":1.44},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.008163,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.183693,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.012477,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587943333888
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6465355776,
+          "cpu_pressure_avg10": 0.19,
+          "io_pressure_avg10": 1.44
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.1540039750107098,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.9043756710016169,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.6230063459952362,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.835452,\"throughput_bytes_per_second\":105310732.006,\"worker_utilization\":0.942261,\"peak_active_workers\":4,\"metadata_seconds\":3.088627,\"transfer_seconds\":0.070366,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587943333888}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6369964032,\"cpu_pressure_avg10\":0.12,\"io_pressure_avg10\":3.9},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.835452,
+        "throughput_bytes_per_second": 105310732.006,
+        "worker_utilization": 0.942261,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.088627,
+        "transfer_seconds": 0.070366,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587943333888
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6369964032,
+          "cpu_pressure_avg10": 0.12,
+          "io_pressure_avg10": 3.9
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 1.7155701959854923,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.885946,\"throughput_bytes_per_second\":99308660.446,\"worker_utilization\":0.937717,\"peak_active_workers\":4,\"metadata_seconds\":3.249749,\"transfer_seconds\":0.077785,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587943333888}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6442614784,\"cpu_pressure_avg10\":0.28,\"io_pressure_avg10\":5},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.885946,
+        "throughput_bytes_per_second": 99308660.446,
+        "worker_utilization": 0.937717,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.249749,
+        "transfer_seconds": 0.077785,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587943333888
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6442614784,
+          "cpu_pressure_avg10": 0.28,
+          "io_pressure_avg10": 5
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune --sync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 2.4739969310176093,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.727365,\"throughput_bytes_per_second\":50934268.771,\"worker_utilization\":0.691110,\"peak_active_workers\":2,\"metadata_seconds\":2.335894,\"transfer_seconds\":0.060321,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":2,\"tuning_state\":\"short-workload\",\"tuning_samples\":1,\"tuning_best_score\":4148232.774,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6446710784,\"cpu_pressure_avg10\":0.41,\"io_pressure_avg10\":5.55},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.727365,
+        "throughput_bytes_per_second": 50934268.771,
+        "worker_utilization": 0.69111,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.335894,
+        "transfer_seconds": 0.060321,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 2,
+        "tuning_state": "short-workload",
+        "tuning_samples": 1,
+        "tuning_best_score": 4148232.774,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6446710784,
+          "cpu_pressure_avg10": 0.41,
+          "io_pressure_avg10": 5.55
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune --sync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.7762337760068476,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.010731,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.293750,\"peak_active_workers\":1,\"metadata_seconds\":0.011418,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":0,\"tuning_state\":\"insufficient-work\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6410706944,\"cpu_pressure_avg10\":0.52,\"io_pressure_avg10\":6.17},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.010731,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.29375,
+        "peak_active_workers": 1,
+        "metadata_seconds": 0.011418,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 0,
+        "tuning_state": "insufficient-work",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6410706944,
+          "cpu_pressure_avg10": 0.52,
+          "io_pressure_avg10": 6.17
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 0.9857157859951258,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.8408955479972064,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.451541939022718,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.724873,\"throughput_bytes_per_second\":121375936.853,\"worker_utilization\":0.910907,\"peak_active_workers\":4,\"metadata_seconds\":2.566748,\"transfer_seconds\":0.079665,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6578548736,\"cpu_pressure_avg10\":0.6,\"io_pressure_avg10\":6.5},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.724873,
+        "throughput_bytes_per_second": 121375936.853,
+        "worker_utilization": 0.910907,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.566748,
+        "transfer_seconds": 0.079665,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6578548736,
+          "cpu_pressure_avg10": 0.6,
+          "io_pressure_avg10": 6.5
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.8015944720245898,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006726,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.282076,\"peak_active_workers\":4,\"metadata_seconds\":0.012507,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6654136320,\"cpu_pressure_avg10\":0.86,\"io_pressure_avg10\":6.59},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.006726,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.282076,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.012507,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6654136320,
+          "cpu_pressure_avg10": 0.86,
+          "io_pressure_avg10": 6.59
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 2.2094598959956784,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.427751,\"throughput_bytes_per_second\":61622859.510,\"worker_utilization\":0.977068,\"peak_active_workers\":2,\"metadata_seconds\":2.737601,\"transfer_seconds\":0.060424,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6657097728,\"cpu_pressure_avg10\":0.88,\"io_pressure_avg10\":7.03},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.427751,
+        "throughput_bytes_per_second": 61622859.51,
+        "worker_utilization": 0.977068,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.737601,
+        "transfer_seconds": 0.060424,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6657097728,
+          "cpu_pressure_avg10": 0.88,
+          "io_pressure_avg10": 7.03
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 2.3506022990040947,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.503437,\"throughput_bytes_per_second\":58520623.541,\"worker_utilization\":0.976202,\"peak_active_workers\":2,\"metadata_seconds\":2.869658,\"transfer_seconds\":0.071066,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6413430784,\"cpu_pressure_avg10\":0.9,\"io_pressure_avg10\":7.38},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.503437,
+        "throughput_bytes_per_second": 58520623.541,
+        "worker_utilization": 0.976202,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.869658,
+        "transfer_seconds": 0.071066,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6413430784,
+          "cpu_pressure_avg10": 0.9,
+          "io_pressure_avg10": 7.38
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.6581966880185064,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.848789,\"throughput_bytes_per_second\":103655949.630,\"worker_utilization\":0.932918,\"peak_active_workers\":4,\"metadata_seconds\":3.091003,\"transfer_seconds\":0.084035,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6580404224,\"cpu_pressure_avg10\":0.92,\"io_pressure_avg10\":7.68},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.848789,
+        "throughput_bytes_per_second": 103655949.63,
+        "worker_utilization": 0.932918,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.091003,
+        "transfer_seconds": 0.084035,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6580404224,
+          "cpu_pressure_avg10": 0.92,
+          "io_pressure_avg10": 7.68
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 1.7859220009995624,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.968778,\"throughput_bytes_per_second\":90817573.755,\"worker_utilization\":0.941964,\"peak_active_workers\":4,\"metadata_seconds\":3.567943,\"transfer_seconds\":0.088063,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6491848704,\"cpu_pressure_avg10\":0.93,\"io_pressure_avg10\":7.91},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.968778,
+        "throughput_bytes_per_second": 90817573.755,
+        "worker_utilization": 0.941964,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.567943,
+        "transfer_seconds": 0.088063,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6491848704,
+          "cpu_pressure_avg10": 0.93,
+          "io_pressure_avg10": 7.91
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto --sync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 2.2753333979926538,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.493053,\"throughput_bytes_per_second\":58927641.289,\"worker_utilization\":0.976537,\"peak_active_workers\":2,\"metadata_seconds\":2.859327,\"transfer_seconds\":0.065904,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6257090560,\"cpu_pressure_avg10\":0.94,\"io_pressure_avg10\":7.93},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.493053,
+        "throughput_bytes_per_second": 58927641.289,
+        "worker_utilization": 0.976537,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.859327,
+        "transfer_seconds": 0.065904,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6257090560,
+          "cpu_pressure_avg10": 0.94,
+          "io_pressure_avg10": 7.93
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto --sync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.8096055409987457,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.005896,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.474642,\"peak_active_workers\":2,\"metadata_seconds\":0.010263,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6257737728,\"cpu_pressure_avg10\":0.95,\"io_pressure_avg10\":8.12},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.005896,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.474642,
+        "peak_active_workers": 2,
+        "metadata_seconds": 0.010263,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6257737728,
+          "cpu_pressure_avg10": 0.95,
+          "io_pressure_avg10": 8.12
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 2.646959228994092,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.800439,\"throughput_bytes_per_second\":48867025.444,\"worker_utilization\":0.701088,\"peak_active_workers\":2,\"metadata_seconds\":2.464192,\"transfer_seconds\":0.070755,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":2,\"tuning_state\":\"short-workload\",\"tuning_samples\":1,\"tuning_best_score\":4049937.364,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6183268352,\"cpu_pressure_avg10\":0.96,\"io_pressure_avg10\":8.28},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.800439,
+        "throughput_bytes_per_second": 48867025.444,
+        "worker_utilization": 0.701088,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.464192,
+        "transfer_seconds": 0.070755,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 2,
+        "tuning_state": "short-workload",
+        "tuning_samples": 1,
+        "tuning_best_score": 4049937.364,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6183268352,
+          "cpu_pressure_avg10": 0.96,
+          "io_pressure_avg10": 8.28
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 2.7879950540082064,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.947278,\"throughput_bytes_per_second\":45182080.393,\"worker_utilization\":0.724163,\"peak_active_workers\":2,\"metadata_seconds\":2.754054,\"transfer_seconds\":0.073569,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":2,\"tuning_state\":\"short-workload\",\"tuning_samples\":1,\"tuning_best_score\":3787793.833,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6253998080,\"cpu_pressure_avg10\":0.79,\"io_pressure_avg10\":8.41},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.947278,
+        "throughput_bytes_per_second": 45182080.393,
+        "worker_utilization": 0.724163,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.754054,
+        "transfer_seconds": 0.073569,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 2,
+        "tuning_state": "short-workload",
+        "tuning_samples": 1,
+        "tuning_best_score": 3787793.833,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6253998080,
+          "cpu_pressure_avg10": 0.79,
+          "io_pressure_avg10": 8.41
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.6243726389948279,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.846643,\"throughput_bytes_per_second\":103918733.220,\"worker_utilization\":0.930990,\"peak_active_workers\":4,\"metadata_seconds\":3.074092,\"transfer_seconds\":0.087131,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6137229312,\"cpu_pressure_avg10\":0.71,\"io_pressure_avg10\":8.42},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.846643,
+        "throughput_bytes_per_second": 103918733.22,
+        "worker_utilization": 0.93099,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.074092,
+        "transfer_seconds": 0.087131,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6137229312,
+          "cpu_pressure_avg10": 0.71,
+          "io_pressure_avg10": 8.42
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.8467577749979682,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.008215,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.178483,\"peak_active_workers\":4,\"metadata_seconds\":0.012221,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6266970112,\"cpu_pressure_avg10\":0.76,\"io_pressure_avg10\":8.34},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.008215,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.178483,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.012221,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6266970112,
+          "cpu_pressure_avg10": 0.76,
+          "io_pressure_avg10": 8.34
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto --sync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 2.178501682006754,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.523537,\"throughput_bytes_per_second\":57748584.800,\"worker_utilization\":0.979647,\"peak_active_workers\":2,\"metadata_seconds\":2.939966,\"transfer_seconds\":0.053936,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":587767545856}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6146953216,\"cpu_pressure_avg10\":0.76,\"io_pressure_avg10\":8.34},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.523537,
+        "throughput_bytes_per_second": 57748584.8,
+        "worker_utilization": 0.979647,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.939966,
+        "transfer_seconds": 0.053936,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 587767545856
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6146953216,
+          "cpu_pressure_avg10": 0.76,
+          "io_pressure_avg10": 8.34
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto --sync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.8464226420037448,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.005734,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.487147,\"peak_active_workers\":2,\"metadata_seconds\":0.010150,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706844160}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6190755840,\"cpu_pressure_avg10\":0.51,\"io_pressure_avg10\":8.89},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.005734,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.487147,
+        "peak_active_workers": 2,
+        "metadata_seconds": 0.01015,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706844160
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6190755840,
+          "cpu_pressure_avg10": 0.51,
+          "io_pressure_avg10": 8.89
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.6448445420246571,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.836048,\"throughput_bytes_per_second\":105235623.102,\"worker_utilization\":0.929294,\"peak_active_workers\":4,\"metadata_seconds\":3.038499,\"transfer_seconds\":0.078630,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706844160}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6099861504,\"cpu_pressure_avg10\":0.51,\"io_pressure_avg10\":8.89},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.836048,
+        "throughput_bytes_per_second": 105235623.102,
+        "worker_utilization": 0.929294,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.038499,
+        "transfer_seconds": 0.07863,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706844160
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6099861504,
+          "cpu_pressure_avg10": 0.51,
+          "io_pressure_avg10": 8.89
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.8009279579855502,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006872,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.216900,\"peak_active_workers\":4,\"metadata_seconds\":0.011126,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706844160}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6388998144,\"cpu_pressure_avg10\":0.6,\"io_pressure_avg10\":8.73},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.006872,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.2169,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.011126,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706844160
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6388998144,
+          "cpu_pressure_avg10": 0.6,
+          "io_pressure_avg10": 8.73
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 2.6314197479805443,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.807010,\"throughput_bytes_per_second\":48689319.729,\"worker_utilization\":0.702069,\"peak_active_workers\":2,\"metadata_seconds\":2.476559,\"transfer_seconds\":0.071293,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706844160}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":2,\"tuning_state\":\"short-workload\",\"tuning_samples\":1,\"tuning_best_score\":4066292.828,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6291976192,\"cpu_pressure_avg10\":0.6,\"io_pressure_avg10\":8.73},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.80701,
+        "throughput_bytes_per_second": 48689319.729,
+        "worker_utilization": 0.702069,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.476559,
+        "transfer_seconds": 0.071293,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706844160
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 2,
+        "tuning_state": "short-workload",
+        "tuning_samples": 1,
+        "tuning_best_score": 4066292.828,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6291976192,
+          "cpu_pressure_avg10": 0.6,
+          "io_pressure_avg10": 8.73
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 2.6631443340156693,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.873595,\"throughput_bytes_per_second\":46958952.212,\"worker_utilization\":0.707953,\"peak_active_workers\":2,\"metadata_seconds\":2.576009,\"transfer_seconds\":0.084869,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706844160}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":2,\"tuning_state\":\"short-workload\",\"tuning_samples\":1,\"tuning_best_score\":4082002.963,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6405468160,\"cpu_pressure_avg10\":0.58,\"io_pressure_avg10\":8.67},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.873595,
+        "throughput_bytes_per_second": 46958952.212,
+        "worker_utilization": 0.707953,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.576009,
+        "transfer_seconds": 0.084869,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706844160
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 2,
+        "tuning_state": "short-workload",
+        "tuning_samples": 1,
+        "tuning_best_score": 4082002.963,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6405468160,
+          "cpu_pressure_avg10": 0.58,
+          "io_pressure_avg10": 8.67
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.2127402820042334,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.8683116699976381,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 3.338993171986658,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 4.146889433992328,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 6.812566063017584,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":3.986063,\"throughput_bytes_per_second\":22072428.043,\"worker_utilization\":0.980447,\"peak_active_workers\":4,\"metadata_seconds\":15.585047,\"transfer_seconds\":0.071259,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706844160}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6659145728,\"cpu_pressure_avg10\":0.25,\"io_pressure_avg10\":11.58},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 3.986063,
+        "throughput_bytes_per_second": 22072428.043,
+        "worker_utilization": 0.980447,
+        "peak_active_workers": 4,
+        "metadata_seconds": 15.585047,
+        "transfer_seconds": 0.071259,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706844160
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6659145728,
+          "cpu_pressure_avg10": 0.25,
+          "io_pressure_avg10": 11.58
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 1.7323778120044153,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.908086,\"throughput_bytes_per_second\":96887433.090,\"worker_utilization\":0.942415,\"peak_active_workers\":4,\"metadata_seconds\":3.358230,\"transfer_seconds\":0.068645,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706844160}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6721970176,\"cpu_pressure_avg10\":0.11,\"io_pressure_avg10\":12.29},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.908086,
+        "throughput_bytes_per_second": 96887433.09,
+        "worker_utilization": 0.942415,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.35823,
+        "transfer_seconds": 0.068645,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706844160
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6721970176,
+          "cpu_pressure_avg10": 0.11,
+          "io_pressure_avg10": 12.29
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune --sync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 2.844319030002225,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":2.135991,\"throughput_bytes_per_second\":41190291.719,\"worker_utilization\":0.498177,\"peak_active_workers\":1,\"metadata_seconds\":2.084154,\"transfer_seconds\":0.054803,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706844160}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6669774848,\"cpu_pressure_avg10\":0.45,\"io_pressure_avg10\":11.51},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 2.135991,
+        "throughput_bytes_per_second": 41190291.719,
+        "worker_utilization": 0.498177,
+        "peak_active_workers": 1,
+        "metadata_seconds": 2.084154,
+        "transfer_seconds": 0.054803,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706844160
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6669774848,
+          "cpu_pressure_avg10": 0.45,
+          "io_pressure_avg10": 11.51
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune --sync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.8279792749963235,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.008473,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.279857,\"peak_active_workers\":1,\"metadata_seconds\":0.009145,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6722260992,\"cpu_pressure_avg10\":0.37,\"io_pressure_avg10\":10.87},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.008473,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.279857,
+        "peak_active_workers": 1,
+        "metadata_seconds": 0.009145,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6722260992,
+          "cpu_pressure_avg10": 0.37,
+          "io_pressure_avg10": 10.87
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 2.8210430830076803,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":2.029744,\"throughput_bytes_per_second\":43346397.598,\"worker_utilization\":0.498163,\"peak_active_workers\":1,\"metadata_seconds\":1.976327,\"transfer_seconds\":0.056026,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6685986816,\"cpu_pressure_avg10\":0.37,\"io_pressure_avg10\":10.87},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 2.029744,
+        "throughput_bytes_per_second": 43346397.598,
+        "worker_utilization": 0.498163,
+        "peak_active_workers": 1,
+        "metadata_seconds": 1.976327,
+        "transfer_seconds": 0.056026,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6685986816,
+          "cpu_pressure_avg10": 0.37,
+          "io_pressure_avg10": 10.87
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 2.4329892710084096,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.645399,\"throughput_bytes_per_second\":53471568.019,\"worker_utilization\":0.974951,\"peak_active_workers\":2,\"metadata_seconds\":3.133425,\"transfer_seconds\":0.081528,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6718406656,\"cpu_pressure_avg10\":0.25,\"io_pressure_avg10\":9.89},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.645399,
+        "throughput_bytes_per_second": 53471568.019,
+        "worker_utilization": 0.974951,
+        "peak_active_workers": 2,
+        "metadata_seconds": 3.133425,
+        "transfer_seconds": 0.081528,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6718406656,
+          "cpu_pressure_avg10": 0.25,
+          "io_pressure_avg10": 9.89
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.608542485977523,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.792807,\"throughput_bytes_per_second\":110975402.175,\"worker_utilization\":0.925295,\"peak_active_workers\":4,\"metadata_seconds\":2.853336,\"transfer_seconds\":0.088322,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6611279872,\"cpu_pressure_avg10\":0.2,\"io_pressure_avg10\":9.73},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.792807,
+        "throughput_bytes_per_second": 110975402.175,
+        "worker_utilization": 0.925295,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.853336,
+        "transfer_seconds": 0.088322,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6611279872,
+          "cpu_pressure_avg10": 0.2,
+          "io_pressure_avg10": 9.73
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 1.6190898210043088,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.929549,\"throughput_bytes_per_second\":94650257.359,\"worker_utilization\":0.932991,\"peak_active_workers\":4,\"metadata_seconds\":3.400159,\"transfer_seconds\":0.073474,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6664466432,\"cpu_pressure_avg10\":0.34,\"io_pressure_avg10\":9.6},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.929549,
+        "throughput_bytes_per_second": 94650257.359,
+        "worker_utilization": 0.932991,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.400159,
+        "transfer_seconds": 0.073474,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6664466432,
+          "cpu_pressure_avg10": 0.34,
+          "io_pressure_avg10": 9.6
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune --sync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 2.577857671014499,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.756398,\"throughput_bytes_per_second\":50092344.318,\"worker_utilization\":0.695877,\"peak_active_workers\":2,\"metadata_seconds\":2.394601,\"transfer_seconds\":0.059761,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":2,\"tuning_state\":\"short-workload\",\"tuning_samples\":1,\"tuning_best_score\":4205377.849,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6415134720,\"cpu_pressure_avg10\":0.64,\"io_pressure_avg10\":9.31},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.756398,
+        "throughput_bytes_per_second": 50092344.318,
+        "worker_utilization": 0.695877,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.394601,
+        "transfer_seconds": 0.059761,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 2,
+        "tuning_state": "short-workload",
+        "tuning_samples": 1,
+        "tuning_best_score": 4205377.849,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6415134720,
+          "cpu_pressure_avg10": 0.64,
+          "io_pressure_avg10": 9.31
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune --sync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.8166277910058852,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.009031,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.307673,\"peak_active_workers\":1,\"metadata_seconds\":0.010137,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":0,\"tuning_state\":\"insufficient-work\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6691524608,\"cpu_pressure_avg10\":0.53,\"io_pressure_avg10\":9.07},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.009031,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.307673,
+        "peak_active_workers": 1,
+        "metadata_seconds": 0.010137,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 0,
+        "tuning_state": "insufficient-work",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6691524608,
+          "cpu_pressure_avg10": 0.53,
+          "io_pressure_avg10": 9.07
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 2.6483177740010433,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.825058,\"throughput_bytes_per_second\":48207815.065,\"worker_utilization\":0.703185,\"peak_active_workers\":2,\"metadata_seconds\":2.503443,\"transfer_seconds\":0.074255,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":2,\"tuning_state\":\"short-workload\",\"tuning_samples\":1,\"tuning_best_score\":4090816.669,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6672187392,\"cpu_pressure_avg10\":0.61,\"io_pressure_avg10\":9.05},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.825058,
+        "throughput_bytes_per_second": 48207815.065,
+        "worker_utilization": 0.703185,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.503443,
+        "transfer_seconds": 0.074255,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 2,
+        "tuning_state": "short-workload",
+        "tuning_samples": 1,
+        "tuning_best_score": 4090816.669,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6672187392,
+          "cpu_pressure_avg10": 0.61,
+          "io_pressure_avg10": 9.05
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy tune",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 2.7028591870039236,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.879882,\"throughput_bytes_per_second\":46801928.166,\"worker_utilization\":0.712012,\"peak_active_workers\":2,\"metadata_seconds\":2.616381,\"transfer_seconds\":0.067776,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":true,\"final_workers\":1,\"concurrency_adjustments\":2,\"tuning_state\":\"short-workload\",\"tuning_samples\":1,\"tuning_best_score\":4057970.867,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6430908416,\"cpu_pressure_avg10\":0.68,\"io_pressure_avg10\":8.86},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.879882,
+        "throughput_bytes_per_second": 46801928.166,
+        "worker_utilization": 0.712012,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.616381,
+        "transfer_seconds": 0.067776,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 2,
+        "tuning_state": "short-workload",
+        "tuning_samples": 1,
+        "tuning_best_score": 4057970.867,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6430908416,
+          "cpu_pressure_avg10": 0.68,
+          "io_pressure_avg10": 8.86
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.6509454520128202,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.838918,\"throughput_bytes_per_second\":104875622.514,\"worker_utilization\":0.910800,\"peak_active_workers\":4,\"metadata_seconds\":2.963498,\"transfer_seconds\":0.100086,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6274314240,\"cpu_pressure_avg10\":0.45,\"io_pressure_avg10\":8.72},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.838918,
+        "throughput_bytes_per_second": 104875622.514,
+        "worker_utilization": 0.9108,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.963498,
+        "transfer_seconds": 0.100086,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6274314240,
+          "cpu_pressure_avg10": 0.45,
+          "io_pressure_avg10": 8.72
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.8466918110207189,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006718,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.212774,\"peak_active_workers\":4,\"metadata_seconds\":0.010764,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6392037376,\"cpu_pressure_avg10\":0.45,\"io_pressure_avg10\":8.72},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.006718,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.212774,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.010764,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6392037376,
+          "cpu_pressure_avg10": 0.45,
+          "io_pressure_avg10": 8.72
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.6387454679934308,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.842127,\"throughput_bytes_per_second\":104476062.168,\"worker_utilization\":0.911542,\"peak_active_workers\":4,\"metadata_seconds\":2.977946,\"transfer_seconds\":0.100727,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6506164224,\"cpu_pressure_avg10\":0.55,\"io_pressure_avg10\":8.59},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.842127,
+        "throughput_bytes_per_second": 104476062.168,
+        "worker_utilization": 0.911542,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.977946,
+        "transfer_seconds": 0.100727,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6506164224,
+          "cpu_pressure_avg10": 0.55,
+          "io_pressure_avg10": 8.59
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 1.6955002959875856,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.889745,\"throughput_bytes_per_second\":98884569.427,\"worker_utilization\":0.933476,\"peak_active_workers\":4,\"metadata_seconds\":3.245532,\"transfer_seconds\":0.080358,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"manual\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6389506048,\"cpu_pressure_avg10\":0.63,\"io_pressure_avg10\":8.48},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.889745,
+        "throughput_bytes_per_second": 98884569.427,
+        "worker_utilization": 0.933476,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.245532,
+        "transfer_seconds": 0.080358,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "manual",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6389506048,
+          "cpu_pressure_avg10": 0.63,
+          "io_pressure_avg10": 8.48
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.7673503340047318,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.895728,\"throughput_bytes_per_second\":98224057.580,\"worker_utilization\":0.921245,\"peak_active_workers\":4,\"metadata_seconds\":3.206054,\"transfer_seconds\":0.102240,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6224670720,\"cpu_pressure_avg10\":0.88,\"io_pressure_avg10\":8.4},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.895728,
+        "throughput_bytes_per_second": 98224057.58,
+        "worker_utilization": 0.921245,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.206054,
+        "transfer_seconds": 0.10224,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6224670720,
+          "cpu_pressure_avg10": 0.88,
+          "io_pressure_avg10": 8.4
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 1.4513697139918804,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.849580,\"throughput_bytes_per_second\":103559454.400,\"worker_utilization\":0.927381,\"peak_active_workers\":4,\"metadata_seconds\":3.076349,\"transfer_seconds\":0.079005,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585706377216}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6313005056,\"cpu_pressure_avg10\":0.9,\"io_pressure_avg10\":8.32},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.84958,
+        "throughput_bytes_per_second": 103559454.4,
+        "worker_utilization": 0.927381,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.076349,
+        "transfer_seconds": 0.079005,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585706377216
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6313005056,
+          "cpu_pressure_avg10": 0.9,
+          "io_pressure_avg10": 8.32
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.1445436899957713,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.9315292120154481,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy auto",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 2.2629171279841103,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.485272,\"throughput_bytes_per_second\":59236340.978,\"worker_utilization\":0.975055,\"peak_active_workers\":2,\"metadata_seconds\":2.834597,\"transfer_seconds\":0.070279,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585617686528}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6273830912,\"cpu_pressure_avg10\":0.75,\"io_pressure_avg10\":8.21},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.485272,
+        "throughput_bytes_per_second": 59236340.978,
+        "worker_utilization": 0.975055,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.834597,
+        "transfer_seconds": 0.070279,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585617686528
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6273830912,
+          "cpu_pressure_avg10": 0.75,
+          "io_pressure_avg10": 8.21
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 2.4714697529852856,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.626116,\"throughput_bytes_per_second\":54105657.264,\"worker_utilization\":0.980120,\"peak_active_workers\":2,\"metadata_seconds\":3.131765,\"transfer_seconds\":0.062533,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585617686528}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6256435200,\"cpu_pressure_avg10\":0.8,\"io_pressure_avg10\":8.36},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.626116,
+        "throughput_bytes_per_second": 54105657.264,
+        "worker_utilization": 0.98012,
+        "peak_active_workers": 2,
+        "metadata_seconds": 3.131765,
+        "transfer_seconds": 0.062533,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585617686528
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6256435200,
+          "cpu_pressure_avg10": 0.8,
+          "io_pressure_avg10": 8.36
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto --sync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 2.230441260006046,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":1.395460,\"throughput_bytes_per_second\":63048786.699,\"worker_utilization\":0.974807,\"peak_active_workers\":2,\"metadata_seconds\":2.661845,\"transfer_seconds\":0.065985,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585617686528}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6065745920,\"cpu_pressure_avg10\":0.83,\"io_pressure_avg10\":8.29},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 1.39546,
+        "throughput_bytes_per_second": 63048786.699,
+        "worker_utilization": 0.974807,
+        "peak_active_workers": 2,
+        "metadata_seconds": 2.661845,
+        "transfer_seconds": 0.065985,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585617686528
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6065745920,
+          "cpu_pressure_avg10": 0.83,
+          "io_pressure_avg10": 8.29
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy auto --sync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.8202581100049429,
+      "stdout": "{\"dry_run\":false,\"workers\":2,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.005978,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.495434,\"peak_active_workers\":2,\"metadata_seconds\":0.010695,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585617686528}],\"auto\":true,\"final_workers\":2,\"concurrency_adjustments\":0,\"tuning_state\":\"pressure-only\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"automatic\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6119817216,\"cpu_pressure_avg10\":0.68,\"io_pressure_avg10\":8.6},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.005978,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.495434,
+        "peak_active_workers": 2,
+        "metadata_seconds": 0.010695,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585617686528
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 0,
+        "tuning_state": "pressure-only",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6119817216,
+          "cpu_pressure_avg10": 0.68,
+          "io_pressure_avg10": 8.6
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.6820313450007234,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.866800,\"throughput_bytes_per_second\":101502157.890,\"worker_utilization\":0.922586,\"peak_active_workers\":4,\"metadata_seconds\":3.108199,\"transfer_seconds\":0.097717,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585617686528}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6016856064,\"cpu_pressure_avg10\":0.56,\"io_pressure_avg10\":8.67},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.8668,
+        "throughput_bytes_per_second": 101502157.89,
+        "worker_utilization": 0.922586,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.108199,
+        "transfer_seconds": 0.097717,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585617686528
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6016856064,
+          "cpu_pressure_avg10": 0.56,
+          "io_pressure_avg10": 8.67
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.838770389003912,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006428,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.290286,\"peak_active_workers\":4,\"metadata_seconds\":0.012159,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true,\"available_bytes\":585617686528}],\"auto\":false,\"final_workers\":4,\"concurrency_adjustments\":0,\"tuning_state\":\"disabled\",\"tuning_samples\":0,\"tuning_best_score\":0.000,\"chunk_policy\":\"streaming\",\"hardware\":{\"logical_cpus\":8,\"physical_cores\":4,\"available_memory_bytes\":6049878016,\"cpu_pressure_avg10\":0.64,\"io_pressure_avg10\":8.55},\"workload\":{\"small_files\":1000,\"medium_files\":16,\"large_files\":1}}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.006428,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.290286,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.012159,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585617686528
+          }
+        ],
+        "auto": false,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "streaming",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6049878016,
+          "cpu_pressure_avg10": 0.64,
+          "io_pressure_avg10": 8.55
+        },
+        "workload": {
+          "small_files": 1000,
+          "medium_files": 16,
+          "large_files": 1
+        }
+      }
+    },
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 3.906718297977932,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 3.9723226219939534,
+      "stdout": ""
+    }
+  ],
+  "tool_versions": {
+    "tcopy": "TurboCopy 0.1.0",
+    "tcopy --sync": "TurboCopy 0.1.0",
+    "tcopy chunks": "TurboCopy 0.1.0",
+    "tcopy chunks --sync": "TurboCopy 0.1.0",
+    "tcopy auto": "TurboCopy 0.1.0",
+    "tcopy auto --sync": "TurboCopy 0.1.0",
+    "tcopy tune": "TurboCopy 0.1.0",
+    "tcopy tune --sync": "TurboCopy 0.1.0",
+    "cp": "cp (GNU coreutils) 9.6",
+    "rsync": "rsync  version 3.4.1  protocol version 32"
+  },
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14) (Fedora 1.95.0-5.fc42)",
+  "files": 1017,
+  "bytes": 87982080,
+  "filesystem": "btrfs /dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941[/home/ewave/projects/turboCopy]",
+  "medians_seconds": {
+    "tcopy": {
+      "first-copy": 1.7673503340047318,
+      "unchanged-incremental": 1.7155701959854923
+    },
+    "tcopy --sync": {
+      "first-copy": 1.6820313450007234,
+      "unchanged-incremental": 0.838770389003912
+    },
+    "tcopy chunks": {
+      "first-copy": 1.6387454679934308,
+      "unchanged-incremental": 1.6955002959875856
+    },
+    "tcopy chunks --sync": {
+      "first-copy": 1.6448445420246571,
+      "unchanged-incremental": 0.8015944720245898
+    },
+    "tcopy auto": {
+      "first-copy": 2.2629171279841103,
+      "unchanged-incremental": 2.4329892710084096
+    },
+    "tcopy auto --sync": {
+      "first-copy": 2.230441260006046,
+      "unchanged-incremental": 0.8202581100049429
+    },
+    "tcopy tune": {
+      "first-copy": 2.646959228994092,
+      "unchanged-incremental": 2.7028591870039236
+    },
+    "tcopy tune --sync": {
+      "first-copy": 2.577857671014499,
+      "unchanged-incremental": 0.8166277910058852
+    },
+    "cp": {
+      "first-copy": 1.1445436899957713,
+      "unchanged-incremental": 0.9315292120154481
+    },
+    "rsync": {
+      "first-copy": 1.2127402820042334,
+      "unchanged-incremental": 0.9043756710016169
+    }
+  }
+}

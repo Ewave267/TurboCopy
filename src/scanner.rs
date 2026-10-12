@@ -164,7 +164,7 @@ fn enter(
     name: &OsStr,
     destination_path: PathBuf,
     metadata: Metadata,
-    dry_run: bool,
+    options: Options,
 ) -> io::Result<Frame> {
     let source = source_parent.child(source_name)?;
     let source_path = source.real_path()?;
@@ -187,17 +187,17 @@ fn enter(
                 ));
             }
         }
-        if dry_run && existing.is_none() {
-            println!("mkdir {destination_path:?}");
+        if options.dry_run && existing.is_none() {
+            options.preview(format_args!("mkdir {destination_path:?}"));
             None
-        } else if dry_run {
+        } else if options.dry_run {
             Some(directory.child(name)?)
         } else {
             Some(directory.ensure_child(name)?)
         }
     } else {
-        if dry_run {
-            println!("mkdir {destination_path:?}");
+        if options.dry_run {
+            options.preview(format_args!("mkdir {destination_path:?}"));
         }
         None
     };
@@ -227,6 +227,11 @@ fn preview(
     options: Options,
     pool: &Pool,
 ) -> io::Result<()> {
+    let _timer = crate::progress::Timer::new(&pool.summary.metadata_ns);
+    pool.summary.discover(metadata);
+    pool.summary
+        .discovered
+        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
     if !metadata.is_file() && !metadata.file_type().is_symlink() {
         return Err(fsutil::invalid(format!(
             "{source:?}: unsupported special file"
@@ -240,10 +245,10 @@ fn preview(
     let skip = options.sync
         && metadata.is_file()
         && existing.is_some_and(|m| m.is_file() && m.len() == metadata.len());
-    println!(
+    options.preview(format_args!(
         "{} {source:?} -> {destination:?}",
         if skip { "skip" } else { "copy" }
-    );
+    ));
     pool.summary.observe(if skip {
         Outcome::Skipped
     } else {
@@ -272,18 +277,20 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
             pool.submit(root)
         };
     }
-    let mut stack = vec![enter(
-        &root.source_parent,
-        &root.source_name,
-        Some(&root.parent),
-        &root.name,
-        root.destination.clone(),
-        root.metadata,
-        options.dry_run,
-    )?];
+    let mut stack = vec![pool.summary.metadata(|| {
+        enter(
+            &root.source_parent,
+            &root.source_name,
+            Some(&root.parent),
+            &root.name,
+            root.destination.clone(),
+            root.metadata,
+            options,
+        )
+    })?];
     while let Some(frame) = stack.last_mut() {
         fsutil::check_cancelled()?;
-        let entry = match frame.entries.next() {
+        let entry = match pool.summary.metadata(|| frame.entries.next()) {
             Some(Ok(entry)) => entry,
             Some(Err(error)) => {
                 pool.summary
@@ -294,7 +301,10 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
                 let frame = stack.pop().unwrap();
                 if !options.dry_run {
                     pool.drain();
-                    if let Err(error) = frame.destination.unwrap().preserve(&frame.metadata) {
+                    if let Err(error) = pool
+                        .summary
+                        .metadata(|| frame.destination.unwrap().preserve(&frame.metadata))
+                    {
                         pool.summary
                             .fail(format!("{:?}: metadata: {error}", frame.destination_path));
                     }
@@ -305,7 +315,10 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
         let name = entry.file_name();
         let source_path = frame.source_path.join(&name);
         let destination = frame.destination_path.join(&name);
-        let metadata = match fs::symlink_metadata(frame.source.path().join(&name)) {
+        let metadata = match pool
+            .summary
+            .metadata(|| fs::symlink_metadata(frame.source.path().join(&name)))
+        {
             Ok(metadata) => metadata,
             Err(error) => {
                 pool.summary.fail(format!("{source_path:?}: {error}"));
@@ -313,15 +326,17 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
             }
         };
         if metadata.is_dir() {
-            match enter(
-                &frame.source,
-                &name,
-                frame.destination.as_ref(),
-                &name,
-                destination.clone(),
-                metadata,
-                options.dry_run,
-            ) {
+            match pool.summary.metadata(|| {
+                enter(
+                    &frame.source,
+                    &name,
+                    frame.destination.as_ref(),
+                    &name,
+                    destination.clone(),
+                    metadata,
+                    options,
+                )
+            }) {
                 Ok(child) => stack.push(child),
                 Err(error) => pool
                     .summary

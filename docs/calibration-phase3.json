@@ -1,0 +1,140 @@
+{
+  "platform": "Linux-6.19.14-108.fc42.x86_64-x86_64-with-glibc2.41",
+  "cache": "warm",
+  "methodology": "Actual copy calibration; 3000 seeded random 4 KiB files; per-file and common final fsync; SHA-256/mode/mtime verification; one smoke sample, not a comparative benchmark",
+  "samples": [
+    {
+      "flags": [
+        "--tune"
+      ],
+      "seconds": 6.926161829993362,
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 3000,
+        "skipped": 0,
+        "bytes": 12288000,
+        "failures": 0,
+        "discovered": 3000,
+        "transferred_bytes": 12288000,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 4.601332,
+        "throughput_bytes_per_second": 2670531.27,
+        "worker_utilization": 0.88914,
+        "peak_active_workers": 2,
+        "metadata_seconds": 8.149513,
+        "transfer_seconds": 0.048567,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585779425280
+          }
+        ],
+        "auto": true,
+        "final_workers": 2,
+        "concurrency_adjustments": 1,
+        "tuning_state": "complete",
+        "tuning_samples": 2,
+        "tuning_best_score": 5647127.582,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6294880256,
+          "cpu_pressure_avg10": 0.16,
+          "io_pressure_avg10": 2.8
+        },
+        "workload": {
+          "small_files": 3000,
+          "medium_files": 0,
+          "large_files": 0
+        }
+      },
+      "content_metadata_verified": true
+    },
+    {
+      "flags": [
+        "--tune",
+        "--sync"
+      ],
+      "seconds": 2.4832750459900126,
+      "metrics": {
+        "dry_run": false,
+        "workers": 2,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 3000,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 3000,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.029746,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.34342,
+        "peak_active_workers": 1,
+        "metadata_seconds": 0.032925,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 585781641216
+          }
+        ],
+        "auto": true,
+        "final_workers": 1,
+        "concurrency_adjustments": 0,
+        "tuning_state": "insufficient-work",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 6430543872,
+          "cpu_pressure_avg10": 0.84,
+          "io_pressure_avg10": 5.47
+        },
+        "workload": {
+          "small_files": 3000,
+          "medium_files": 0,
+          "large_files": 0
+        }
+      },
+      "content_metadata_verified": true
+    }
+  ]
+}

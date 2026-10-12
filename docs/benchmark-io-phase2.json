@@ -1,0 +1,95 @@
+{
+  "platform": "Linux-6.19.14-108.fc42.x86_64-x86_64-with-glibc2.41",
+  "python": "3.13.13",
+  "cache": "warm: source read before every sample",
+  "runs": 3,
+  "durability": "create, transfer, mode/mtime, file fsync, directory fsync included",
+  "caveats": [
+    "Python loop overhead included",
+    "copy_file_range may clone/offload; not a physical-copy speed comparison"
+  ],
+  "buffer_bytes": 131072,
+  "samples": [
+    {
+      "method": "pread_pwrite",
+      "run": 1,
+      "seconds": 0.10855315599474125,
+      "status": "verified"
+    },
+    {
+      "method": "sendfile",
+      "run": 1,
+      "seconds": 0.11183181399246678,
+      "status": "verified"
+    },
+    {
+      "method": "copy_file_range",
+      "run": 1,
+      "seconds": 0.010093215998494998,
+      "status": "verified"
+    },
+    {
+      "method": "read_write",
+      "run": 1,
+      "seconds": 0.10601409000810236,
+      "status": "verified"
+    },
+    {
+      "method": "pread_pwrite",
+      "run": 2,
+      "seconds": 0.11112446599872783,
+      "status": "verified"
+    },
+    {
+      "method": "read_write",
+      "run": 2,
+      "seconds": 0.10973371998989023,
+      "status": "verified"
+    },
+    {
+      "method": "copy_file_range",
+      "run": 2,
+      "seconds": 0.009132464998401701,
+      "status": "verified"
+    },
+    {
+      "method": "sendfile",
+      "run": 2,
+      "seconds": 0.11642632400617003,
+      "status": "verified"
+    },
+    {
+      "method": "sendfile",
+      "run": 3,
+      "seconds": 0.10730707598850131,
+      "status": "verified"
+    },
+    {
+      "method": "pread_pwrite",
+      "run": 3,
+      "seconds": 0.10863560900907032,
+      "status": "verified"
+    },
+    {
+      "method": "copy_file_range",
+      "run": 3,
+      "seconds": 0.008707859989954159,
+      "status": "verified"
+    },
+    {
+      "method": "read_write",
+      "run": 3,
+      "seconds": 0.10438976000295952,
+      "status": "verified"
+    }
+  ],
+  "bytes": 134217745,
+  "dataset": "repeated seeded random 1 MiB block plus 17-byte tail",
+  "filesystem": "btrfs /dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941[/home/ewave/projects/turboCopy]",
+  "medians_seconds": {
+    "read_write": 0.10601409000810236,
+    "pread_pwrite": 0.10863560900907032,
+    "sendfile": 0.11183181399246678,
+    "copy_file_range": 0.009132464998401701
+  }
+}

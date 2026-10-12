@@ -1,0 +1,1269 @@
+{
+  "platform": "Linux-6.19.14-108.fc42.x86_64-x86_64-with-glibc2.41",
+  "cpus": 8,
+  "cache": "warm (source read before each sample)",
+  "durability": "tool completion plus file and directory fsync for every tool",
+  "runs": 3,
+  "tools": {
+    "tcopy": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--json"
+    ],
+    "tcopy --sync": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--sync",
+      "--json"
+    ],
+    "tcopy chunks": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--workers=4",
+      "--chunk-size=8M",
+      "--json"
+    ],
+    "tcopy chunks --sync": [
+      "/home/ewave/projects/turboCopy/target/release/tcopy",
+      "--workers=4",
+      "--chunk-size=8M",
+      "--sync",
+      "--json"
+    ],
+    "cp": [
+      "cp",
+      "-rp",
+      "--reflink=never",
+      "--sparse=never"
+    ],
+    "rsync": [
+      "rsync",
+      "-rltp"
+    ]
+  },
+  "samples": [
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.1988936899870168,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.8800651440105867,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.6759186679846607,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.829704,\"throughput_bytes_per_second\":106040339.556,\"worker_utilization\":0.923142,\"peak_active_workers\":4,\"metadata_seconds\":2.991492,\"transfer_seconds\":0.085645,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.829704,
+        "throughput_bytes_per_second": 106040339.556,
+        "worker_utilization": 0.923142,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.991492,
+        "transfer_seconds": 0.085645,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.8361531970149372,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.012089,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.138002,\"peak_active_workers\":4,\"metadata_seconds\":0.017245,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.012089,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.138002,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.017245,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.6182241089991294,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.822739,\"throughput_bytes_per_second\":106938027.200,\"worker_utilization\":0.925106,\"peak_active_workers\":4,\"metadata_seconds\":2.961606,\"transfer_seconds\":0.090681,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.822739,
+        "throughput_bytes_per_second": 106938027.2,
+        "worker_utilization": 0.925106,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.961606,
+        "transfer_seconds": 0.090681,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 1.742863985011354,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.918365,\"throughput_bytes_per_second\":95802923.493,\"worker_utilization\":0.938128,\"peak_active_workers\":4,\"metadata_seconds\":3.377144,\"transfer_seconds\":0.073941,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.918365,
+        "throughput_bytes_per_second": 95802923.493,
+        "worker_utilization": 0.938128,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.377144,
+        "transfer_seconds": 0.073941,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.672988485021051,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.829929,\"throughput_bytes_per_second\":106011519.941,\"worker_utilization\":0.926543,\"peak_active_workers\":4,\"metadata_seconds\":3.007006,\"transfer_seconds\":0.077146,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.829929,
+        "throughput_bytes_per_second": 106011519.941,
+        "worker_utilization": 0.926543,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.007006,
+        "transfer_seconds": 0.077146,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 1.7654946690017823,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.942324,\"throughput_bytes_per_second\":93367115.201,\"worker_utilization\":0.929737,\"peak_active_workers\":4,\"metadata_seconds\":3.413329,\"transfer_seconds\":0.095295,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.942324,
+        "throughput_bytes_per_second": 93367115.201,
+        "worker_utilization": 0.929737,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.413329,
+        "transfer_seconds": 0.095295,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.187462700996548,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 1.0327981279988308,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "first-copy",
+      "run": 1,
+      "seconds": 1.6783255810150877,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.839309,\"throughput_bytes_per_second\":104826826.935,\"worker_utilization\":0.946797,\"peak_active_workers\":4,\"metadata_seconds\":3.125955,\"transfer_seconds\":0.059434,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.839309,
+        "throughput_bytes_per_second": 104826826.935,
+        "worker_utilization": 0.946797,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.125955,
+        "transfer_seconds": 0.059434,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "unchanged-incremental",
+      "run": 1,
+      "seconds": 0.7963491950067692,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006514,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.244809,\"peak_active_workers\":4,\"metadata_seconds\":0.011183,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.006514,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.244809,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.011183,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.581442219991004,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.798871,\"throughput_bytes_per_second\":110133076.792,\"worker_utilization\":0.939219,\"peak_active_workers\":4,\"metadata_seconds\":2.955541,\"transfer_seconds\":0.052442,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.798871,
+        "throughput_bytes_per_second": 110133076.792,
+        "worker_utilization": 0.939219,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.955541,
+        "transfer_seconds": 0.052442,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.7277711979986634,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006210,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.267095,\"peak_active_workers\":4,\"metadata_seconds\":0.011069,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.00621,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.267095,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.011069,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.0179907009878661,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.8941741859889589,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.1400772630004212,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.8760387699876446,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.6679442120075691,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.833831,\"throughput_bytes_per_second\":105515419.389,\"worker_utilization\":0.918040,\"peak_active_workers\":4,\"metadata_seconds\":2.967821,\"transfer_seconds\":0.100677,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.833831,
+        "throughput_bytes_per_second": 105515419.389,
+        "worker_utilization": 0.91804,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.967821,
+        "transfer_seconds": 0.100677,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 1.7565163880062755,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.911603,\"throughput_bytes_per_second\":96513569.335,\"worker_utilization\":0.939140,\"peak_active_workers\":4,\"metadata_seconds\":3.363555,\"transfer_seconds\":0.065711,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.911603,
+        "throughput_bytes_per_second": 96513569.335,
+        "worker_utilization": 0.93914,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.363555,
+        "transfer_seconds": 0.065711,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.6138937459909357,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.803642,\"throughput_bytes_per_second\":109479136.973,\"worker_utilization\":0.923905,\"peak_active_workers\":4,\"metadata_seconds\":2.896366,\"transfer_seconds\":0.080203,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.803642,
+        "throughput_bytes_per_second": 109479136.973,
+        "worker_utilization": 0.923905,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.896366,
+        "transfer_seconds": 0.080203,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 1.0984866569924634,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.879023,\"throughput_bytes_per_second\":100090796.178,\"worker_utilization\":0.936101,\"peak_active_workers\":4,\"metadata_seconds\":3.238330,\"transfer_seconds\":0.057796,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.879023,
+        "throughput_bytes_per_second": 100090796.178,
+        "worker_utilization": 0.936101,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.23833,
+        "transfer_seconds": 0.057796,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "first-copy",
+      "run": 2,
+      "seconds": 1.6017966340004932,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.811230,\"throughput_bytes_per_second\":108455181.003,\"worker_utilization\":0.934485,\"peak_active_workers\":4,\"metadata_seconds\":2.972229,\"transfer_seconds\":0.068421,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.81123,
+        "throughput_bytes_per_second": 108455181.003,
+        "worker_utilization": 0.934485,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.972229,
+        "transfer_seconds": 0.068421,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "unchanged-incremental",
+      "run": 2,
+      "seconds": 0.8123383359925356,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006250,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.230832,\"peak_active_workers\":4,\"metadata_seconds\":0.010209,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.00625,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.230832,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.010209,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "cp",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.0942433410091326,
+      "stdout": ""
+    },
+    {
+      "tool": "cp",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.9662991579971276,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.5606447249883786,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.802862,\"throughput_bytes_per_second\":109585518.630,\"worker_utilization\":0.930900,\"peak_active_workers\":4,\"metadata_seconds\":2.914438,\"transfer_seconds\":0.082422,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.802862,
+        "throughput_bytes_per_second": 109585518.63,
+        "worker_utilization": 0.9309,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.914438,
+        "transfer_seconds": 0.082422,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy --sync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.8087956520030275,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006017,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.287833,\"peak_active_workers\":4,\"metadata_seconds\":0.011244,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.006017,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.287833,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.011244,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "rsync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.1911230609985068,
+      "stdout": ""
+    },
+    {
+      "tool": "rsync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.8480621390044689,
+      "stdout": ""
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.3715838830103166,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.710391,\"throughput_bytes_per_second\":123850272.266,\"worker_utilization\":0.928283,\"peak_active_workers\":4,\"metadata_seconds\":2.592400,\"transfer_seconds\":0.051353,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.710391,
+        "throughput_bytes_per_second": 123850272.266,
+        "worker_utilization": 0.928283,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.5924,
+        "transfer_seconds": 0.051353,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 1.4193230560049415,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":null,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.687852,\"throughput_bytes_per_second\":127908471.827,\"worker_utilization\":0.927806,\"peak_active_workers\":4,\"metadata_seconds\":2.512610,\"transfer_seconds\":0.043375,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.687852,
+        "throughput_bytes_per_second": 127908471.827,
+        "worker_utilization": 0.927806,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.51261,
+        "transfer_seconds": 0.043375,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.4781392810109537,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.744252,\"throughput_bytes_per_second\":118215393.917,\"worker_utilization\":0.939929,\"peak_active_workers\":4,\"metadata_seconds\":2.753604,\"transfer_seconds\":0.050310,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.744252,
+        "throughput_bytes_per_second": 118215393.917,
+        "worker_utilization": 0.939929,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.753604,
+        "transfer_seconds": 0.05031,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks --sync",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 0.7560462580004241,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":0,\"skipped\":1017,\"bytes\":0,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":0,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.006327,\"throughput_bytes_per_second\":0.000,\"worker_utilization\":0.239111,\"peak_active_workers\":4,\"metadata_seconds\":0.010450,\"transfer_seconds\":0.000000,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 0,
+        "skipped": 1017,
+        "bytes": 0,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 0,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.006327,
+        "throughput_bytes_per_second": 0.0,
+        "worker_utilization": 0.239111,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.01045,
+        "transfer_seconds": 0.0,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "first-copy",
+      "run": 3,
+      "seconds": 1.5145002329954877,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.782946,\"throughput_bytes_per_second\":112373148.444,\"worker_utilization\":0.932203,\"peak_active_workers\":4,\"metadata_seconds\":2.861818,\"transfer_seconds\":0.063954,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.782946,
+        "throughput_bytes_per_second": 112373148.444,
+        "worker_utilization": 0.932203,
+        "peak_active_workers": 4,
+        "metadata_seconds": 2.861818,
+        "transfer_seconds": 0.063954,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    },
+    {
+      "tool": "tcopy chunks",
+      "scenario": "unchanged-incremental",
+      "run": 3,
+      "seconds": 1.596570434019668,
+      "stdout": "{\"dry_run\":false,\"workers\":4,\"chunk_size\":8388608,\"copied\":1017,\"skipped\":0,\"bytes\":87982080,\"failures\":0,\"discovered\":1017,\"transferred_bytes\":87982080,\"chunked_files\":0,\"positioned_fallbacks\":0,\"elapsed_seconds\":0.866913,\"throughput_bytes_per_second\":101488974.394,\"worker_utilization\":0.928013,\"peak_active_workers\":4,\"metadata_seconds\":3.133293,\"transfer_seconds\":0.088359,\"storage\":[{\"source\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"destination\":{\"filesystem\":\"btrfs\",\"device\":\"/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941\",\"kind\":\"unknown\",\"backing_devices\":[],\"topology_complete\":false},\"same_filesystem\":true,\"shared_storage\":true}]}",
+      "metrics": {
+        "dry_run": false,
+        "workers": 4,
+        "chunk_size": 8388608,
+        "copied": 1017,
+        "skipped": 0,
+        "bytes": 87982080,
+        "failures": 0,
+        "discovered": 1017,
+        "transferred_bytes": 87982080,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.866913,
+        "throughput_bytes_per_second": 101488974.394,
+        "worker_utilization": 0.928013,
+        "peak_active_workers": 4,
+        "metadata_seconds": 3.133293,
+        "transfer_seconds": 0.088359,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "unknown",
+              "backing_devices": [],
+              "topology_complete": false
+            },
+            "same_filesystem": true,
+            "shared_storage": true
+          }
+        ]
+      }
+    }
+  ],
+  "tool_versions": {
+    "tcopy": "TurboCopy 0.1.0",
+    "tcopy --sync": "TurboCopy 0.1.0",
+    "tcopy chunks": "TurboCopy 0.1.0",
+    "tcopy chunks --sync": "TurboCopy 0.1.0",
+    "cp": "cp (GNU coreutils) 9.6",
+    "rsync": "rsync  version 3.4.1  protocol version 32"
+  },
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14) (Fedora 1.95.0-5.fc42)",
+  "files": 1017,
+  "bytes": 87982080,
+  "filesystem": "btrfs /dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941[/home/ewave/projects/turboCopy]",
+  "medians_seconds": {
+    "tcopy": {
+      "first-copy": 1.6182241089991294,
+      "unchanged-incremental": 1.742863985011354
+    },
+    "tcopy --sync": {
+      "first-copy": 1.581442219991004,
+      "unchanged-incremental": 0.8087956520030275
+    },
+    "tcopy chunks": {
+      "first-copy": 1.6138937459909357,
+      "unchanged-incremental": 1.596570434019668
+    },
+    "tcopy chunks --sync": {
+      "first-copy": 1.6017966340004932,
+      "unchanged-incremental": 0.7963491950067692
+    },
+    "cp": {
+      "first-copy": 1.0942433410091326,
+      "unchanged-incremental": 0.9662991579971276
+    },
+    "rsync": {
+      "first-copy": 1.1911230609985068,
+      "unchanged-incremental": 0.8760387699876446
+    }
+  }
+}

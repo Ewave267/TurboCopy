@@ -31,6 +31,14 @@ static SIGNAL: AtomicI32 = AtomicI32::new(0);
 extern "C" {
     fn signal(number: c_int, handler: usize) -> usize;
     fn utimensat(fd: c_int, path: *const c_char, times: *const Timespec, flags: c_int) -> c_int;
+    fn fstatvfs(fd: c_int, stat: *mut Statvfs) -> c_int;
+}
+
+#[repr(C)]
+#[derive(Default)]
+struct Statvfs {
+    fields: [u64; 11],
+    spare: [c_int; 6],
 }
 
 #[repr(C)]
@@ -118,6 +126,14 @@ pub fn preserve_metadata(file: &File, metadata: &Metadata) -> io::Result<()> {
 pub struct Directory(Arc<File>);
 
 impl Directory {
+    pub fn available_bytes(&self) -> Option<u64> {
+        let mut stat = Statvfs::default();
+        // SAFETY: live fd and Linux 64-bit statvfs layout with writable storage.
+        if unsafe { fstatvfs(self.0.as_raw_fd(), &mut stat) } != 0 {
+            return None;
+        }
+        stat.fields[4].checked_mul(stat.fields[1])
+    }
     pub fn open(path: &Path) -> io::Result<Self> {
         let absolute = if path.is_absolute() {
             path.to_path_buf()
