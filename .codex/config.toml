@@ -1,0 +1,15 @@
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 4
+
+[agents.small]
+description = "Simple, low-risk tasks. Formatting, documentation, and minor fixes."
+config_file = "agents/small.toml"
+
+[agents.medium]
+description = "Moderate changes, features, tests, and localized refactoring."
+config_file = "agents/medium.toml"
+
+[agents.large]
+description = "Complex architecture, parallel I/O, race conditions, and performance."
+config_file = "agents/large.toml"
