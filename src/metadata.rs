@@ -120,7 +120,13 @@ fn copy_fd_xattrs(source: &File, dest: &File) -> io::Result<()> {
     Ok(())
 }
 
-fn preserve_fd(source: &File, dest: &File, metadata: &Metadata, extended: bool) -> io::Result<()> {
+fn preserve_fd(
+    source: &File,
+    dest: &File,
+    metadata: &Metadata,
+    extended: bool,
+    fsync: bool,
+) -> io::Result<()> {
     if extended {
         let current = dest.metadata()?;
         if (metadata.uid(), metadata.gid()) != (current.uid(), current.gid()) {
@@ -133,7 +139,10 @@ fn preserve_fd(source: &File, dest: &File, metadata: &Metadata, extended: bool) 
         copy_fd_xattrs(source, dest)?;
     }
     dest.set_times(FileTimes::new().set_modified(metadata.modified()?))?;
-    dest.sync_all()
+    if fsync {
+        dest.sync_all()?;
+    }
+    Ok(())
 }
 
 pub fn preserve_file(
@@ -141,8 +150,9 @@ pub fn preserve_file(
     dest: &File,
     metadata: &Metadata,
     extended: bool,
+    fsync: bool,
 ) -> io::Result<()> {
-    preserve_fd(source, dest, metadata, extended)
+    preserve_fd(source, dest, metadata, extended, fsync)
 }
 
 pub fn preserve_directory(
@@ -150,8 +160,9 @@ pub fn preserve_directory(
     dest: &Directory,
     metadata: &Metadata,
     extended: bool,
+    fsync: bool,
 ) -> io::Result<()> {
-    preserve_fd(source.as_file(), dest.as_file(), metadata, extended)
+    preserve_fd(source.as_file(), dest.as_file(), metadata, extended, fsync)
 }
 
 pub fn preserve_link(
@@ -295,7 +306,7 @@ mod tests {
             },
             0
         );
-        preserve_file(&source, &dest, &source.metadata().unwrap(), true).unwrap();
+        preserve_file(&source, &dest, &source.metadata().unwrap(), true, true).unwrap();
         assert_eq!(dest.metadata().unwrap().permissions().mode() & 0o777, 0o640);
         assert_eq!(
             dest.metadata().unwrap().modified().unwrap(),
@@ -336,7 +347,7 @@ mod tests {
             },
             0
         );
-        preserve_directory(&source, &dest, &source.metadata().unwrap(), true).unwrap();
+        preserve_directory(&source, &dest, &source.metadata().unwrap(), true, true).unwrap();
         assert_eq!(
             unsafe {
                 fgetxattr(

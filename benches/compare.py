@@ -50,6 +50,7 @@ def main():
     parser.add_argument("--medium-files", type=int, default=16)
     parser.add_argument("--large-mib", type=int, default=64)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--gpfs", action="store_true", help="Compare GPFS profile, durability barriers and 8/16/32/64 worker settings")
     args = parser.parse_args()
     if args.runs < 1 or min(args.small_files, args.medium_files) < 0 or args.large_mib < 1:
         parser.error("runs and large-mib must be positive; file counts must be nonnegative")
@@ -61,6 +62,12 @@ def main():
              "tcopy auto --sync": [str(binary), "--auto", "--sync", "--json"],
              "tcopy tune": [str(binary), "--tune", "--json"],
              "tcopy tune --sync": [str(binary), "--tune", "--sync", "--json"]}
+    if args.gpfs:
+        tools = {"tcopy": [str(binary), "--json"],
+                 "tcopy gpfs durable": [str(binary), "--gpfs", "--workers=32", "--json"]}
+        for workers in (8, 16, 32, 64):
+            tools[f"tcopy gpfs no-fsync workers={workers}"] = [
+                str(binary), "--gpfs", "--no-fsync", f"--workers={workers}", "--json"]
     if shutil.which("cp"):
         tools["cp"] = ["cp", "-rp", "--reflink=never", "--sparse=never"]
     if shutil.which("rsync"):

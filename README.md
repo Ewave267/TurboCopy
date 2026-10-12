@@ -25,6 +25,7 @@ cargo build --release
 ./target/release/tcopy image.bin clone.bin --reflink
 ./target/release/tcopy large.bin backup.bin --resume
 ./target/release/tcopy source_dir/ destination_dir/ --preserve-extended
+./target/release/tcopy /gpfs/source/ /gpfs/destination/ --gpfs --no-fsync --progress
 ./target/release/tcopy --help
 ```
 
@@ -144,6 +145,43 @@ destination files. Temporary names are never automatically swept on startup.
 verified on retry but is not guaranteed durable.
 Source identity, size, mtime and ctime changes are checked, but copying a live
 source is not a filesystem snapshot. Keep source data stable for consistent copies.
+
+## GPFS / IBM Storage Scale
+
+`--gpfs` selects a fixed concurrency profile for latency-heavy bulk copies:
+up to 32 file/chunk slots, 1 MiB transfer buffers and 16 MiB positioned ranges
+for eligible files at least 64 MiB. The default slot count is bounded by available
+memory (all file/helper buffers budgeted at 1/64 of available memory); it is not
+capped by local CPU count. `--workers` and `--chunk-size` override these defaults.
+This is an explicit profile, not a claim that 32 workers is optimal on every
+cluster. It is incompatible with `--auto` and `--tune` and does not use local PSI
+to throttle remote storage concurrency. It does not change cluster settings.
+
+GPFS mounts permit explicit positioned chunks without requiring visible local
+disk topology. HDD and unsupported/network filesystem guards still apply to
+other mounts, including NFS exports of GPFS. The profile can run on supported
+local filesystems for correctness testing. Files share one bounded slot budget;
+many files use file parallelism, while a few large files can use idle slots for
+chunks. Resume remains sequential. Directory finalization batches up to 64
+completed directories so sibling trees overlap; files finish before permissions
+and mtimes are restored in post-order. Traversal remains single-threaded and
+memory remains bounded by depth, the task queue and the finalization batch.
+
+`--no-fsync` independently disables file, directory-creation, directory-metadata
+and post-rename durability barriers. Atomic replacement, metadata preservation,
+source validation and transfer-error handling remain enabled. The previous
+destination survives a detected pre-publication failure. Success means the copy
+completed without those barriers; it does **not** promise crash/power-loss
+durability or detection of delayed writeback failures before publication. There
+is no implicit final filesystem flush. It cannot be combined with `--resume`.
+Without this flag, the existing durability behavior remains the default,
+including with `--gpfs`.
+
+Start with `--gpfs --no-fsync --workers=32` for bulk datasets when that durability
+tradeoff is acceptable; compare 8, 16, 32 and 64 workers on the actual cluster.
+The JSON report includes `gpfs`, `fsync` and `buffer_size`. See the
+[GPFS measurement guide](docs/gpfs.md) for commands and limitations. No GPFS
+performance results have been measured on this development filesystem.
 
 ## Verify
 

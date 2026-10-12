@@ -19,6 +19,10 @@ An existing destination directory receives each source basename.
   --auto       Select workers/chunks from hardware; react to pressure.
   --tune       Calibrate concurrency on the real copy workload (implies --auto).
   --no-tune    Keep the selected configuration fixed.
+  --gpfs       GPFS profile: up to 32 fixed slots, 16 MiB chunks, 1 MiB buffers.
+               Overrides via --workers/--chunk-size; incompatible with --auto/--tune.
+  --no-fsync   Skip durability barriers; retain atomic replacement.
+               Completed copies are not guaranteed durable after a crash.
   --progress   Print live progress to stderr.
   --json       Print one final JSON summary to stdout.
   --help, -h   Show this help.
@@ -29,6 +33,8 @@ Destination directory symlinks are refused; source links are recreated.";
 
 #[derive(Clone, Copy, Default)]
 pub struct Options {
+    pub gpfs: bool,
+    pub no_fsync: bool,
     pub sync: bool,
     pub checksum: bool,
     pub sparse: bool,
@@ -75,6 +81,14 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
                 Some("--version") => return Ok(Action::Version),
                 Some("--sync") => {
                     options.sync = true;
+                    continue;
+                }
+                Some("--gpfs") => {
+                    options.gpfs = true;
+                    continue;
+                }
+                Some("--no-fsync") => {
+                    options.no_fsync = true;
                     continue;
                 }
                 Some("--checksum") => {
@@ -165,6 +179,12 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
     if options.tune && options.no_tune {
         return Err("--tune and --no-tune cannot be combined".into());
     }
+    if options.gpfs && options.auto {
+        return Err("--gpfs cannot be combined with --auto or --tune".into());
+    }
+    if options.resume && options.no_fsync {
+        return Err("--resume cannot be combined with --no-fsync".into());
+    }
     if options.checksum && !options.sync {
         return Err("--checksum requires --sync".into());
     }
@@ -183,6 +203,13 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
 }
 
 impl Options {
+    pub fn buffer_size(self) -> usize {
+        if self.gpfs {
+            1 << 20
+        } else {
+            128 << 10
+        }
+    }
     pub fn worker_count(self) -> usize {
         self.workers
             .unwrap_or_else(|| std::thread::available_parallelism().map_or(1, |n| n.get().min(4)))
@@ -240,6 +267,9 @@ mod tests {
         assert_eq!(parsed.chunk_size, Some(8 * 1024 * 1024));
         assert!(parsed.json && parsed.progress);
         for args in [
+            vec!["--gpfs", "--auto", "a", "b"],
+            vec!["--tune", "--gpfs", "a", "b"],
+            vec!["--no-fsync", "--resume", "a", "b"],
             vec!["--workers", "0", "a", "b"],
             vec!["--workers=129", "a", "b"],
             vec!["--workers=-1", "a", "b"],

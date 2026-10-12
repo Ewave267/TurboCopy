@@ -95,6 +95,113 @@ fn copies_file_and_atomically_overwrites_without_changing_hardlink_alias() {
 }
 
 #[test]
+fn gpfs_profile_keeps_atomic_replacement_and_reports_durability() {
+    let f = Fixture::new();
+    fs::write(f.path("source"), b"new contents").unwrap();
+    fs::write(f.path("dest"), b"old").unwrap();
+    fs::hard_link(f.path("dest"), f.path("alias")).unwrap();
+    let report = success(f.copy(&[
+        "--gpfs",
+        "--no-fsync",
+        "--workers=3",
+        "--json",
+        "source",
+        "dest",
+    ]));
+    assert!(report.contains("\"workers\":3"));
+    assert!(report.contains("\"fsync\":false"));
+    assert!(report.contains("\"gpfs\":true"));
+    assert!(report.contains("\"concurrency_adjustments\":0"));
+    assert_eq!(fs::read(f.path("dest")).unwrap(), b"new contents");
+    assert_eq!(fs::read(f.path("alias")).unwrap(), b"old");
+}
+
+#[test]
+fn no_fsync_preserves_tree_metadata_and_symlinks() {
+    let f = Fixture::new();
+    fs::create_dir(f.path("source")).unwrap();
+    fs::write(f.path("source/file"), b"payload").unwrap();
+    symlink("file", f.path("source/link")).unwrap();
+    fs::set_permissions(f.path("source/file"), fs::Permissions::from_mode(0o640)).unwrap();
+    success(f.copy(&["--no-fsync", "source", "dest"]));
+    assert_eq!(fs::read(f.path("dest/file")).unwrap(), b"payload");
+    assert_eq!(
+        fs::read_link(f.path("dest/link")).unwrap(),
+        Path::new("file")
+    );
+    for name in ["", "/file", "/link"] {
+        let src = fs::symlink_metadata(f.path(format!("source{name}"))).unwrap();
+        let dst = fs::symlink_metadata(f.path(format!("dest{name}"))).unwrap();
+        assert_eq!(src.mode(), dst.mode());
+        assert_eq!(src.mtime_nsec(), dst.mtime_nsec());
+        assert_eq!(src.mtime(), dst.mtime());
+    }
+}
+
+#[test]
+fn gpfs_batches_directory_finalization_in_post_order() {
+    let f = Fixture::new();
+    fs::create_dir(f.path("source")).unwrap();
+    let modified = std::time::UNIX_EPOCH + std::time::Duration::new(1_600_000_000, 123_456_789);
+    for i in 0..130 {
+        let dir = f.path(format!("source/{i}"));
+        fs::create_dir(&dir).unwrap();
+        fs::write(dir.join("file"), i.to_string()).unwrap();
+        fs::File::open(&dir)
+            .unwrap()
+            .set_times(fs::FileTimes::new().set_modified(modified))
+            .unwrap();
+        fs::set_permissions(&dir, fs::Permissions::from_mode(0o550)).unwrap();
+    }
+    fs::File::open(f.path("source"))
+        .unwrap()
+        .set_times(fs::FileTimes::new().set_modified(modified))
+        .unwrap();
+    success(f.copy(&["--gpfs", "--no-fsync", "--workers=4", "source", "dest"]));
+    for i in 0..130 {
+        assert_eq!(
+            fs::read_to_string(f.path(format!("dest/{i}/file"))).unwrap(),
+            i.to_string()
+        );
+        let dir = fs::metadata(f.path(format!("dest/{i}"))).unwrap();
+        assert_eq!(dir.mode() & 0o777, 0o550);
+        assert_eq!(dir.modified().unwrap(), modified);
+    }
+    assert_eq!(
+        fs::metadata(f.path("dest")).unwrap().modified().unwrap(),
+        modified
+    );
+}
+
+#[test]
+fn gpfs_profile_chunks_large_files_with_exact_partial_tail() {
+    use std::io::{Seek, SeekFrom, Write};
+    let f = Fixture::new();
+    let mut file = fs::File::create(f.path("source")).unwrap();
+    file.set_len((64 << 20) + 17).unwrap();
+    file.seek(SeekFrom::Start(16 << 20)).unwrap();
+    file.write_all(b"chunk boundary").unwrap();
+    file.seek(SeekFrom::End(-17)).unwrap();
+    file.write_all(b"partial tail test").unwrap();
+    drop(file);
+    let report = success(f.copy(&[
+        "--gpfs",
+        "--no-fsync",
+        "--workers=4",
+        "--json",
+        "source",
+        "dest",
+    ]));
+    assert!(report.contains("\"chunked_files\":1"));
+    assert!(report.contains("\"buffer_size\":1048576"));
+    assert_eq!(
+        fs::read(f.path("source")).unwrap(),
+        fs::read(f.path("dest")).unwrap()
+    );
+    no_temporaries(&f.0);
+}
+
+#[test]
 fn recursive_mapping_empty_entries_and_trailing_slashes() {
     let f = Fixture::new();
     fs::create_dir_all(f.path("source/sub/empty")).unwrap();
@@ -562,7 +669,7 @@ fn permission_failure_keeps_existing_destination() {
 
 #[test]
 fn write_failure_cleans_temporary_and_keeps_existing_destination() {
-    for mode in ["buffered", "chunks", "tune"] {
+    for mode in ["buffered", "chunks", "tune", "gpfs"] {
         let f = Fixture::new();
         fs::write(f.path("source"), vec![42; 1024 * 1024]).unwrap();
         if mode == "chunks" {
@@ -578,6 +685,8 @@ fn write_failure_cleans_temporary_and_keeps_existing_destination() {
             "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest --workers=4 --chunk-size=8M"
         } else if mode == "tune" {
             "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest --tune --json"
+        } else if mode == "gpfs" {
+            "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest --gpfs --no-fsync --workers=3"
         } else {
             "trap '' XFSZ; ulimit -f 1; exec \"$1\" source dest"
         };
@@ -654,6 +763,8 @@ fn sigint_and_sigterm_keep_old_destination_and_clean_up() {
         (15, "chunks"),
         (2, "tune"),
         (15, "tune"),
+        (2, "gpfs"),
+        (15, "gpfs"),
     ] {
         let f = Fixture::new();
         fs::File::create(f.path("source"))
@@ -665,6 +776,8 @@ fn sigint_and_sigterm_keep_old_destination_and_clean_up() {
             vec!["source", "dest", "--workers=4", "--chunk-size=8M", "--json"]
         } else if mode == "tune" {
             vec!["source", "dest", "--tune", "--json"]
+        } else if mode == "gpfs" {
+            vec!["source", "dest", "--gpfs", "--no-fsync", "--workers=4"]
         } else {
             vec!["source", "dest"]
         };
@@ -684,7 +797,7 @@ fn sigint_and_sigterm_keep_old_destination_and_clean_up() {
 
 #[test]
 fn changing_source_is_reported_without_publishing_partial_data() {
-    for mode in ["buffered", "chunks", "tune"] {
+    for mode in ["buffered", "chunks", "tune", "gpfs"] {
         let f = Fixture::new();
         let source = fs::File::create(f.path("source")).unwrap();
         source.set_len(2 * 1024 * 1024 * 1024).unwrap();
@@ -693,6 +806,8 @@ fn changing_source_is_reported_without_publishing_partial_data() {
             vec!["source", "dest", "--workers=4", "--chunk-size=8M", "--json"]
         } else if mode == "tune" {
             vec!["source", "dest", "--tune", "--json"]
+        } else if mode == "gpfs" {
+            vec!["source", "dest", "--gpfs", "--no-fsync", "--workers=4"]
         } else {
             vec!["source", "dest"]
         };

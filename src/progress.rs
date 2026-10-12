@@ -121,8 +121,8 @@ impl Summary {
                 pair.source.shared_with(&pair.destination).map_or("null", |v| if v { "true" } else { "false" }),
                 optional_number(pair.available_bytes)
             )).collect::<Vec<_>>().join(",");
-            println!("{{\"dry_run\":{},\"workers\":{},\"chunk_size\":{},\"copied\":{},\"skipped\":{},\"bytes\":{},\"failures\":{},\"discovered\":{},\"transferred_bytes\":{},\"chunked_files\":{},\"positioned_fallbacks\":{},\"elapsed_seconds\":{:.6},\"throughput_bytes_per_second\":{:.3},\"worker_utilization\":{:.6},\"peak_active_workers\":{},\"metadata_seconds\":{:.6},\"transfer_seconds\":{:.6},\"storage\":[{}],\"auto\":{},\"final_workers\":{},\"concurrency_adjustments\":{},\"tuning_state\":{},\"tuning_samples\":{},\"tuning_best_score\":{:.3},\"chunk_policy\":{},\"hardware\":{},\"workload\":{{\"small_files\":{},\"medium_files\":{},\"large_files\":{}}}}}",
-                self.options.dry_run, self.options.worker_count(), self.options.chunk_size.map_or("null".into(), |n| n.to_string()),
+            println!("{{\"dry_run\":{},\"gpfs\":{},\"fsync\":{},\"buffer_size\":{},\"workers\":{},\"chunk_size\":{},\"copied\":{},\"skipped\":{},\"bytes\":{},\"failures\":{},\"discovered\":{},\"transferred_bytes\":{},\"chunked_files\":{},\"positioned_fallbacks\":{},\"elapsed_seconds\":{:.6},\"throughput_bytes_per_second\":{:.3},\"worker_utilization\":{:.6},\"peak_active_workers\":{},\"metadata_seconds\":{:.6},\"transfer_seconds\":{:.6},\"storage\":[{}],\"auto\":{},\"final_workers\":{},\"concurrency_adjustments\":{},\"tuning_state\":{},\"tuning_samples\":{},\"tuning_best_score\":{:.3},\"chunk_policy\":{},\"hardware\":{},\"workload\":{{\"small_files\":{},\"medium_files\":{},\"large_files\":{}}}}}",
+                self.options.dry_run, self.options.gpfs, !self.options.no_fsync, self.options.buffer_size(), self.options.worker_count(), self.options.chunk_size.map_or("null".into(), |n| n.to_string()),
                 count(&self.copied), count(&self.skipped), count(&self.bytes), count(&self.failures), count(&self.discovered),
                 count(&self.transferred), count(&self.chunked), count(&self.fallbacks), elapsed, throughput, utilization,
                 count(&self.peak), count(&self.metadata_ns) as f64 / 1e9, count(&self.transfer_ns) as f64 / 1e9, storage,
@@ -136,6 +136,18 @@ impl Summary {
             println!("Workers: {}  Peak active: {}  Utilization: {:.1}%  Metadata: {:.3}s  Transfer: {:.3}s  Chunked files: {}",
                 self.options.worker_count(), count(&self.peak), utilization * 100.0,
                 count(&self.metadata_ns) as f64 / 1e9, count(&self.transfer_ns) as f64 / 1e9, count(&self.chunked));
+            if self.options.gpfs || self.options.no_fsync {
+                println!(
+                    "Profile: {}  Durability barriers: {}  Buffer: {} bytes",
+                    if self.options.gpfs { "gpfs" } else { "default" },
+                    if self.options.no_fsync {
+                        "disabled"
+                    } else {
+                        "enabled"
+                    },
+                    self.options.buffer_size()
+                );
+            }
             if self.options.auto {
                 println!("Adaptation: {}  Final workers: {}  Adjustments: {}  CPU: {} logical / {} physical  Available memory: {} bytes",
                     *self.tuning_state.lock().unwrap(), count(&self.limit), count(&self.adjustments), self.hardware.logical_cpus,

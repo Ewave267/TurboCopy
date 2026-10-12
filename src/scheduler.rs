@@ -203,7 +203,7 @@ pub fn run(roots: Vec<Task>, options: Options, start: std::time::Instant) -> Arc
             let spawn = thread::Builder::new()
                 .name(format!("tcopy-{number}"))
                 .spawn_scoped(scope, move || {
-                    let mut buffer = vec![0; 128 * 1024];
+                    let mut buffer = vec![0; options.buffer_size()];
                     loop {
                         let task = match receiver.lock().unwrap().recv() {
                             Ok(task) => task,

@@ -112,7 +112,7 @@ impl Partial {
                 "destination name is reserved for resume checkpoints",
             ));
         }
-        let directory = parent.ensure_child(OsStr::new(".tcopy-resume"))?;
+        let directory = parent.ensure_child(OsStr::new(".tcopy-resume"), true)?;
         let info = directory.metadata()?;
         // SAFETY: geteuid takes no arguments and has no side effects.
         let uid = unsafe { geteuid() };

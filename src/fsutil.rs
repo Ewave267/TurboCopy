@@ -166,7 +166,7 @@ impl Directory {
         Ok(Self(Arc::new(file)))
     }
 
-    pub fn ensure_child(&self, name: &OsStr) -> io::Result<Self> {
+    pub fn ensure_child(&self, name: &OsStr, fsync: bool) -> io::Result<Self> {
         let path = self.path().join(name);
         match self.child(name) {
             Ok(directory) => Ok(directory),
@@ -177,7 +177,9 @@ impl Directory {
                     Err(error) if error.kind() == io::ErrorKind::AlreadyExists => {}
                     Err(error) => return Err(error),
                 }
-                self.sync()?;
+                if fsync {
+                    self.sync()?;
+                }
                 self.child(name)
             }
             Err(error) => Err(error),

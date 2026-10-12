@@ -23,7 +23,7 @@ impl Storage {
         self.kind != "hdd"
             && matches!(
                 self.filesystem.as_str(),
-                "ext4" | "xfs" | "btrfs" | "tmpfs" | "ramfs" | "f2fs" | "zfs"
+                "ext4" | "xfs" | "btrfs" | "tmpfs" | "ramfs" | "f2fs" | "zfs" | "gpfs"
             )
     }
     pub fn shared_with(&self, other: &Self) -> Option<bool> {

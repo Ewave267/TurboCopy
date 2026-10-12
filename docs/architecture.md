@@ -8,12 +8,15 @@ tasks through a bounded standard-library channel. Workers share the receiver
 only while taking a task; data copying happens concurrently. Counters are
 atomic, and errors are printed as they happen instead of accumulating in RAM.
 
-Directory exits insert a scheduler barrier: all queued descendants finish
+By default directory exits insert a scheduler barrier: all queued descendants finish
 before directory permissions and mtimes are restored. This keeps memory
 bounded by depth plus queue capacity, without storing all directory metadata.
 The barrier trades some parallelism between sibling directories for simple,
 correct metadata handling. Existing destination directory permissions are
 retained during copying and replaced on successful directory finalization.
+The explicit GPFS profile accumulates up to 64 completed frames before draining
+the pool and restoring metadata in post-order. This bounds retained handles while
+allowing file work from sibling directories to overlap.
 
 Destination directories are opened one component at a time with
 `O_DIRECTORY | O_NOFOLLOW`. Tasks retain shared directory handles. Operations
@@ -32,7 +35,9 @@ available. The ordinary default uses neither.
 The source's observed length limits the read so continuous growth cannot make
 the copy unbounded. File identity, size, mtime and ctime are checked before
 publication. Atomic rename happens only after metadata and file fsync succeed;
-parent fsync completes durability where supported.
+parent fsync completes durability where supported. Explicit `--no-fsync` skips
+these barriers and directory creation/finalization barriers while retaining
+atomic publication. It provides no crash durability promise and forbids resume.
 
 `--resume` stages sequential regular-file data under a private destination
 checkpoint directory. Its source identity sidecar and full retained-prefix
@@ -44,7 +49,8 @@ and xattrs including ACLs. Directory metadata is finalized after descendants.
 Explicit chunk controls add positioned [Rust FileExt I/O](https://doc.rust-lang.org/std/os/unix/fs/trait.FileExt.html)
 for eligible large local files. The parent worker reserves idle permits, sizes
 the temporary file and runs ranges alongside scoped helpers. An atomic chunk
-index assigns non-overlapping offsets; each range streams through 128 KiB.
+index assigns non-overlapping offsets; each range streams through 128 KiB
+(1 MiB with the GPFS profile). Native GPFS mounts also permit explicit chunks.
 All helper threads stop and join before validation/publication or an unsupported
 positioned-I/O fallback. Data, space, permission and cancellation errors fail
 the copy. A shared permit budget bounds active file and chunk work; helpers
@@ -74,6 +80,10 @@ Workload counters classify regular files during streaming discovery, including
 sync skips and dry-run previews. Reports distinguish the configured worker
 ceiling from the final admission limit and expose insufficient calibration data.
 The root chunk-size hint can differ from automatically selected per-file sizes.
+
+`--gpfs` is a separate fixed profile: memory-bounded 32 slots, 16 MiB chunks,
+1 MiB buffers and no local CPU/PSI admission policy. Manual worker/chunk controls
+take precedence. It forbids auto/tune rather than mixing the two policies.
 
 See [Phase 1 contract](phase1.md), [Phase 2 contract](phase2.md), [Phase 3 contract](phase3.md), [Phase 4 contract](phase4.md), [adaptation decision](decisions/003-workload-adaptation.md), [Phase 4 decision](decisions/004-phase4-opt-ins.md), [decisions](decisions/001-correctness-first.md)
 and [benchmark methodology](performance.md) for acceptance criteria and limits.

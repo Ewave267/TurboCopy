@@ -201,7 +201,7 @@ fn enter(
         } else if options.dry_run {
             Some(directory.child(name)?)
         } else {
-            Some(directory.ensure_child(name)?)
+            Some(directory.ensure_child(name, !options.no_fsync)?)
         }
     } else {
         if options.dry_run {
@@ -285,6 +285,25 @@ fn preview(
     Ok(())
 }
 
+fn finalize(frames: &mut Vec<Frame>, options: Options, pool: &Pool) {
+    pool.drain();
+    // Frames arrive in post-order so parent mtimes follow child metadata changes.
+    for frame in frames.drain(..) {
+        if let Err(error) = pool.summary.metadata(|| {
+            crate::metadata::preserve_directory(
+                &frame.source,
+                &frame.destination.unwrap(),
+                &frame.metadata,
+                options.preserve_extended,
+                !options.no_fsync,
+            )
+        }) {
+            pool.summary
+                .fail(format!("{:?}: metadata: {error}", frame.destination_path));
+        }
+    }
+}
+
 pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
     if !root.metadata.is_dir() {
         return if options.dry_run {
@@ -312,6 +331,7 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
             options,
         )
     })?];
+    let mut finished = Vec::new();
     while let Some(frame) = stack.last_mut() {
         fsutil::check_cancelled()?;
         let entry = match pool.summary.metadata(|| frame.entries.next()) {
@@ -324,17 +344,9 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
             None => {
                 let frame = stack.pop().unwrap();
                 if !options.dry_run {
-                    pool.drain();
-                    if let Err(error) = pool.summary.metadata(|| {
-                        crate::metadata::preserve_directory(
-                            &frame.source,
-                            &frame.destination.unwrap(),
-                            &frame.metadata,
-                            options.preserve_extended,
-                        )
-                    }) {
-                        pool.summary
-                            .fail(format!("{:?}: metadata: {error}", frame.destination_path));
+                    finished.push(frame);
+                    if finished.len() >= if options.gpfs { 64 } else { 1 } {
+                        finalize(&mut finished, options, pool);
                     }
                 }
                 continue;
@@ -398,6 +410,9 @@ pub fn scan(root: Task, options: Options, pool: &Pool) -> io::Result<()> {
                 metadata,
             })?;
         }
+    }
+    if !finished.is_empty() {
+        finalize(&mut finished, options, pool);
     }
     Ok(())
 }

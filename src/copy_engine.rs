@@ -217,7 +217,9 @@ pub fn copy(
         }
         fsutil::check_cancelled()?;
         temporary.publish(&destination)?;
-        task.parent.sync()?;
+        if !options.no_fsync {
+            task.parent.sync()?;
+        }
         return Ok(Outcome::Copied(0));
     }
     if !task.metadata.is_file() {
@@ -342,7 +344,13 @@ pub fn copy(
     }
     stage.discard_on_drop();
     let output = stage.file();
-    crate::metadata::preserve_file(&input, output, &before, options.preserve_extended)?;
+    crate::metadata::preserve_file(
+        &input,
+        output,
+        &before,
+        options.preserve_extended,
+        !options.no_fsync,
+    )?;
     if !fsutil::unchanged(&before, &input.metadata()?)
         || !fsutil::unchanged(&before, &fs::symlink_metadata(&source)?)
     {
@@ -352,7 +360,9 @@ pub fn copy(
     }
     fsutil::check_cancelled()?;
     stage.publish(&destination)?;
-    task.parent.sync()?;
+    if !options.no_fsync {
+        task.parent.sync()?;
+    }
     Ok(Outcome::Copied(before.len()))
 }
 
@@ -447,7 +457,7 @@ fn transfer_chunks(
                 .name("tcopy-chunk".into())
                 .spawn_scoped(scope, move || {
                     let _permit = permit;
-                    run(&mut vec![0; 128 * 1024]);
+                    run(&mut vec![0; budget.summary.options.buffer_size()]);
                 }) {
                 Ok(helper) => helpers.push(helper),
                 Err(error) => {

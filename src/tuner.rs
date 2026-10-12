@@ -5,6 +5,18 @@ fn fast(storage: &Storage) -> bool {
 }
 
 pub fn select(mut options: Options, hardware: &Hardware, pairs: &[StoragePair]) -> Options {
+    if options.gpfs {
+        if !options.manual_workers {
+            // Remote I/O waits can overlap beyond the local CPU count.
+            let memory_limit = hardware.memory_bytes.map_or(1, |n| {
+                (n / 64 / (2 * options.buffer_size() as u64)).clamp(1, 32) as usize
+            });
+            options.workers = Some(memory_limit);
+        }
+        if !options.manual_chunks {
+            options.chunk_size = Some(16 << 20);
+        }
+    }
     if options.auto {
         if !options.manual_workers {
             let storage_limit = pairs
@@ -226,6 +238,38 @@ pub fn monitor(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn gpfs_profile_overlaps_remote_io_without_assuming_local_topology() {
+        let profile = Options {
+            gpfs: true,
+            ..Options::default()
+        };
+        let mut host = hardware();
+        host.logical_cpus = 1;
+        let selected = select(profile, &host, &[]);
+        assert_eq!(selected.worker_count(), 32);
+        assert_eq!(selected.chunk_size, Some(16 << 20));
+        let mut remote = storage("unknown", 1);
+        remote.filesystem = "gpfs".into();
+        assert_eq!(
+            chunk_size(selected, &remote, &remote, 1 << 30, 32),
+            Some(16 << 20)
+        );
+        remote.filesystem = "nfs".into();
+        assert_eq!(chunk_size(selected, &remote, &remote, 1 << 30, 32), None);
+        host.memory_bytes = Some(128 << 20);
+        assert_eq!(select(profile, &host, &[]).worker_count(), 1);
+        let manual = Options {
+            workers: Some(7),
+            manual_workers: true,
+            chunk_size: Some(4 << 20),
+            manual_chunks: true,
+            ..profile
+        };
+        let selected = select(manual, &host, &[]);
+        assert_eq!(selected.worker_count(), 7);
+        assert_eq!(selected.chunk_size, Some(4 << 20));
+    }
     fn hardware() -> Hardware {
         Hardware {
             logical_cpus: 16,
