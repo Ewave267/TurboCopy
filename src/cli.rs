@@ -5,7 +5,12 @@ Usage: tcopy [OPTIONS] SOURCE... DESTINATION
 
 Recursively copy files and directories; overwrite files atomically.
 An existing destination directory receives each source basename.
+SSH endpoints: [user@]host:path or user@[IPv6]:path (native tcopy agents).
+Install tcopy on remote hosts; OpenSSH tunnels relay data through this machine.
+SSH copies support workers/chunks, sync/checksum, sparse, dry-run and reporting.
+Resume, reflink, extended metadata, tune and GPFS are local-only.
 
+  --ssh-program PATH  Remote tcopy executable (default: tcopy).
   --sync       Skip regular files with matching path and size.
                Matching sizes do not guarantee matching contents.
   --checksum   With --sync, compare all bytes before skipping.
@@ -57,12 +62,14 @@ pub struct Command {
     pub sources: Vec<PathBuf>,
     pub destination: PathBuf,
     pub options: Options,
+    pub ssh_program: OsString,
 }
 
 pub enum Action {
     Copy(Command),
     Help,
     Version,
+    SshAgent,
 }
 
 pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String> {
@@ -71,6 +78,7 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
         ..Options::default()
     };
     let mut paths = Vec::new();
+    let mut ssh_program = OsString::from("tcopy");
     let mut operands_only = false;
     let mut args = args.into_iter();
     while let Some(arg) = args.next() {
@@ -82,6 +90,19 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
                 }
                 Some("--help" | "-h") => return Ok(Action::Help),
                 Some("--version") => return Ok(Action::Version),
+                Some("--ssh-agent") => {
+                    if !paths.is_empty() || args.next().is_some() {
+                        return Err("--ssh-agent is an internal standalone command".into());
+                    }
+                    return Ok(Action::SshAgent);
+                }
+                Some("--ssh-program") => {
+                    ssh_program = args
+                        .next()
+                        .filter(|value| !value.is_empty())
+                        .ok_or("--ssh-program requires an executable path")?;
+                    continue;
+                }
                 Some("--sync") => {
                     options.sync = true;
                     continue;
@@ -202,6 +223,7 @@ pub fn parse(args: impl IntoIterator<Item = OsString>) -> Result<Action, String>
         sources: paths,
         destination,
         options,
+        ssh_program,
     }))
 }
 

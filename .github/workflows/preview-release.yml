@@ -30,7 +30,7 @@ jobs:
       - name: Install Linux build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y musl-tools acl
+          sudo apt-get install -y musl-tools acl openssh-client openssh-server
           rustup toolchain install stable --profile minimal --component rustfmt --component clippy
           rustup default stable
           rustup target add "${{ matrix.target }}"
@@ -43,6 +43,7 @@ jobs:
           cargo clippy --locked --all-targets --target "${{ matrix.target }}" -- -D warnings
           cargo test --locked --target "${{ matrix.target }}"
           python3 -m unittest discover -s tests -p 'test_publish_preview.py'
+          TCOPY_BIN="$PWD/target/${{ matrix.target }}/debug/tcopy" python3 -m unittest discover -s tests -p 'test_native_ssh.py'
       - name: Build and package
         env:
           TARGET: ${{ matrix.target }}

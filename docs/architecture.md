@@ -98,6 +98,27 @@ and [bounded channels](https://doc.rust-lang.org/std/sync/mpsc/fn.sync_channel.h
 Linux open flags differ on [AArch64](https://github.com/torvalds/linux/blob/master/arch/arm64/include/uapi/asm/fcntl.h);
 `fsutil` keeps those ABI differences explicit.
 
+SSH endpoints dispatch to `remote` before the local scanner. `transport` starts
+native agents through OpenSSH and forwards temporary loopback listeners. Workers
+reuse authenticated native TCP streams; `wire` versions and bounds the private
+binary protocol. All paths travel as raw length-prefixed bytes rather than shell
+arguments. Only the remote executable is shell-quoted.
+
+`agent` owns retained directory descriptors, streaming directory iterators, and
+private temporary file stages. Directory batches hold at most 64 entries. The
+coordinator's bounded queue and shared `Concurrency` budget admit file workers
+and optional range helpers. Range data streams without per-buffer round trips;
+remote-to-remote data passes through the coordinator's buffers, never its disk.
+Agents independently validate source snapshots and disjoint, complete ranges.
+Only the owning stage stream may publish or abort a file. Publication reuses the
+local temporary-file cleanup/rename helper and the same parent fsync behavior.
+
+An agent's SSH stdin is its lease. Closing it shuts down native sockets and
+cleans stages; the coordinator retains endpoint lifetimes through queued work
+and directory finalization. Random stream capabilities prevent unrelated local
+users from accessing the loopback listener. See [SSH contract](ssh.md) for
+features, limits, and real-tunnel acceptance checks.
+
 Storage sources: [mountinfo format](https://www.man7.org/linux/man-pages/man5/proc_pid_mountinfo.5.html)
 and [kernel block queue attributes](https://www.kernel.org/doc/html/v5.9/block/queue-sysfs.html).
 The separate syscall benchmark accounts for [copy_file_range acceleration](https://www.man7.org/linux/man-pages/man2/copy_file_range.2.html),

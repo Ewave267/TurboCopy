@@ -93,8 +93,8 @@ pub fn checksum_matches(source: &File, destination: &Path, length: u64) -> io::R
             .is_some_and(|current| fsutil::same_file(current, &other_before)))
 }
 
-struct Temporary {
-    path: PathBuf,
+pub(crate) struct Temporary {
+    pub(crate) path: PathBuf,
     published: bool,
 }
 
@@ -128,7 +128,7 @@ impl Stage {
     }
 }
 impl Temporary {
-    fn publish(&mut self, destination: &std::path::Path) -> io::Result<()> {
+    pub(crate) fn publish(&mut self, destination: &std::path::Path) -> io::Result<()> {
         fs::rename(&self.path, destination)?;
         self.published = true;
         Ok(())
@@ -147,7 +147,7 @@ impl Drop for Temporary {
     }
 }
 
-fn temporary(
+pub(crate) fn temporary(
     parent: &Directory,
     link: Option<&std::path::Path>,
 ) -> io::Result<(Temporary, Option<File>)> {

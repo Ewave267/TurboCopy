@@ -36,7 +36,7 @@ impl Concurrency {
             start: std::time::Instant::now(),
         }
     }
-    fn acquire(&self) -> Permit<'_> {
+    pub(crate) fn acquire(&self) -> Permit<'_> {
         let mut active = self.active.lock().unwrap();
         while *active >= self.summary.limit.load(Ordering::Relaxed) as usize {
             active = self.ready.wait(active).unwrap();

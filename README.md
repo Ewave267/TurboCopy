@@ -38,6 +38,11 @@ dependencies.
 
 # Show live progress
 ./tcopy source_dir destination_dir --progress
+
+# Copy through SSH with native parallel workers (tcopy installed remotely)
+./tcopy --workers 8 source_dir alice@server:/backup/source_dir
+./tcopy alice@server:/data/source_dir ./backup
+./tcopy --workers 8 --chunk-size 16M alice@source:/data bob@destination:/backup
 ```
 
 For a source build, use `./target/release/tcopy` in place of `./tcopy`.
@@ -45,6 +50,10 @@ Run `./tcopy --help` for all options, including worker controls, JSON output,
 sparse files, reflinks, resumable copies, and extended metadata preservation.
 Native GPFS mounts select the GPFS profile automatically; see the
 [GPFS guide](docs/gpfs.md) for configuration and measurement.
+See the [SSH guide](docs/ssh.md) for native remote copying, tunnel routing,
+installation requirements, and supported options. File data uses Rust agents;
+OpenSSH handles authentication and forwarding. Remote hosts do not need to
+reach each other, and transfers do not stage file data on your machine.
 
 ## Copy behavior
 
@@ -67,9 +76,14 @@ cargo test --locked
 cargo fmt --check
 cargo clippy --locked --all-targets -- -D warnings
 python3 -m unittest discover -s tests -p 'test_publish_preview.py'
+cargo build --locked
+python3 -m unittest discover -s tests -p 'test_native_ssh.py'
 ```
 
 Chunking tests require a supported non-HDD filesystem, such as tmpfs.
+SSH integration tests require OpenSSH client/server, key generation, and
+permission to bind temporary loopback listeners; they use temporary keys and
+two test servers without changing your SSH configuration.
 See the [architecture](docs/architecture.md) and
 [performance documentation](docs/performance.md) for implementation details.
 

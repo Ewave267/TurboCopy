@@ -10,6 +10,7 @@ mod fsutil;
 mod hardware;
 mod metadata;
 mod progress;
+mod remote;
 mod resume;
 mod scanner;
 mod scheduler;
@@ -27,13 +28,33 @@ fn main() {
             println!("TurboCopy {}", env!("CARGO_PKG_VERSION"));
             0
         }
+        Ok(cli::Action::SshAgent) => match remote::agent::run() {
+            Ok(()) => 0,
+            Err(error) => {
+                eprintln!("tcopy: SSH agent: {error}");
+                1
+            }
+        },
         Ok(cli::Action::Copy(command)) => {
             let start = std::time::Instant::now();
             if command.options.sync && !command.options.checksum {
                 eprintln!("tcopy: --sync compares size only; matching sizes do not guarantee matching contents");
             }
-            let summary = match fsutil::install_signals().and_then(|_| scanner::plan(&command)) {
-                Ok(roots) => scheduler::run(roots, command.options, start),
+            let summary = match fsutil::install_signals().and_then(|_| remote::requested(&command))
+            {
+                Ok(true) => remote::run(&command, start),
+                Ok(false) => match scanner::plan(&command) {
+                    Ok(roots) => scheduler::run(roots, command.options, start),
+                    Err(error) => {
+                        let summary = std::sync::Arc::new(scheduler::Summary::new(
+                            command.options,
+                            Vec::new(),
+                            start,
+                        ));
+                        summary.fail(error);
+                        summary
+                    }
+                },
                 Err(error) => {
                     let summary = std::sync::Arc::new(scheduler::Summary::new(
                         command.options,

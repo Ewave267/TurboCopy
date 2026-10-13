@@ -207,16 +207,16 @@ impl Directory {
         self.0.sync_all()
     }
     pub fn link_mtime(&self, name: &OsStr, metadata: &Metadata) -> io::Result<()> {
+        self.link_mtime_parts(name, metadata.mtime(), metadata.mtime_nsec())
+    }
+    pub fn link_mtime_parts(&self, name: &OsStr, seconds: i64, nanos: i64) -> io::Result<()> {
         let name = CString::new(name.as_bytes()).map_err(|_| invalid("NUL in filename"))?;
         let times = [
             Timespec {
                 seconds: 0,
                 nanos: (1 << 30) - 2,
             }, // UTIME_OMIT: retain atime.
-            Timespec {
-                seconds: metadata.mtime(),
-                nanos: metadata.mtime_nsec(),
-            },
+            Timespec { seconds, nanos },
         ];
         // SAFETY: live fd, terminated filename, two initialized Linux timespecs.
         let result = unsafe { utimensat(self.0.as_raw_fd(), name.as_ptr(), times.as_ptr(), 0x100) };

@@ -12,6 +12,7 @@ pub struct StoragePair {
 }
 
 pub struct Summary {
+    pub backend: &'static str,
     pub hardware: crate::hardware::Hardware,
     pub limit: AtomicU64,
     pub adjustments: AtomicU64,
@@ -41,6 +42,7 @@ pub struct Summary {
 impl Summary {
     pub fn new(options: Options, storage: Vec<StoragePair>, start: Instant) -> Self {
         Self {
+            backend: "local",
             hardware: crate::hardware::Hardware::load(),
             limit: (options.worker_count() as u64).into(),
             adjustments: 0.into(),
@@ -121,8 +123,8 @@ impl Summary {
                 pair.source.shared_with(&pair.destination).map_or("null", |v| if v { "true" } else { "false" }),
                 optional_number(pair.available_bytes)
             )).collect::<Vec<_>>().join(",");
-            println!("{{\"dry_run\":{},\"gpfs\":{},\"fsync\":{},\"buffer_size\":{},\"workers\":{},\"chunk_size\":{},\"copied\":{},\"skipped\":{},\"bytes\":{},\"failures\":{},\"discovered\":{},\"transferred_bytes\":{},\"chunked_files\":{},\"positioned_fallbacks\":{},\"elapsed_seconds\":{:.6},\"throughput_bytes_per_second\":{:.3},\"worker_utilization\":{:.6},\"peak_active_workers\":{},\"metadata_seconds\":{:.6},\"transfer_seconds\":{:.6},\"storage\":[{}],\"auto\":{},\"final_workers\":{},\"concurrency_adjustments\":{},\"tuning_state\":{},\"tuning_samples\":{},\"tuning_best_score\":{:.3},\"chunk_policy\":{},\"hardware\":{},\"workload\":{{\"small_files\":{},\"medium_files\":{},\"large_files\":{}}}}}",
-                self.options.dry_run, self.options.gpfs, !self.options.no_fsync, self.options.buffer_size(), self.options.worker_count(), self.options.chunk_size.map_or("null".into(), |n| n.to_string()),
+            println!("{{\"backend\":{},\"dry_run\":{},\"gpfs\":{},\"fsync\":{},\"buffer_size\":{},\"workers\":{},\"chunk_size\":{},\"copied\":{},\"skipped\":{},\"bytes\":{},\"failures\":{},\"discovered\":{},\"transferred_bytes\":{},\"chunked_files\":{},\"positioned_fallbacks\":{},\"elapsed_seconds\":{:.6},\"throughput_bytes_per_second\":{:.3},\"worker_utilization\":{:.6},\"peak_active_workers\":{},\"metadata_seconds\":{:.6},\"transfer_seconds\":{:.6},\"storage\":[{}],\"auto\":{},\"final_workers\":{},\"concurrency_adjustments\":{},\"tuning_state\":{},\"tuning_samples\":{},\"tuning_best_score\":{:.3},\"chunk_policy\":{},\"hardware\":{},\"workload\":{{\"small_files\":{},\"medium_files\":{},\"large_files\":{}}}}}",
+                quote(self.backend), self.options.dry_run, self.options.gpfs, !self.options.no_fsync, self.options.buffer_size(), self.options.worker_count(), self.options.chunk_size.map_or("null".into(), |n| n.to_string()),
                 count(&self.copied), count(&self.skipped), count(&self.bytes), count(&self.failures), count(&self.discovered),
                 count(&self.transferred), count(&self.chunked), count(&self.fallbacks), elapsed, throughput, utilization,
                 count(&self.peak), count(&self.metadata_ns) as f64 / 1e9, count(&self.transfer_ns) as f64 / 1e9, storage,
@@ -130,6 +132,12 @@ impl Summary {
                 quote(if self.options.gpfs && !self.options.manual_chunks { "gpfs" } else if self.options.auto && !self.options.manual_chunks { "automatic" } else if self.options.chunk_size.is_some() { "manual" } else { "streaming" }), self.hardware_json(),
                 count(&self.small_files), count(&self.medium_files), count(&self.large_files));
         } else {
+            if self.backend != "local" {
+                println!(
+                    "Backend: {} (native workers through SSH tunnels)",
+                    self.backend
+                );
+            }
             println!("{}: {}  Skipped: {}  Bytes: {}  Failures: {}  Elapsed: {:.3}s  Throughput: {:.2} MiB/s",
                 if self.options.dry_run { "Planned" } else { "Copied" }, count(&self.copied), count(&self.skipped),
                 count(&self.bytes), count(&self.failures), elapsed, throughput / 1048576.0);
