@@ -254,6 +254,57 @@ fn native_checks_source_identity_and_authentication() {
 }
 
 #[test]
+fn native_rejects_incompatible_versions_and_malformed_requests() {
+    let f = Fixture::new();
+    let endpoint = f.endpoint();
+    let mut socket = std::net::TcpStream::connect(endpoint.address).unwrap();
+    socket
+        .set_read_timeout(Some(Duration::from_secs(2)))
+        .unwrap();
+    let mut magic = *wire::MAGIC;
+    magic[7] += 1;
+    socket.write_all(&magic).unwrap();
+    socket.write_all(&endpoint.token).unwrap();
+    assert_eq!(socket.read(&mut [0]).unwrap(), 0);
+
+    for frame in [vec![255], {
+        let mut frame = vec![wire::STAT];
+        frame.extend_from_slice(&u64::MAX.to_le_bytes());
+        frame
+    }] {
+        let mut client = endpoint.connect().unwrap();
+        client.stream.write_all(&frame).unwrap();
+        assert!(wire::status(&mut client.stream).is_err());
+        assert_eq!(client.stream.read(&mut [0]).unwrap(), 0);
+    }
+    // A bad session must not prevent subsequent authenticated sessions.
+    endpoint.connect().unwrap();
+}
+
+#[test]
+fn native_cleans_stage_after_owner_disconnect_before_commit() {
+    let f = Fixture::new();
+    fs::write(f.0.join("source"), b"new").unwrap();
+    fs::write(f.0.join("dest"), b"old").unwrap();
+    let endpoint = f.endpoint();
+    let info = f.source(&endpoint);
+    let mut owner = endpoint.connect().unwrap();
+    let (parent, name, _) = owner.stat(&f.0.join("dest"), true).unwrap();
+    let stage = owner.begin(parent, &name, &info, 1024, true).unwrap();
+    owner.write_start(stage, 0, false).unwrap();
+    owner.stream.write_all(b"new").unwrap();
+    owner.write_finish().unwrap();
+    drop(owner);
+    drop(endpoint);
+    assert_eq!(fs::read(f.0.join("dest")).unwrap(), b"old");
+    assert!(fs::read_dir(&f.0).unwrap().all(|entry| !entry
+        .unwrap()
+        .file_name()
+        .to_string_lossy()
+        .ends_with(".tmp")));
+}
+
+#[test]
 fn native_detects_source_changes_after_streaming_begins() {
     use std::io::Read;
     use std::os::unix::fs::FileExt;

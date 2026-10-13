@@ -54,6 +54,8 @@ See the [SSH guide](docs/ssh.md) for native remote copying, tunnel routing,
 installation requirements, and supported options. File data uses Rust agents;
 OpenSSH handles authentication and forwarding. Remote hosts do not need to
 reach each other, and transfers do not stage file data on your machine.
+See [filesystem validation](docs/correctness.md) for tested preservation,
+failure cases, and commands to repeat checks on another filesystem.
 
 ## Copy behavior
 

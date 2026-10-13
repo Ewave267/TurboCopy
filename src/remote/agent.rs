@@ -22,9 +22,10 @@ use std::{
 pub const TIMEOUT: Duration = Duration::from_secs(30);
 
 struct Stage {
+    // Unlink the temporary through its retained directory before closing that descriptor.
+    temporary: Mutex<Temporary>,
     parent: Directory,
     name: OsString,
-    temporary: Mutex<Temporary>,
     file: File,
     info: Info,
     size: u64,

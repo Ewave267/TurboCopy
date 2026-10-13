@@ -94,3 +94,16 @@ workers bypass the profile's automatic memory ceiling; at 32 workers, transfer
 buffers occupy at most 63 MiB, plus thread stacks, retained directory handles,
 filesystem caches and optional metadata. The profile does not impose byte-rate
 limits, spread work across clients, or alter GPFS settings.
+
+## Pending GPFS and NFS validation
+
+GPFS/NFS tests are deferred at the user's request: this workstation has no
+writable GPFS or NFS data mount. Classifier fixtures are not evidence of real
+network filesystem performance or correctness. Resume when a writable mount or
+SSH host is supplied. Run the Phase 5 file-size workloads, record selected and
+final workers, verify filesystem classification against mount information,
+and compare durable throughput with cp and rsync. Also run metadata-heavy
+trees and the filesystem correctness suite on each actual mount.
+The current Phase 5 harness accepts resolved local physical filesystems only;
+network runs need appropriate device accounting and cache controls before using
+that harness. The smaller comparison harness above can run on an existing mount.

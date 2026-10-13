@@ -1,0 +1,166 @@
+[
+  {
+    "filesystem": "ext4",
+    "status": "passed",
+    "image_bytes": 2147483648,
+    "mount": {
+      "filesystems": [
+        {
+          "target": "/tmp/tcopy-fs-matrix-sxvmg6_g/ext4",
+          "source": "/dev/loop28",
+          "fstype": "ext4",
+          "options": "rw,relatime,seclabel"
+        }
+      ]
+    },
+    "command": [
+      "runuser",
+      "-u",
+      "ewave",
+      "--",
+      "env",
+      "TMPDIR=/tmp/tcopy-fs-matrix-sxvmg6_g/ext4",
+      "/usr/bin/cargo",
+      "test",
+      "--locked",
+      "--test",
+      "copy",
+      "--test",
+      "phase4",
+      "--",
+      "--test-threads=1"
+    ],
+    "tests": {
+      "returncode": 0,
+      "stdout": "\nrunning 35 tests\ntest adaptive_flags_preserve_manual_controls_and_dry_run ... ok\ntest changing_source_is_reported_without_publishing_partial_data ... ok\ntest checksum_sync_compares_contents_even_in_dry_run ... ok\ntest chunk_controls_copy_partial_tail_and_share_budget_across_files ... ok\ntest cli_help_version_and_invalid_arguments ... ok\ntest copies_file_and_atomically_overwrites_without_changing_hardlink_alias ... ok\ntest copies_read_only_tree_raw_names_and_source_hardlink_contents ... ok\ntest destination_parent_symlink_swap_cannot_redirect_opened_directory ... ok\ntest directory_file_conflicts_fail_without_truncating_existing_data ... ok\ntest dry_run_creates_nothing_and_preserves_destination_metadata ... ok\ntest explicit_dot_copies_contents_without_an_extra_directory ... ok\ntest gpfs_batches_directory_finalization_in_post_order ... ok\ntest gpfs_profile_chunks_large_files_with_exact_partial_tail ... ok\ntest gpfs_profile_keeps_atomic_replacement_and_reports_durability ... ok\ntest json_dry_run_sync_and_failure_keep_stdout_machine_readable ... ok\ntest multiple_sources_and_collision_rejection ... ok\ntest no_fsync_preserves_tree_metadata_and_symlinks ... ok\ntest permission_failure_keeps_existing_destination ... ok\ntest preserves_permissions_and_nanosecond_mtimes_after_children_finish ... ok\ntest read_only_destination_failure_keeps_existing_file_and_leaves_no_stage ... ok\ntest recreates_links_and_never_writes_through_destination_symlinks ... ok\ntest recursive_mapping_empty_entries_and_trailing_slashes ... ok\ntest refuses_special_destinations_and_file_paths_with_trailing_slashes ... ok\ntest rejects_self_copy_nested_destination_and_hardlink_alias ... ok\ntest rejects_symlink_destination_directories_and_parents ... ok\ntest reports_special_files_and_continues_independent_copies ... ok\ntest resume_refuses_reserved_destination_name_before_mutation ... ok\ntest resume_rejects_tampered_symlinked_hardlinked_and_locked_checkpoints ... ok\ntest resume_retains_valid_partial_and_rejects_changed_source ... ok\ntest sigint_and_sigterm_keep_old_destination_and_clean_up ... ok\ntest sparse_and_reflink_options_copy_exact_data ... ok\ntest streams_wide_and_deep_trees_and_copies_sparse_contents ... ok\ntest supports_unix_filenames_and_end_of_options ... ok\ntest sync_skips_same_size_different_contents_and_retains_extras ... ok\ntest write_failure_cleans_temporary_and_keeps_existing_destination ... ok\n\ntest result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.63s\n\n\nrunning 4 tests\ntest preserves_acl_xattr_when_acl_tools_and_filesystem_allow_it ... ok\ntest preserves_file_and_directory_ownership_and_xattrs_and_removes_stale_directory_xattr ... ok\ntest preserves_symlink_xattr_when_filesystem_allows_it ... ok\ntest requested_owner_preservation_failure_does_not_publish_file ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n",
+      "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s\n     Running tests/copy.rs (target/debug/deps/copy-6c8c4edbc204e90e)\n     Running tests/phase4.rs (target/debug/deps/phase4-261dafc0f1fb8d07)\n"
+    },
+    "enospc": {
+      "returncode": 1,
+      "stderr": "tcopy: \"/tmp/tcopy-fs-matrix-sxvmg6_g/source\" -> \"/tmp/tcopy-fs-matrix-sxvmg6_g/ext4/existing\": No space left on device (os error 28)\n"
+    }
+  },
+  {
+    "filesystem": "xfs",
+    "status": "passed",
+    "image_bytes": 2147483648,
+    "mount": {
+      "filesystems": [
+        {
+          "target": "/tmp/tcopy-fs-matrix-sxvmg6_g/xfs",
+          "source": "/dev/loop28",
+          "fstype": "xfs",
+          "options": "rw,relatime,seclabel,inode64,logbufs=8,logbsize=32k,noquota"
+        }
+      ]
+    },
+    "command": [
+      "runuser",
+      "-u",
+      "ewave",
+      "--",
+      "env",
+      "TMPDIR=/tmp/tcopy-fs-matrix-sxvmg6_g/xfs",
+      "/usr/bin/cargo",
+      "test",
+      "--locked",
+      "--test",
+      "copy",
+      "--test",
+      "phase4",
+      "--",
+      "--test-threads=1"
+    ],
+    "tests": {
+      "returncode": 0,
+      "stdout": "\nrunning 35 tests\ntest adaptive_flags_preserve_manual_controls_and_dry_run ... ok\ntest changing_source_is_reported_without_publishing_partial_data ... ok\ntest checksum_sync_compares_contents_even_in_dry_run ... ok\ntest chunk_controls_copy_partial_tail_and_share_budget_across_files ... ok\ntest cli_help_version_and_invalid_arguments ... ok\ntest copies_file_and_atomically_overwrites_without_changing_hardlink_alias ... ok\ntest copies_read_only_tree_raw_names_and_source_hardlink_contents ... ok\ntest destination_parent_symlink_swap_cannot_redirect_opened_directory ... ok\ntest directory_file_conflicts_fail_without_truncating_existing_data ... ok\ntest dry_run_creates_nothing_and_preserves_destination_metadata ... ok\ntest explicit_dot_copies_contents_without_an_extra_directory ... ok\ntest gpfs_batches_directory_finalization_in_post_order ... ok\ntest gpfs_profile_chunks_large_files_with_exact_partial_tail ... ok\ntest gpfs_profile_keeps_atomic_replacement_and_reports_durability ... ok\ntest json_dry_run_sync_and_failure_keep_stdout_machine_readable ... ok\ntest multiple_sources_and_collision_rejection ... ok\ntest no_fsync_preserves_tree_metadata_and_symlinks ... ok\ntest permission_failure_keeps_existing_destination ... ok\ntest preserves_permissions_and_nanosecond_mtimes_after_children_finish ... ok\ntest read_only_destination_failure_keeps_existing_file_and_leaves_no_stage ... ok\ntest recreates_links_and_never_writes_through_destination_symlinks ... ok\ntest recursive_mapping_empty_entries_and_trailing_slashes ... ok\ntest refuses_special_destinations_and_file_paths_with_trailing_slashes ... ok\ntest rejects_self_copy_nested_destination_and_hardlink_alias ... ok\ntest rejects_symlink_destination_directories_and_parents ... ok\ntest reports_special_files_and_continues_independent_copies ... ok\ntest resume_refuses_reserved_destination_name_before_mutation ... ok\ntest resume_rejects_tampered_symlinked_hardlinked_and_locked_checkpoints ... ok\ntest resume_retains_valid_partial_and_rejects_changed_source ... ok\ntest sigint_and_sigterm_keep_old_destination_and_clean_up ... ok\ntest sparse_and_reflink_options_copy_exact_data ... ok\ntest streams_wide_and_deep_trees_and_copies_sparse_contents ... ok\ntest supports_unix_filenames_and_end_of_options ... ok\ntest sync_skips_same_size_different_contents_and_retains_extras ... ok\ntest write_failure_cleans_temporary_and_keeps_existing_destination ... ok\n\ntest result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.51s\n\n\nrunning 4 tests\ntest preserves_acl_xattr_when_acl_tools_and_filesystem_allow_it ... ok\ntest preserves_file_and_directory_ownership_and_xattrs_and_removes_stale_directory_xattr ... ok\ntest preserves_symlink_xattr_when_filesystem_allows_it ... ok\ntest requested_owner_preservation_failure_does_not_publish_file ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n",
+      "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running tests/copy.rs (target/debug/deps/copy-6c8c4edbc204e90e)\n     Running tests/phase4.rs (target/debug/deps/phase4-261dafc0f1fb8d07)\n"
+    },
+    "enospc": {
+      "returncode": 1,
+      "stderr": "tcopy: \"/tmp/tcopy-fs-matrix-sxvmg6_g/source\" -> \"/tmp/tcopy-fs-matrix-sxvmg6_g/xfs/existing\": No space left on device (os error 28)\n"
+    }
+  },
+  {
+    "filesystem": "btrfs",
+    "status": "passed",
+    "image_bytes": 2147483648,
+    "mount": {
+      "filesystems": [
+        {
+          "target": "/tmp/tcopy-fs-matrix-sxvmg6_g/btrfs",
+          "source": "/dev/loop28",
+          "fstype": "btrfs",
+          "options": "rw,relatime,seclabel,ssd,discard=async,space_cache=v2,subvolid=5,subvol=/"
+        }
+      ]
+    },
+    "command": [
+      "runuser",
+      "-u",
+      "ewave",
+      "--",
+      "env",
+      "TMPDIR=/tmp/tcopy-fs-matrix-sxvmg6_g/btrfs",
+      "/usr/bin/cargo",
+      "test",
+      "--locked",
+      "--test",
+      "copy",
+      "--test",
+      "phase4",
+      "--",
+      "--test-threads=1"
+    ],
+    "tests": {
+      "returncode": 0,
+      "stdout": "\nrunning 35 tests\ntest adaptive_flags_preserve_manual_controls_and_dry_run ... ok\ntest changing_source_is_reported_without_publishing_partial_data ... ok\ntest checksum_sync_compares_contents_even_in_dry_run ... ok\ntest chunk_controls_copy_partial_tail_and_share_budget_across_files ... ok\ntest cli_help_version_and_invalid_arguments ... ok\ntest copies_file_and_atomically_overwrites_without_changing_hardlink_alias ... ok\ntest copies_read_only_tree_raw_names_and_source_hardlink_contents ... ok\ntest destination_parent_symlink_swap_cannot_redirect_opened_directory ... ok\ntest directory_file_conflicts_fail_without_truncating_existing_data ... ok\ntest dry_run_creates_nothing_and_preserves_destination_metadata ... ok\ntest explicit_dot_copies_contents_without_an_extra_directory ... ok\ntest gpfs_batches_directory_finalization_in_post_order ... ok\ntest gpfs_profile_chunks_large_files_with_exact_partial_tail ... ok\ntest gpfs_profile_keeps_atomic_replacement_and_reports_durability ... ok\ntest json_dry_run_sync_and_failure_keep_stdout_machine_readable ... ok\ntest multiple_sources_and_collision_rejection ... ok\ntest no_fsync_preserves_tree_metadata_and_symlinks ... ok\ntest permission_failure_keeps_existing_destination ... ok\ntest preserves_permissions_and_nanosecond_mtimes_after_children_finish ... ok\ntest read_only_destination_failure_keeps_existing_file_and_leaves_no_stage ... ok\ntest recreates_links_and_never_writes_through_destination_symlinks ... ok\ntest recursive_mapping_empty_entries_and_trailing_slashes ... ok\ntest refuses_special_destinations_and_file_paths_with_trailing_slashes ... ok\ntest rejects_self_copy_nested_destination_and_hardlink_alias ... ok\ntest rejects_symlink_destination_directories_and_parents ... ok\ntest reports_special_files_and_continues_independent_copies ... ok\ntest resume_refuses_reserved_destination_name_before_mutation ... ok\ntest resume_rejects_tampered_symlinked_hardlinked_and_locked_checkpoints ... ok\ntest resume_retains_valid_partial_and_rejects_changed_source ... ok\ntest sigint_and_sigterm_keep_old_destination_and_clean_up ... ok\ntest sparse_and_reflink_options_copy_exact_data ... ok\ntest streams_wide_and_deep_trees_and_copies_sparse_contents ... ok\ntest supports_unix_filenames_and_end_of_options ... ok\ntest sync_skips_same_size_different_contents_and_retains_extras ... ok\ntest write_failure_cleans_temporary_and_keeps_existing_destination ... ok\n\ntest result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.06s\n\n\nrunning 4 tests\ntest preserves_acl_xattr_when_acl_tools_and_filesystem_allow_it ... ok\ntest preserves_file_and_directory_ownership_and_xattrs_and_removes_stale_directory_xattr ... ok\ntest preserves_symlink_xattr_when_filesystem_allows_it ... ok\ntest requested_owner_preservation_failure_does_not_publish_file ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+      "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running tests/copy.rs (target/debug/deps/copy-6c8c4edbc204e90e)\n     Running tests/phase4.rs (target/debug/deps/phase4-261dafc0f1fb8d07)\n"
+    },
+    "enospc": {
+      "returncode": 1,
+      "stderr": "tcopy: \"/tmp/tcopy-fs-matrix-sxvmg6_g/source\" -> \"/tmp/tcopy-fs-matrix-sxvmg6_g/btrfs/existing\": No space left on device (os error 28)\n"
+    }
+  },
+  {
+    "filesystem": "f2fs",
+    "status": "passed",
+    "image_bytes": 2147483648,
+    "mount": {
+      "filesystems": [
+        {
+          "target": "/tmp/tcopy-fs-matrix-sxvmg6_g/f2fs",
+          "source": "/dev/loop28",
+          "fstype": "f2fs",
+          "options": "rw,relatime,lazytime,seclabel,background_gc=on,nogc_merge,discard,discard_unit=block,user_xattr,inline_xattr,acl,inline_data,inline_dentry,flush_merge,barrier,extent_cache,mode=adaptive,active_logs=6,alloc_mode=reuse,checkpoint_merge,fsync_mode=posix,memory=normal,errors=continue,lookup_mode=perf"
+        }
+      ]
+    },
+    "command": [
+      "runuser",
+      "-u",
+      "ewave",
+      "--",
+      "env",
+      "TMPDIR=/tmp/tcopy-fs-matrix-sxvmg6_g/f2fs",
+      "/usr/bin/cargo",
+      "test",
+      "--locked",
+      "--test",
+      "copy",
+      "--test",
+      "phase4",
+      "--",
+      "--test-threads=1"
+    ],
+    "tests": {
+      "returncode": 0,
+      "stdout": "\nrunning 35 tests\ntest adaptive_flags_preserve_manual_controls_and_dry_run ... ok\ntest changing_source_is_reported_without_publishing_partial_data ... ok\ntest checksum_sync_compares_contents_even_in_dry_run ... ok\ntest chunk_controls_copy_partial_tail_and_share_budget_across_files ... ok\ntest cli_help_version_and_invalid_arguments ... ok\ntest copies_file_and_atomically_overwrites_without_changing_hardlink_alias ... ok\ntest copies_read_only_tree_raw_names_and_source_hardlink_contents ... ok\ntest destination_parent_symlink_swap_cannot_redirect_opened_directory ... ok\ntest directory_file_conflicts_fail_without_truncating_existing_data ... ok\ntest dry_run_creates_nothing_and_preserves_destination_metadata ... ok\ntest explicit_dot_copies_contents_without_an_extra_directory ... ok\ntest gpfs_batches_directory_finalization_in_post_order ... ok\ntest gpfs_profile_chunks_large_files_with_exact_partial_tail ... ok\ntest gpfs_profile_keeps_atomic_replacement_and_reports_durability ... ok\ntest json_dry_run_sync_and_failure_keep_stdout_machine_readable ... ok\ntest multiple_sources_and_collision_rejection ... ok\ntest no_fsync_preserves_tree_metadata_and_symlinks ... ok\ntest permission_failure_keeps_existing_destination ... ok\ntest preserves_permissions_and_nanosecond_mtimes_after_children_finish ... ok\ntest read_only_destination_failure_keeps_existing_file_and_leaves_no_stage ... ok\ntest recreates_links_and_never_writes_through_destination_symlinks ... ok\ntest recursive_mapping_empty_entries_and_trailing_slashes ... ok\ntest refuses_special_destinations_and_file_paths_with_trailing_slashes ... ok\ntest rejects_self_copy_nested_destination_and_hardlink_alias ... ok\ntest rejects_symlink_destination_directories_and_parents ... ok\ntest reports_special_files_and_continues_independent_copies ... ok\ntest resume_refuses_reserved_destination_name_before_mutation ... ok\ntest resume_rejects_tampered_symlinked_hardlinked_and_locked_checkpoints ... ok\ntest resume_retains_valid_partial_and_rejects_changed_source ... ok\ntest sigint_and_sigterm_keep_old_destination_and_clean_up ... ok\ntest sparse_and_reflink_options_copy_exact_data ... ok\ntest streams_wide_and_deep_trees_and_copies_sparse_contents ... ok\ntest supports_unix_filenames_and_end_of_options ... ok\ntest sync_skips_same_size_different_contents_and_retains_extras ... ok\ntest write_failure_cleans_temporary_and_keeps_existing_destination ... ok\n\ntest result: ok. 35 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.78s\n\n\nrunning 4 tests\ntest preserves_acl_xattr_when_acl_tools_and_filesystem_allow_it ... ok\ntest preserves_file_and_directory_ownership_and_xattrs_and_removes_stale_directory_xattr ... ok\ntest preserves_symlink_xattr_when_filesystem_allows_it ... ok\ntest requested_owner_preservation_failure_does_not_publish_file ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+      "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s\n     Running tests/copy.rs (target/debug/deps/copy-6c8c4edbc204e90e)\n     Running tests/phase4.rs (target/debug/deps/phase4-261dafc0f1fb8d07)\n"
+    },
+    "enospc": {
+      "returncode": 1,
+      "stderr": "tcopy: \"/tmp/tcopy-fs-matrix-sxvmg6_g/source\" -> \"/tmp/tcopy-fs-matrix-sxvmg6_g/f2fs/existing\": No space left on device (os error 28)\n"
+    }
+  }
+]

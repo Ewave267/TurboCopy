@@ -10,6 +10,24 @@ import phase5
 
 
 class Phase5Tests(unittest.TestCase):
+    def test_report_records_automatic_workers_and_classifier_mismatches(self):
+        result = json.loads((Path(__file__).resolve().parents[1] /
+                             "docs/benchmark-phase5.json").read_text())
+        sample = next(s for s in result["samples"] if s["tool"] == "tcopy auto"
+                      and s["scenario"] == "dense" and s["status"] == "verified")
+        result["samples"] = [sample]
+        result["datasets"] = []
+        result["omitted"] = []
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "report"
+            phase5.write_report(result, output)
+            report = output.with_suffix(".md").read_text()
+            self.assertIn(f"{sample['tcopy']['workers']} → {sample['tcopy']['final_workers']}", report)
+            self.assertIn("| yes |", report)
+            sample["tcopy"]["storage"][0]["source"]["filesystem"] = "wrong"
+            phase5.write_report(result, output)
+            self.assertIn("| no |", output.with_suffix(".md").read_text())
+
     def test_btrfs_device_discovery_uses_mount_point(self):
         with tempfile.TemporaryDirectory() as directory:
             parent = Path(directory)

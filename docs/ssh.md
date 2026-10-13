@@ -20,7 +20,35 @@ would collide. Two remote hosts need access only from the coordinator, not to
 each other. SSH host-key checks and SSH configuration remain effective; no
 passwords are stored and no agent forwarding is requested.
 
-## Correctness and efficiency contract
+## Protocol compatibility
+
+The current wire version is 1 (`TCOPY\0\0\x01`). Coordinator and agents must
+use exactly the same wire version; there is no negotiation or fallback.
+The agent startup response and every worker connection check this version
+before processing operations. An incompatible peer fails the transfer.
+Use the same TurboCopy release on all hosts; package version alone does not
+establish compatibility. Changes to framing, operation meanings or metadata
+encoding require a new wire version. Compatible fixes keep the wire version.
+Unknown operations, oversized fields and invalid metadata terminate the
+affected session after an error response where possible. Incomplete frames
+fail on EOF or the active I/O timeout. Uncommitted stages are removed when
+their owning session closes; already published files remain in place.
+
+## Examples
+
+```bash
+tcopy ./source/ user@host:/data/destination/ --auto
+tcopy user@host:/data/source/ ./destination/ --checksum --sync
+tcopy host-a:/data/source/ host-b:/data/destination/ --workers 4
+tcopy ./source/ host:/data/destination/ --ssh-program /opt/tcopy/bin/tcopy
+```
+
+Use `--dry-run` to check routing and destination mapping first. A failed copy
+returns a nonzero exit status; retry normally to overwrite files, or use
+`--sync --checksum` to skip files whose bytes already match. Remote resume
+checkpoints are unsupported.
+
+## Preservation and failure behavior
 
 - Local-to-remote, remote-to-local, remote-to-remote, and mixed multiple sources
   use the same root mapping as local copies, including trailing slashes and `/.`.

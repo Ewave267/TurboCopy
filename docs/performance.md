@@ -1,7 +1,8 @@
 # Benchmark methodology and results
 
-The historical Phase 1–5 measurements predate the removal of PSI-based admission
-throttling and automatic GPFS detection. The Phase 5 follow-up below measures
+The original Phase 1–5 measurements predate the removal of PSI-based admission
+throttling and automatic GPFS detection. The Phase 5 follow-up and
+[current rebenchmark](#phase-5-current-automatic-mode-rebenchmark) below measure
 the revised policy. Current CLI defaults select storage automatically
 and retain the selected admission limit unless explicit tuning is requested.
 Historical automatic-mode slowdowns remain recorded for comparison. See [GPFS guide](gpfs.md) for cluster verification.
@@ -437,3 +438,77 @@ the baseline tools improved by up to 33.5%. All dense source-residency checks
 were 0%; device/controller and metadata caches, host activity and temperature
 remain uncontrolled. Warm-cache and cross-device tests remain unsupported.
 TurboCopy’s per-file durability and atomic publication costs remain included.
+
+## Phase 5 current automatic-mode rebenchmark
+
+[benchmark-phase5-20261013T015836Z.md](benchmark-phase5-20261013T015836Z.md)
+contains the full report, four throughput graphs and automatic-selection table;
+[benchmark-phase5-20261013T015836Z.json](benchmark-phase5-20261013T015836Z.json)
+is an exact copy of the raw results from `run-20261013T015836Z-8Kq6h4`.
+The run started at 2026-10-13 01:58:44 UTC and finished at 03:09:35 UTC.
+Both the report status (`completed`) and script exit status (`0`) confirm success:
+all 96 dense copies and 96 empty-file companion copies were verified.
+The recorded Git revision is `e9b928931f813da91d66865946f1e1d22896329c`;
+the JSON also records the binary SHA-256 because a revision alone does not
+identify uncommitted working-tree changes.
+
+This repeats the same four workloads, eight configurations and three randomized
+iterations on the same Btrfs/encrypted-NVMe storage pair. Every dense source
+residency check was **0%** immediately before copying. Median durable MiB/s,
+including the same common final fsync endpoint:
+
+| Workload | GNU `cp -a` | `rsync -a` | `tcopy --auto` | Workers 1 | Best manual setting | Gain over workers 1 |
+| --- | ---: | ---: | ---: | ---: | --- | ---: |
+| 1 × 10 GiB | 683.6 | 621.0 | 659.9 | 656.6 | 1 worker: 656.6 | 1.00× |
+| 10 × 1 GiB | 609.5 | 598.1 | 636.8 | 629.1 | 8 workers: 680.6 | 1.08× |
+| 100 × 100 MiB | 592.0 | 554.9 | 658.7 | 578.9 | 16 workers: 666.1 | 1.15× |
+| 10,000 × 1 MiB | 352.3 | 275.4 | 216.4 | 130.4 | 16 workers: 492.2 | 3.77× |
+
+Automatic-mode comparison with both historical Phase 5 runs. Changes use
+unrounded medians; ranges are the current run's observed min–max, not confidence
+intervals:
+
+| Workload | Original auto MiB/s | Previous follow-up auto MiB/s | Current auto MiB/s (range) | Change vs original | Change vs follow-up |
+| --- | ---: | ---: | --- | ---: | ---: |
+| 1 × 10 GiB | 634.7 | 652.0 | 659.9 (635.1–669.0) | +4.0% | +1.2% |
+| 10 × 1 GiB | 655.7 | 749.9 | 636.8 (623.0–638.6) | -2.9% | -15.1% |
+| 100 × 100 MiB | 606.7 | 684.8 | 658.7 (598.4–668.2) | +8.6% | -3.8% |
+| 10,000 × 1 MiB | 105.4 | 221.8 | 216.4 (203.4–234.6) | +105.3% | -2.4% |
+
+Automatic mode selected and retained **4 → 4** workers with **zero concurrency
+adjustments in all 12 dense copies**. No dense TurboCopy sample used chunks.
+The storage classifier was correct for both endpoints in every automatic dense
+copy: **Btrfs, NVMe, complete topology, same filesystem and shared storage**.
+The reported encrypted mapper matches the mount inventory, whose physical
+device and `lsblk` hierarchy identify the non-rotational `nvme0n1`
+(HFM001TD3JX013N). Both endpoints report backing device `259:4`.
+This validates classification on this storage pair, not on GPFS/NFS or other
+untested topologies.
+
+The 10,000-file result preserves the main improvement over the original run:
+216.4 versus 105.4 MiB/s (**2.05×**), with the current observed range entirely
+above the original 104.6–108.6 MiB/s range. It remains below both current baseline
+tools and manual four workers at 242.5 MiB/s. Manual 16 workers reached
+492.2 MiB/s, but its 301.6–496.1 MiB/s range overlaps cp's 245.8–434.9 MiB/s
+range. These medians do not establish a consistent win or an optimal setting.
+
+There is **no consistent additional automatic-mode gain over the previous
+follow-up**. Three of four medians decreased, while the single-file result
+increased only 1.2%. The ten-file slowdown has non-overlapping observed ranges
+against the follow-up (623.0–638.6 versus 675.0–767.1 MiB/s), but it is not
+evidence that a particular code change caused it. Baseline tools also changed:
+cp's medians ranged from -12.1% to +22.4% relative to that run, and rsync's from
+-17.8% to -0.2%. Initial available memory was about 11.7 GiB, versus 9.1 GiB in
+the follow-up and 5.9 GiB originally. Host activity, device/controller caches,
+metadata caches and temperature remain uncontrolled.
+
+For 10,000 empty-file companions, median auto time was 28.176 s, versus
+30.085 s in the follow-up and 50.379 s originally. Current manual four and
+16 workers took 29.753 and 22.788 s; cp and rsync took 11.623 and 12.354 s.
+These creation/metadata measurements have uncontrolled metadata caches and are
+separate from dense-copy throughput; the full report retains individual samples.
+
+Warm-cache workloads again exceeded half the available RAM, and there was no
+independent writable physical-device pair for cross-device testing. GPFS/NFS
+remains deferred. The earlier interrupted `benchmark-phase5-current` artifacts
+are retained separately and do not contribute samples to this completed run.

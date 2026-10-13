@@ -80,6 +80,38 @@ fn cli_help_version_and_invalid_arguments() {
 }
 
 #[test]
+fn copies_read_only_tree_raw_names_and_source_hardlink_contents() {
+    let f = Fixture::new();
+    fs::create_dir(f.path("source")).unwrap();
+    let name = OsString::from_vec(b"-line\n tab\t quote' colon: \xff".to_vec());
+    fs::write(f.path("source").join(&name), b"contents").unwrap();
+    fs::hard_link(f.path("source").join(&name), f.path("source/alias")).unwrap();
+    fs::set_permissions(f.path("source"), fs::Permissions::from_mode(0o555)).unwrap();
+    success(f.copy(&["source/", "dest", "--workers", "4"]));
+    for path in [f.path("dest").join(&name), f.path("dest/alias")] {
+        assert_eq!(fs::read(path).unwrap(), b"contents");
+    }
+    assert_eq!(fs::metadata(f.path("dest")).unwrap().mode() & 0o777, 0o555);
+    // Source hard links are copied independently under the current contract.
+    assert_ne!(
+        fs::metadata(f.path("dest").join(&name)).unwrap().ino(),
+        fs::metadata(f.path("dest/alias")).unwrap().ino()
+    );
+}
+
+#[test]
+fn read_only_destination_failure_keeps_existing_file_and_leaves_no_stage() {
+    let f = Fixture::new();
+    fs::write(f.path("source"), b"new").unwrap();
+    fs::create_dir(f.path("dest")).unwrap();
+    fs::write(f.path("dest/file"), b"old").unwrap();
+    fs::set_permissions(f.path("dest"), fs::Permissions::from_mode(0o555)).unwrap();
+    assert!(!f.copy(&["source", "dest/file"]).status.success());
+    assert_eq!(fs::read(f.path("dest/file")).unwrap(), b"old");
+    assert_eq!(fs::read_dir(f.path("dest")).unwrap().count(), 1);
+}
+
+#[test]
 fn copies_file_and_atomically_overwrites_without_changing_hardlink_alias() {
     let f = Fixture::new();
     fs::write(f.path("source"), b"new contents").unwrap();

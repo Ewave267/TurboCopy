@@ -273,6 +273,39 @@ fn preserves_acl_xattr_when_acl_tools_and_filesystem_allow_it() {
         assert!(source_acl.status.success() && dest_acl.status.success());
         assert_eq!(source_acl.stdout, dest_acl.stdout);
     }
+    fs::create_dir(f.path("source-directory")).unwrap();
+    let setup = Command::new("setfacl")
+        .args(["-m", "u:65534:r-x,d:u:65534:r-x"])
+        .arg(f.path("source-directory"))
+        .output()
+        .unwrap();
+    assert!(
+        setup.status.success(),
+        "{}",
+        String::from_utf8_lossy(&setup.stderr)
+    );
+    fs::write(f.path("source-directory/child"), b"inherited ACL").unwrap();
+    assert_success(f.copy("source-directory", "dest-directory"));
+    for name in ["system.posix_acl_access", "system.posix_acl_default"] {
+        assert_eq!(
+            attr(&f.path("dest-directory"), name, false).unwrap(),
+            attr(&f.path("source-directory"), name, false).unwrap()
+        );
+    }
+    assert_eq!(
+        attr(
+            &f.path("dest-directory/child"),
+            "system.posix_acl_access",
+            false
+        )
+        .unwrap(),
+        attr(
+            &f.path("source-directory/child"),
+            "system.posix_acl_access",
+            false
+        )
+        .unwrap()
+    );
 }
 
 #[test]

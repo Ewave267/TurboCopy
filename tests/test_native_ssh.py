@@ -248,6 +248,36 @@ class NativeSSH(unittest.TestCase):
         self.assertEqual((self.data / "dest").read_bytes(), b"native")
         self.assertFalse(list(self.data.glob("control-*")))
 
+    def test_disconnected_ssh_tunnel_keeps_destination_and_cleans_stage(self):
+        with open(self.data / "huge", "wb") as file:
+            file.truncate(8 << 30)
+        for upload in (True, False):
+            with self.subTest(upload=upload):
+                (self.data / "dest").write_bytes(b"old destination")
+                args = (["huge", self.remote("destination", "dest")] if upload else
+                        [self.remote("source", "huge"), "dest"])
+                process = subprocess.Popen(self.command(args), cwd=self.data, env=self.env,
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                self.addCleanup(self.stop, process)
+                deadline = time.monotonic() + 15
+                while not any(p.stat().st_blocks for p in self.data.glob(".tcopy-*.tmp")):
+                    if process.poll() is not None or time.monotonic() >= deadline:
+                        self.fail("transfer did not write native staging data")
+                    time.sleep(0.01)
+                children = Path(f"/proc/{process.pid}/task/{process.pid}/children").read_text().split()
+                tunnels = [int(pid) for pid in children
+                           if b"-N" in Path(f"/proc/{pid}/cmdline").read_bytes().split(b"\0")]
+                self.assertEqual(len(tunnels), 1)
+                os.kill(tunnels[0], signal.SIGKILL)
+                stdout, stderr = process.communicate(timeout=40)
+                self.assertNotEqual(process.returncode, 0, stdout.decode())
+                self.assertEqual((self.data / "dest").read_bytes(), b"old destination", stderr.decode())
+                # Remote sessions can observe tunnel EOF after the coordinator exits.
+                deadline = time.monotonic() + 5
+                while list(self.data.glob(".tcopy-*.tmp")) and time.monotonic() < deadline:
+                    time.sleep(0.01)
+                self.assertFalse(list(self.data.glob(".tcopy-*.tmp")))
+
 
 if __name__ == "__main__":
     unittest.main()

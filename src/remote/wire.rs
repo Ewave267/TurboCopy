@@ -261,4 +261,32 @@ mod tests {
         assert!(info.unchanged(&decoded));
         assert_eq!(info.path, decoded.path);
     }
+
+    #[test]
+    fn rejects_truncated_and_out_of_range_metadata() {
+        let mut encoded = Vec::new();
+        Info {
+            kind: 1,
+            path: PathBuf::from("source"),
+            ..Info::default()
+        }
+        .write(&mut encoded)
+        .unwrap();
+        for length in 0..encoded.len() {
+            assert!(Info::read(&mut &encoded[..length]).is_err());
+        }
+        // Wire offsets for size, mode and the two nanosecond fields.
+        for (offset, value) in [
+            (1, u64::MAX),
+            (9, u64::MAX),
+            (41, 1_000_000_000),
+            (57, 1_000_000_000),
+        ] {
+            let mut invalid = encoded.clone();
+            invalid[offset..offset + 8].copy_from_slice(&value.to_le_bytes());
+            assert!(Info::read(&mut invalid.as_slice()).is_err());
+        }
+        encoded[0] = 5;
+        assert!(Info::read(&mut encoded.as_slice()).is_err());
+    }
 }

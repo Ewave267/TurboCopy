@@ -465,12 +465,32 @@ def write_report(result, output):
               "same-device contention and per-file fsync costs. Treat these as explanations to "
               "check against recorded worker/chunk telemetry, not performance claims for untested storage.", "",
               f"Observed automatic-mode initial → final worker limits: **{limits}** "
-              f"across {len(automatic)} verified dense copies. These reflect the existing pressure policy. "
-              "Prior verification and preparation I/O can influence its recent pressure window. "
+              f"across {len(automatic)} verified dense copies. "
               "Manual workers retain their limits. The 10,000-file runs spend most of their "
               "summed worker time in metadata/sync work, so overlapping those waits produces "
               "the largest measured parallel gain. Observed ranges are not confidence intervals.", "",
-              "## Read/write accounting", "",
+              "## Automatic selection and filesystem classification", "",
+              "Filesystem correctness compares reported types with the independent mount inventory. "
+              "Device kinds and topology completeness are reported separately; matching filesystem "
+              "types alone does not validate physical storage classification.", "",
+              "| Pair | Workload | Cache/run | Workers initial → final | Source / destination classification | Filesystem types correct |",
+              "| --- | --- | --- | --- | --- | --- |"]
+    for sample in result["samples"]:
+        if sample["status"] != "verified" or sample["scenario"] != "dense" or sample["tool"] != "tcopy auto":
+            continue
+        telemetry = sample["tcopy"]
+        pair = result["pairs"][sample["pair"]]
+        for storage in telemetry["storage"]:
+            descriptions = []
+            correct = True
+            for side in ("source", "destination"):
+                actual = storage[side]
+                expected = result["filesystems"][pair[side]]["fstype"]
+                correct &= actual["filesystem"] == expected
+                descriptions.append(f"{actual['filesystem']}/{actual['kind']} (topology {'complete' if actual['topology_complete'] else 'incomplete'})")
+            lines.append(f"| {sample['pair']} | {sample['workload']} | {sample['cache']['mode']}/{sample['run']} | "
+                         f"{telemetry['workers']} → {telemetry['final_workers']} | {' / '.join(descriptions)} | {'yes' if correct else 'no'} |")
+    lines += ["", "## Read/write accounting", "",
               "Medians in GiB. Device totals cover all backing devices and include other host activity; "
               "process totals cover the tool and supervisor, ending before the final external fsync.", "",
               "| Pair/cache | Workload | Tool | Process read GiB | Process write GiB | Device read GiB | Device write GiB |",
