@@ -1092,3 +1092,101 @@ fn json_dry_run_sync_and_failure_keep_stdout_machine_readable() {
     assert_eq!(summary.lines().count(), 1);
     assert_eq!(json_number(&summary, "failures"), 1.0);
 }
+
+#[test]
+fn sync_reconciles_metadata_without_rewriting_contents() {
+    use std::{
+        fs::{File, FileTimes},
+        time::{Duration, UNIX_EPOCH},
+    };
+    for (checksum, no_fsync) in [(false, false), (true, false), (true, true)] {
+        let f = Fixture::new();
+        fs::write(f.path("source"), b"same contents").unwrap();
+        fs::write(f.path("dest"), b"same contents").unwrap();
+        fs::set_permissions(f.path("source"), fs::Permissions::from_mode(0o644)).unwrap();
+        fs::set_permissions(f.path("dest"), fs::Permissions::from_mode(0o400)).unwrap();
+        File::open(f.path("source"))
+            .unwrap()
+            .set_times(
+                FileTimes::new().set_modified(UNIX_EPOCH + Duration::new(1234567890, 123456789)),
+            )
+            .unwrap();
+        let before = fs::metadata(f.path("dest")).unwrap();
+        let mut args = vec!["source", "dest", "--sync"];
+        if checksum {
+            args.push("--checksum");
+        }
+        if no_fsync {
+            args.push("--no-fsync");
+        }
+        args.push("--dry-run");
+        success(f.copy(&args));
+        assert_eq!(fs::metadata(f.path("dest")).unwrap().mode(), before.mode());
+        assert_eq!(
+            fs::metadata(f.path("dest")).unwrap().modified().unwrap(),
+            before.modified().unwrap()
+        );
+        args.pop();
+        success(f.copy(&args));
+        let after = fs::metadata(f.path("dest")).unwrap();
+        let source = fs::metadata(f.path("source")).unwrap();
+        assert_eq!(after.ino(), before.ino());
+        assert_eq!(after.mode() & 0o7777, source.mode() & 0o7777);
+        assert_eq!(after.modified().unwrap(), source.modified().unwrap());
+        assert_eq!(fs::read(f.path("dest")).unwrap(), b"same contents");
+        success(f.copy(&args));
+        assert_eq!(
+            fs::metadata(f.path("dest")).unwrap().ctime_nsec(),
+            after.ctime_nsec()
+        );
+    }
+}
+
+#[test]
+fn sync_metadata_replacement_protects_hardlink_alias_and_size_only_contents() {
+    for checksum in [false, true] {
+        let f = Fixture::new();
+        fs::write(f.path("source"), b"new").unwrap();
+        fs::write(f.path("dest"), if checksum { b"new" } else { b"old" }).unwrap();
+        fs::set_permissions(f.path("source"), fs::Permissions::from_mode(0o644)).unwrap();
+        fs::set_permissions(f.path("dest"), fs::Permissions::from_mode(0o600)).unwrap();
+        fs::hard_link(f.path("dest"), f.path("alias")).unwrap();
+        let alias = fs::metadata(f.path("alias")).unwrap();
+        let mut args = vec!["source", "dest", "--sync"];
+        if checksum {
+            args.push("--checksum");
+        }
+        success(f.copy(&args));
+        assert_eq!(
+            fs::read(f.path("dest")).unwrap(),
+            if checksum { b"new" } else { b"old" }
+        );
+        assert_eq!(fs::metadata(f.path("dest")).unwrap().mode() & 0o777, 0o644);
+        assert_ne!(fs::metadata(f.path("dest")).unwrap().ino(), alias.ino());
+        assert_eq!(fs::metadata(f.path("alias")).unwrap().mode(), alias.mode());
+        assert_eq!(
+            fs::metadata(f.path("alias")).unwrap().modified().unwrap(),
+            alias.modified().unwrap()
+        );
+    }
+}
+
+#[test]
+fn sync_metadata_access_failure_is_reported_without_replacing_destination() {
+    extern "C" {
+        fn geteuid() -> u32;
+    }
+    if unsafe { geteuid() } == 0 {
+        return;
+    }
+    let f = Fixture::new();
+    fs::write(f.path("source"), b"data").unwrap();
+    fs::write(f.path("dest"), b"keep").unwrap();
+    fs::set_permissions(f.path("dest"), fs::Permissions::from_mode(0o0)).unwrap();
+    let before = fs::metadata(f.path("dest")).unwrap();
+    let failed = f.copy(&["source", "dest", "--sync"]);
+    assert_eq!(failed.status.code(), Some(1));
+    assert_eq!(fs::metadata(f.path("dest")).unwrap().ino(), before.ino());
+    fs::set_permissions(f.path("dest"), fs::Permissions::from_mode(0o600)).unwrap();
+    assert_eq!(fs::read(f.path("dest")).unwrap(), b"keep");
+}

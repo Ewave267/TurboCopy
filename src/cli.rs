@@ -11,9 +11,9 @@ SSH copies support workers/chunks, sync/checksum, sparse, dry-run and reporting.
 Resume, reflink, extended metadata, tune and GPFS are local-only.
 
   --ssh-program PATH  Remote tcopy executable (default: tcopy).
-  --sync       Skip regular files with matching path and size.
+  --sync       Skip file contents with matching path and size; reconcile metadata.
                Matching sizes do not guarantee matching contents.
-  --checksum   With --sync, compare all bytes before skipping.
+  --checksum   With --sync, compare all bytes before skipping contents.
   --sparse     Preserve sparse holes where Linux reports them.
   --reflink    Try copy-on-write clone; fall back if unsupported.
   --resume     Keep and validate sequential partials for retry (no sparse/reflink).

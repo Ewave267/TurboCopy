@@ -105,6 +105,25 @@ fn run(
             job.path
         ));
     }
+    if skip
+        && !options.dry_run
+        && (job.info.mode & 0o7777 != existing.mode & 0o7777
+            || job.info.mtime != existing.mtime
+            || job.info.mtime_ns != existing.mtime_ns)
+    {
+        let transferred = destination.sync_metadata(
+            job.parent.unwrap(),
+            &job.name,
+            &existing,
+            &job.info,
+            !options.no_fsync,
+        )?;
+        budget
+            .summary
+            .transferred
+            .fetch_add(transferred, Ordering::Relaxed);
+        agent::verify(&job.info, &source.stat(&job.info.path, false)?.2)?;
+    }
     if skip {
         return Ok(Outcome::Skipped);
     }

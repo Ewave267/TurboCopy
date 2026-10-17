@@ -350,6 +350,68 @@ impl Session {
                 apply(directory.as_file(), &info, fsync)?;
                 wire::ok(&mut self.stream)
             }
+            wire::SYNC_METADATA => {
+                let parent = self.state.directory(wire::number(&mut self.stream)?)?;
+                let name = wire::name(&mut self.stream)?;
+                let expected = Info::read(&mut self.stream)?;
+                let desired = Info::read(&mut self.stream)?;
+                let fsync = wire::byte(&mut self.stream)? != 0;
+                if expected.kind != 1 || desired.kind != 1 || expected.size != desired.size {
+                    return Err(fsutil::invalid("invalid metadata synchronization"));
+                }
+                let file = OpenOptions::new()
+                    .read(true)
+                    .custom_flags(fsutil::NOFOLLOW | fsutil::NONBLOCK)
+                    .open(parent.path().join(&name))?;
+                let current = file.metadata()?;
+                if !current.is_file()
+                    || !expected.unchanged(&Info::new(&current, expected.path.clone()))
+                {
+                    return Err(fsutil::invalid(
+                        "destination changed during sync comparison",
+                    ));
+                }
+                let replacement = if current.nlink() > 1 {
+                    let (temporary, staged) = copy_engine::temporary(&parent, None)?;
+                    let mut staged = staged.unwrap();
+                    let mut input = &file;
+                    copy_engine::transfer(
+                        &mut input,
+                        &mut staged,
+                        current.len(),
+                        &mut self.buffer,
+                        |_| {},
+                    )?;
+                    if !fsutil::unchanged(&current, &file.metadata()?) {
+                        return Err(fsutil::invalid(
+                            "destination changed during metadata staging",
+                        ));
+                    }
+                    Some((temporary, staged))
+                } else {
+                    None
+                };
+                let target = replacement.as_ref().map_or(&file, |(_, staged)| staged);
+                apply(target, &desired, fsync)?;
+                if !fsutil::same_file(&current, &fs::symlink_metadata(parent.path().join(&name))?)
+                    || (replacement.is_some() && !fsutil::unchanged(&current, &file.metadata()?))
+                {
+                    return Err(fsutil::invalid(
+                        "destination replaced during metadata synchronization",
+                    ));
+                }
+                let transferred = if let Some((mut temporary, _)) = replacement {
+                    temporary.publish(&parent.path().join(&name))?;
+                    if fsync {
+                        parent.sync()?;
+                    }
+                    current.len()
+                } else {
+                    0
+                };
+                wire::ok(&mut self.stream)?;
+                wire::put_number(&mut self.stream, transferred)
+            }
             wire::BEGIN => {
                 let parent = self.state.directory(wire::number(&mut self.stream)?)?;
                 let name = wire::name(&mut self.stream)?;

@@ -12,7 +12,7 @@ use std::{
     time::Duration,
 };
 
-pub const MAGIC: &[u8; 8] = b"TCOPY\0\0\x01";
+pub const MAGIC: &[u8; 8] = b"TCOPY\0\0\x02";
 pub const MAX_FIELD: usize = 8192;
 pub const MAX_RANGE: u64 = 64 << 20;
 pub const STAT: u8 = 1;
@@ -32,6 +32,7 @@ pub const READ_AT: u8 = 14;
 pub const LINK: u8 = 15;
 pub const ANCESTOR: u8 = 16;
 pub const PATH_ANCESTOR: u8 = 17;
+pub const SYNC_METADATA: u8 = 18;
 
 // Coalesce metadata frames; large data buffers bypass the small output buffer.
 pub struct Stream {

@@ -260,6 +260,31 @@ fn preserves_acl_xattr_when_acl_tools_and_filesystem_allow_it() {
         attr(&f.path("dest"), "system.posix_acl_access", false).unwrap(),
         attr(&f.path("source"), "system.posix_acl_access", false).unwrap()
     );
+    let inode = fs::metadata(f.path("dest")).unwrap().ino();
+    assert!(Command::new("setfacl")
+        .arg("-b")
+        .arg(f.path("dest"))
+        .status()
+        .unwrap()
+        .success());
+    assert_success(
+        Command::new(env!("CARGO_BIN_EXE_tcopy"))
+            .current_dir(&f.0)
+            .args([
+                "source",
+                "dest",
+                "--sync",
+                "--checksum",
+                "--preserve-extended",
+            ])
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(fs::metadata(f.path("dest")).unwrap().ino(), inode);
+    assert_eq!(
+        attr(&f.path("dest"), "system.posix_acl_access", false).unwrap(),
+        attr(&f.path("source"), "system.posix_acl_access", false).unwrap()
+    );
     if let Ok(source_acl) = Command::new("getfacl")
         .arg("-cp")
         .arg(f.path("source"))
@@ -337,4 +362,57 @@ fn requested_owner_preservation_failure_does_not_publish_file() {
         String::from_utf8_lossy(&output.stderr)
     );
     assert!(!f.path("dest").exists());
+}
+
+#[test]
+fn sync_extended_metadata_converges_without_content_writes_and_default_leaves_xattrs() {
+    let f = Fixture::new();
+    fs::write(f.path("source"), b"same").unwrap();
+    fs::write(f.path("dest"), b"same").unwrap();
+    if !supported_setup(
+        set_attr(&f.path("source"), "user.tcopy", b"source", false),
+        false,
+    ) || !supported_setup(
+        set_attr(&f.path("dest"), "user.tcopy", b"dest", false),
+        false,
+    ) || !supported_setup(
+        set_attr(&f.path("dest"), "user.stale", b"remove", false),
+        false,
+    ) {
+        return;
+    }
+    let inode = fs::metadata(f.path("dest")).unwrap().ino();
+    let run = |extra: &[&str]| {
+        Command::new(env!("CARGO_BIN_EXE_tcopy"))
+            .current_dir(&f.0)
+            .args(["source", "dest", "--sync", "--checksum"])
+            .args(extra)
+            .output()
+            .unwrap()
+    };
+    assert_success(run(&[]));
+    assert_eq!(attr(&f.path("dest"), "user.tcopy", false).unwrap(), b"dest");
+    assert_success(run(&["--preserve-extended", "--dry-run"]));
+    assert_eq!(attr(&f.path("dest"), "user.tcopy", false).unwrap(), b"dest");
+    assert_success(run(&["--preserve-extended"]));
+    assert_eq!(
+        attr(&f.path("dest"), "user.tcopy", false).unwrap(),
+        b"source"
+    );
+    assert_eq!(
+        attr(&f.path("dest"), "user.stale", false)
+            .unwrap_err()
+            .raw_os_error(),
+        Some(61)
+    );
+    let source = fs::metadata(f.path("source")).unwrap();
+    let after = fs::metadata(f.path("dest")).unwrap();
+    assert_eq!((after.uid(), after.gid()), (source.uid(), source.gid()));
+    assert_eq!(after.ino(), inode);
+    assert_success(run(&["--preserve-extended"]));
+    let repeated = fs::metadata(f.path("dest")).unwrap();
+    assert_eq!(
+        (after.ctime(), after.ctime_nsec()),
+        (repeated.ctime(), repeated.ctime_nsec())
+    );
 }

@@ -65,8 +65,10 @@ failure cases, and commands to repeat checks on another filesystem.
   parents must already exist.
 - Permissions and modification times are preserved. Source symlinks are
   recreated; destination directory symlinks are refused.
-- `--sync` alone skips files with matching sizes, which may have different
-  contents. Add `--checksum` to compare contents before skipping.
+- `--sync` skips contents with matching sizes, which may have different
+  bytes. Add `--checksum` to compare contents. Both reconcile permissions and
+  modification time; local `--preserve-extended` also reconciles owner/group,
+  xattrs and ACLs. See the [metadata synchronization contract](docs/metadata-sync.md).
 - File replacement is atomic; a directory copy is not transactional. Keep
   source data stable while copying. `--no-fsync` disables durability barriers
   and removes the guarantee of crash durability.

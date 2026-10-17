@@ -285,6 +285,23 @@ impl Client {
         wire::status(&mut self.stream)?;
         Info::read(&mut self.stream)
     }
+    pub fn sync_metadata(
+        &mut self,
+        parent: u64,
+        name: &OsStr,
+        expected: &Info,
+        desired: &Info,
+        fsync: bool,
+    ) -> io::Result<u64> {
+        self.op(wire::SYNC_METADATA)?;
+        wire::put_number(&mut self.stream, parent)?;
+        wire::put_path(&mut self.stream, name)?;
+        expected.write(&mut self.stream)?;
+        desired.write(&mut self.stream)?;
+        self.stream.write_all(&[u8::from(fsync)])?;
+        wire::status(&mut self.stream)?;
+        wire::number(&mut self.stream)
+    }
     pub fn list(&mut self, info: &Info) -> io::Result<u64> {
         self.op(wire::LIST)?;
         info.write(&mut self.stream)?;

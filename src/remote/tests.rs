@@ -374,3 +374,129 @@ fn destination_parent_remains_anchored_after_path_replacement() {
     assert_eq!(fs::read(f.0.join("retained/dest")).unwrap(), b"safe");
     assert!(!f.0.join("outside/dest").exists());
 }
+
+#[test]
+fn native_sync_reconciles_metadata_without_rewriting_contents() {
+    use std::{
+        fs::{File, FileTimes},
+        time::{Duration, UNIX_EPOCH},
+    };
+    for (checksum, no_fsync) in [(false, false), (true, false), (true, true)] {
+        let f = Fixture::new();
+        fs::write(f.0.join("source"), b"same contents").unwrap();
+        fs::write(f.0.join("dest"), b"same contents").unwrap();
+        fs::set_permissions(f.0.join("source"), fs::Permissions::from_mode(0o644)).unwrap();
+        fs::set_permissions(f.0.join("dest"), fs::Permissions::from_mode(0o400)).unwrap();
+        File::open(f.0.join("source"))
+            .unwrap()
+            .set_times(
+                FileTimes::new().set_modified(UNIX_EPOCH + Duration::new(1234567890, 123456789)),
+            )
+            .unwrap();
+        let before = fs::metadata(f.0.join("dest")).unwrap();
+        let options = Options {
+            sync: true,
+            checksum,
+            no_fsync,
+            ..Options::default()
+        };
+        successful(&f.run(
+            &["source"],
+            "dest",
+            Options {
+                dry_run: true,
+                ..options
+            },
+        ));
+        assert_eq!(
+            fs::metadata(f.0.join("dest")).unwrap().mode(),
+            before.mode()
+        );
+        let summary = f.run(&["source"], "dest", options);
+        successful(&summary);
+        assert_eq!(summary.transferred.load(Ordering::Relaxed), 0);
+        assert_eq!(summary.skipped.load(Ordering::Relaxed), 1);
+        let after = fs::metadata(f.0.join("dest")).unwrap();
+        let source = fs::metadata(f.0.join("source")).unwrap();
+        assert_eq!(after.ino(), before.ino());
+        assert_eq!(after.mode() & 0o7777, source.mode() & 0o7777);
+        assert_eq!(after.modified().unwrap(), source.modified().unwrap());
+        successful(&f.run(&["source"], "dest", options));
+        assert_eq!(
+            fs::metadata(f.0.join("dest")).unwrap().ctime_nsec(),
+            after.ctime_nsec()
+        );
+    }
+}
+
+#[test]
+fn native_sync_metadata_protects_hardlink_alias_and_size_only_contents() {
+    for checksum in [false, true] {
+        let f = Fixture::new();
+        fs::write(f.0.join("source"), b"new").unwrap();
+        fs::write(f.0.join("dest"), if checksum { b"new" } else { b"old" }).unwrap();
+        fs::set_permissions(f.0.join("source"), fs::Permissions::from_mode(0o644)).unwrap();
+        fs::set_permissions(f.0.join("dest"), fs::Permissions::from_mode(0o600)).unwrap();
+        fs::hard_link(f.0.join("dest"), f.0.join("alias")).unwrap();
+        let alias = fs::metadata(f.0.join("alias")).unwrap();
+        successful(&f.run(
+            &["source"],
+            "dest",
+            Options {
+                sync: true,
+                checksum,
+                ..Options::default()
+            },
+        ));
+        assert_eq!(
+            fs::read(f.0.join("dest")).unwrap(),
+            if checksum { b"new" } else { b"old" }
+        );
+        assert_eq!(
+            fs::metadata(f.0.join("dest")).unwrap().mode() & 0o777,
+            0o644
+        );
+        assert_ne!(fs::metadata(f.0.join("dest")).unwrap().ino(), alias.ino());
+        assert_eq!(
+            fs::metadata(f.0.join("alias")).unwrap().mode(),
+            alias.mode()
+        );
+        assert_eq!(
+            fs::metadata(f.0.join("alias")).unwrap().modified().unwrap(),
+            alias.modified().unwrap()
+        );
+    }
+}
+
+#[test]
+fn native_metadata_update_rejects_stale_identity_and_symlink_destination() {
+    let f = Fixture::new();
+    fs::write(f.0.join("source"), b"data").unwrap();
+    fs::write(f.0.join("dest"), b"data").unwrap();
+    let endpoint = f.endpoint();
+    let mut client = endpoint.connect().unwrap();
+    let desired = f.source(&endpoint);
+    let (parent, name, expected) = client.stat(&f.0.join("dest"), true).unwrap();
+    fs::remove_file(f.0.join("dest")).unwrap();
+    symlink(f.0.join("source"), f.0.join("dest")).unwrap();
+    assert!(client
+        .sync_metadata(parent, &name, &expected, &desired, true)
+        .is_err());
+    assert!(fs::symlink_metadata(f.0.join("dest"))
+        .unwrap()
+        .file_type()
+        .is_symlink());
+    let mut client = endpoint.connect().unwrap();
+    fs::remove_file(f.0.join("dest")).unwrap();
+    fs::write(f.0.join("dest"), b"data").unwrap();
+    let (parent, name, mut expected) = client.stat(&f.0.join("dest"), true).unwrap();
+    expected.ino ^= 1;
+    let before = fs::metadata(f.0.join("dest")).unwrap();
+    assert!(client
+        .sync_metadata(parent, &name, &expected, &desired, true)
+        .is_err());
+    assert!(fsutil::unchanged(
+        &before,
+        &fs::metadata(f.0.join("dest")).unwrap()
+    ));
+}

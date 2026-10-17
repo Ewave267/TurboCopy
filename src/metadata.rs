@@ -120,6 +120,50 @@ fn copy_fd_xattrs(source: &File, dest: &File) -> io::Result<()> {
     Ok(())
 }
 
+pub fn basic_matches(source: &Metadata, dest: &Metadata) -> bool {
+    source.mode() & 0o7777 == dest.mode() & 0o7777
+        && source.mtime() == dest.mtime()
+        && source.mtime_nsec() == dest.mtime_nsec()
+}
+
+pub fn file_matches(
+    source: &File,
+    dest: &File,
+    metadata: &Metadata,
+    extended: bool,
+) -> io::Result<bool> {
+    let current = dest.metadata()?;
+    if !basic_matches(metadata, &current) {
+        return Ok(false);
+    }
+    if !extended {
+        return Ok(true);
+    }
+    if (metadata.uid(), metadata.gid()) != (current.uid(), current.gid()) {
+        return Ok(false);
+    }
+    // SAFETY: live descriptors and buffers sized by the checked xattr helpers.
+    let source_names = names(|ptr, len| unsafe { flistxattr(source.as_raw_fd(), ptr, len) })?;
+    let dest_names = names(|ptr, len| unsafe { flistxattr(dest.as_raw_fd(), ptr, len) })?;
+    if source_names.len() != dest_names.len() {
+        return Ok(false);
+    }
+    for name in source_names {
+        fsutil::check_cancelled()?;
+        if !dest_names.contains(&name) {
+            return Ok(false);
+        }
+        let left =
+            value(|ptr, len| unsafe { fgetxattr(source.as_raw_fd(), name.as_ptr(), ptr, len) })?;
+        let right =
+            value(|ptr, len| unsafe { fgetxattr(dest.as_raw_fd(), name.as_ptr(), ptr, len) })?;
+        if left != right {
+            return Ok(false);
+        }
+    }
+    Ok(true)
+}
+
 fn preserve_fd(
     source: &File,
     dest: &File,

@@ -22,13 +22,15 @@ passwords are stored and no agent forwarding is requested.
 
 ## Protocol compatibility
 
-The current wire version is 1 (`TCOPY\0\0\x01`). Coordinator and agents must
+The current wire version is 2 (`TCOPY\0\0\x02`). Coordinator and agents must
 use exactly the same wire version; there is no negotiation or fallback.
 The agent startup response and every worker connection check this version
 before processing operations. An incompatible peer fails the transfer.
 Use the same TurboCopy release on all hosts; package version alone does not
 establish compatibility. Changes to framing, operation meanings or metadata
 encoding require a new wire version. Compatible fixes keep the wire version.
+Version 2 adds the validated metadata-only synchronization operation; version 1
+peers are incompatible. Upgrade the coordinator and all participating agents together.
 Unknown operations, oversized fields and invalid metadata terminate the
 affected session after an error response where possible. Incomplete frames
 fail on EOF or the active I/O timeout. Uncommitted stages are removed when
@@ -45,7 +47,9 @@ tcopy ./source/ host:/data/destination/ --ssh-program /opt/tcopy/bin/tcopy
 
 Use `--dry-run` to check routing and destination mapping first. A failed copy
 returns a nonzero exit status; retry normally to overwrite files, or use
-`--sync --checksum` to skip files whose bytes already match. Remote resume
+`--sync --checksum` to skip contents whose bytes already match. Sync still
+reconciles mode and mtime without transferring those contents; see the
+[metadata synchronization contract](metadata-sync.md). Remote resume
 checkpoints are unsupported.
 
 ## Preservation and failure behavior

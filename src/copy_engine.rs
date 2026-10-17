@@ -246,6 +246,64 @@ pub fn copy(
         {
             return Err(fsutil::invalid("source changed during sync comparison"));
         }
+        if !options.preserve_extended
+            && crate::metadata::basic_matches(&before, existing.as_ref().unwrap())
+        {
+            return Ok(Outcome::Skipped);
+        }
+        let mut output = OpenOptions::new()
+            .read(true)
+            .custom_flags(fsutil::NOFOLLOW | fsutil::NONBLOCK)
+            .open(&destination)?;
+        let current = output.metadata()?;
+        if !current.is_file() || !fsutil::unchanged(existing.as_ref().unwrap(), &current) {
+            return Err(fsutil::invalid(
+                "destination changed during sync comparison",
+            ));
+        }
+        let matches =
+            crate::metadata::file_matches(&input, &output, &before, options.preserve_extended)?;
+        // Stage existing bytes to keep size-only sync semantics and protect aliases.
+        let replacement = if !matches && current.nlink() > 1 {
+            let (temporary, staged) = temporary(&task.parent, None)?;
+            let mut staged = staged.unwrap();
+            transfer(&mut output, &mut staged, current.len(), buffer, |n| {
+                summary.transferred.fetch_add(n, Ordering::Relaxed);
+            })?;
+            if !fsutil::unchanged(&current, &output.metadata()?) {
+                return Err(fsutil::invalid(
+                    "destination changed during metadata staging",
+                ));
+            }
+            Some((temporary, staged))
+        } else {
+            None
+        };
+        let target = replacement.as_ref().map_or(&output, |(_, file)| file);
+        if !matches {
+            crate::metadata::preserve_file(
+                &input,
+                target,
+                &before,
+                options.preserve_extended,
+                !options.no_fsync,
+            )?;
+        }
+        if !fsutil::unchanged(&before, &input.metadata()?)
+            || !fsutil::unchanged(&before, &fs::symlink_metadata(&source)?)
+            || !fsutil::same_file(&current, &fs::symlink_metadata(&destination)?)
+            || (replacement.is_some() && !fsutil::unchanged(&current, &output.metadata()?))
+        {
+            return Err(fsutil::invalid(
+                "file changed during metadata synchronization",
+            ));
+        }
+        if let Some((mut temporary, _)) = replacement {
+            temporary.publish(&destination)?;
+            if !options.no_fsync {
+                task.parent.sync()?;
+            }
+        }
         return Ok(Outcome::Skipped);
     }
     let mut stage = if options.resume {
@@ -376,7 +434,7 @@ pub fn copy(
     Ok(Outcome::Copied(before.len()))
 }
 
-fn transfer(
+pub(crate) fn transfer(
     input: &mut impl Read,
     output: &mut impl Write,
     mut remaining: u64,

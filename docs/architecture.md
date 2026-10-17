@@ -43,6 +43,10 @@ atomic publication. It provides no crash durability promise and forbids resume.
 checkpoint directory. Its source identity sidecar and full retained-prefix
 comparison prevent stale or corrupt partials from being published. The
 checkpoint file is locked during use and publication still uses atomic rename.
+Sync decisions skip contents, then reconcile requested file metadata. Single-link
+files update through a validated descriptor; hardlinked files stage the existing
+destination bytes to protect aliases. See [metadata synchronization](metadata-sync.md)
+for durability, failure and native wire-version details.
 `metadata` applies basic mode/mtime or, with `--preserve-extended`, owner/group
 and xattrs including ACLs. Directory metadata is finalized after descendants.
 

@@ -175,6 +175,39 @@ class NativeSSH(unittest.TestCase):
         self.assertEqual((self.data / "sparse").stat().st_size, 8 << 20)
         self.assertEqual((self.data / "sparse").stat().st_blocks, 0)
 
+    def test_sync_metadata_only_upload_download_and_relay(self):
+        source = self.data / "source"
+        source.write_bytes(b"identical contents")
+        source.chmod(0o644)
+        os.utime(source, ns=(1234567890123456789, 1234567890123456789))
+        routes = [("source", self.remote("destination", "uploaded"), "uploaded"),
+                  (self.remote("source", "source"), "downloaded", "downloaded"),
+                  (self.remote("source", "source"), self.remote("destination", "relayed"), "relayed")]
+        for origin, destination, name in routes:
+            with self.subTest(route=name):
+                target = self.data / name
+                target.write_bytes(source.read_bytes())
+                target.chmod(0o400)
+                before = target.stat()
+                self.run_copy("--sync", "--checksum", "--dry-run", origin, destination)
+                self.assertEqual(target.stat().st_mode, before.st_mode)
+                self.assertEqual(target.stat().st_mtime_ns, before.st_mtime_ns)
+                report = json.loads(self.run_copy("--json", "--sync", "--checksum", origin, destination).stdout)
+                self.assertEqual(report["skipped"], 1)
+                self.assertEqual(target.stat().st_ino, before.st_ino)
+                self.assertEqual(target.stat().st_mode, source.stat().st_mode)
+                self.assertEqual(target.stat().st_mtime_ns, source.stat().st_mtime_ns)
+                self.assertEqual(target.read_bytes(), source.read_bytes())
+        if os.geteuid() != 0:
+            target = self.data / "uploaded"
+            target.chmod(0o0)
+            before = target.stat()
+            self.run_copy("--sync", "source", self.remote("destination", "uploaded"), success=False)
+            self.assertEqual(target.stat().st_ino, before.st_ino)
+            self.assertEqual(target.stat().st_mode, before.st_mode)
+            target.chmod(0o600)
+            self.assertEqual(target.read_bytes(), source.read_bytes())
+
     def test_parallel_chunks_and_native_byte_integrity(self):
         block = bytes(range(251)) * 4096
         digest = hashlib.sha256()
