@@ -251,7 +251,17 @@ pub fn copy(
     let mut stage = if options.resume {
         let (partial, offset) =
             crate::resume::Partial::open(&task.parent, &task.name, &input, &before)?;
-        Stage::Partial(partial, offset)
+        match partial {
+            Some(partial) => Stage::Partial(partial, offset),
+            None => {
+                if !fsutil::unchanged(&before, &fs::symlink_metadata(&source)?) {
+                    return Err(fsutil::invalid(
+                        "source changed during publication recovery",
+                    ));
+                }
+                return Ok(Outcome::Copied(before.len()));
+            }
+        }
     } else {
         let (temporary, output) = temporary(&task.parent, None)?;
         Stage::Temporary(temporary, output.unwrap())

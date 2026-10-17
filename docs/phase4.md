@@ -23,8 +23,9 @@ symlinks must retain the existing safe failure behavior.
 `--resume` reserves the `.tcopy-resume` entry in each destination directory and
 cannot be combined with `--sparse` or `--reflink`; its partial is sequential.
 It retains failed transfer progress on a best-effort basis, then verifies all
-retained bytes on restart. A crash can leave an incomplete or stale checkpoint
-that must be removed manually. Retained bytes are not a durability guarantee.
+retained bytes on restart. Initialization and publication interruptions now recover automatically when
+state and retained contents can be validated; see [resume recovery](resume-recovery.md).
+Corrupt or stale checkpoints still fail closed. Retained bytes are not a durability guarantee.
 
 Implementation slices: CLI and checksum sync; optional clone and sparse transfer;
 validated resume state; extended metadata; filesystem benchmark matrix. Tests

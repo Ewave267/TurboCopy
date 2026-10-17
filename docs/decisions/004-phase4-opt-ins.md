@@ -9,7 +9,7 @@ neither syscall is assumed faster on every filesystem.
 `--resume` copies sequentially into a 0600 partial under a private 0700
 `.tcopy-resume` directory on the destination filesystem. A sidecar records the
 exact destination basename and source device, inode, length, mtime and ctime.
-The partial is locked while used. Restart checks owner, mode, link count, state
+The sidecar and partial are locked while used. Restart checks owner, mode, link count, state
 and every retained byte before seeking to its end. A bad or stale checkpoint
 fails without replacing the destination; the operator can remove the checkpoint
 to restart. The partial and sidecar have deterministic names, while the sidecar
@@ -18,8 +18,10 @@ checks the full basename to turn hash collisions into explicit failures.
 The data file is synced before atomic rename. After rename, the destination
 parent and checkpoint directory are synced before the sidecar is removed, then
 the checkpoint directory is synced again. Failed transfer bytes may survive a
-crash but are not promised durable. A crash between checkpoint operations can
-leave stale state requiring manual removal. The reserved `.tcopy-resume` entry
+crash but are not promised durable. Restart can finish publication cleanup after validating the source identity,
+basic destination metadata and every destination byte. Torn initial sidecar
+writes are repairable only before partial data exists. See
+[recovery guarantees and regression coverage](../resume-recovery.md). The reserved `.tcopy-resume` entry
 and incompatibility with `--sparse`/`--reflink` are deliberate limits that keep
 checkpoint offsets meaningful and the publication path reviewable.
 

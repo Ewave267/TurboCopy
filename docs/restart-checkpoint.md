@@ -1,3 +1,15 @@
+# Current work — 2026-10-17
+
+| Task | Status | Scope and completion criteria |
+| --- | --- | --- |
+| 1. Crash-recoverable resume | Completed | Reproduce the publication crash before changing code; review initialization, validation, metadata, publication and cleanup; make retries idempotent while protecting unrelated data and preserving atomic rename/fsync; test deterministic and repeated interruptions; document guarantees and commit independently. See [recovery details](resume-recovery.md). |
+| 2. Metadata synchronization | Queued | Reproduce identical-content skips locally and over SSH; define the sync/checksum/preservation contract; reconcile requested mode, mtime and supported ownership/ACL/xattrs without rewriting contents; propagate failures; test and document local/remote behavior; commit independently. |
+| 3. Automatic worker selection | Queued | Benchmark current HEAD before changes; identify the actual auto/manual bottleneck; implement a small bounded policy change only if measurements justify it, preserving manual settings and short-transfer behavior. Compare large, multiple-large, small and mixed workloads against manual TurboCopy, cp and rsync, using existing infrastructure and available same/separate devices; record medians, variability, workers, CPU/RAM and correctness/durability conditions. GPFS/NFS requires authorized accessible mounts. Test, document before/after results and limitations, and commit independently. |
+
+Only Task 1 was authorized for implementation in this work session. Tasks 2 and
+3 remain queued; earlier benchmark results below are historical, not Task 3's
+required current-HEAD baseline.
+
 # Restart checkpoint — 2026-10-12
 
 User asked to stop and save progress, then offered to run the benchmark for later
