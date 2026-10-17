@@ -24,6 +24,9 @@ source identity format and CLI are unchanged. No dependencies were added.
   its length. Completed partials remain usable after metadata has changed their
   permissions, including read-only modes. Root can resume a completed partial
   whose owner was changed to the recorded source owner by extended preservation.
+  Recovery from mode `000` opens an anchored Linux `O_PATH` handle directly;
+  this avoids Rust `OpenOptions` masking that flag on musl builds. Ownership,
+  hardlink and full-content validation still apply before publication.
 - When valid state exists without a partial, recovery opens the destination
   without following symlinks. It requires a regular file with matching size,
   mode and mtime, compares every byte, and rechecks file and source stability.

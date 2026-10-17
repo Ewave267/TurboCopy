@@ -1,10 +1,10 @@
 use crate::fsutil::{self, Directory};
 use std::{
-    ffi::OsStr,
+    ffi::{CString, OsStr},
     fs::{self, File, Metadata, OpenOptions},
     io::{self, Read, Write},
     os::{
-        fd::AsRawFd,
+        fd::{AsRawFd, FromRawFd},
         unix::{
             ffi::OsStrExt,
             fs::{FileExt, MetadataExt, OpenOptionsExt},
@@ -16,6 +16,7 @@ use std::{
 extern "C" {
     fn geteuid() -> u32;
     fn flock(fd: i32, operation: i32) -> i32;
+    fn open(path: *const std::ffi::c_char, flags: i32, ...) -> i32;
 }
 
 fn remove_if_same(path: &Path, file: &File) {
@@ -254,10 +255,17 @@ impl Partial {
                     Ok(file) => file,
                     Err(error) if error.kind() == io::ErrorKind::PermissionDenied => {
                         // O_PATH lets the owner restore access after metadata set mode 000.
-                        let handle = OpenOptions::new()
-                            .read(true)
-                            .custom_flags(0o10000000 | fsutil::NOFOLLOW)
-                            .open(&path)?;
+                        let c_path = CString::new(path.as_os_str().as_bytes())?;
+                        // OpenOptions masks O_PATH out with musl's O_ACCMODE.
+                        // SAFETY: live NUL-terminated path; no O_CREAT, so no mode argument.
+                        let fd = unsafe {
+                            open(c_path.as_ptr(), 0o10000000 | fsutil::NOFOLLOW | 0o2000000)
+                        };
+                        if fd < 0 {
+                            return Err(io::Error::last_os_error());
+                        }
+                        // SAFETY: open returned a new owned descriptor.
+                        let handle = unsafe { File::from_raw_fd(fd) };
                         let metadata = handle.metadata()?;
                         if !metadata.is_file()
                             || metadata.nlink() != 1
@@ -427,13 +435,17 @@ mod tests {
     }
 
     fn child(root: &Path, point: &str) -> std::process::ExitStatus {
-        std::process::Command::new(std::env::current_exe().unwrap())
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
             .args(["--exact", "resume::tests::crash_child"])
             .env("TCOPY_TEST_ROOT", root)
             .env("TCOPY_TEST_CRASH", point)
-            .stdout(std::process::Stdio::null())
-            .status()
-            .unwrap()
+            .output()
+            .unwrap();
+        if !output.status.success() && output.status.code() != Some(77) {
+            eprintln!("{}", String::from_utf8_lossy(&output.stdout));
+            eprintln!("{}", String::from_utf8_lossy(&output.stderr));
+        }
+        output.status
     }
 
     #[test]
