@@ -4,11 +4,11 @@
 | --- | --- | --- |
 | 1. Crash-recoverable resume | Completed | Reproduce the publication crash before changing code; review initialization, validation, metadata, publication and cleanup; make retries idempotent while protecting unrelated data and preserving atomic rename/fsync; test deterministic and repeated interruptions; document guarantees and commit independently. See [recovery details](resume-recovery.md). |
 | 2. Metadata synchronization | Completed | Reproduce identical-content skips locally and over SSH; define the sync/checksum/preservation contract; reconcile requested mode, mtime and supported ownership/ACL/xattrs without rewriting contents; propagate failures; test and document local/remote behavior; commit independently. See [implemented contract and tests](metadata-sync.md). |
-| 3. Automatic worker selection | Queued | Benchmark current HEAD before changes; identify the actual auto/manual bottleneck; implement a small bounded policy change only if measurements justify it, preserving manual settings and short-transfer behavior. Compare large, multiple-large, small and mixed workloads against manual TurboCopy, cp and rsync, using existing infrastructure and available same/separate devices; record medians, variability, workers, CPU/RAM and correctness/durability conditions. GPFS/NFS requires authorized accessible mounts. Test, document before/after results and limitations, and commit independently. |
+| 3. Automatic worker selection | Completed | Benchmark current HEAD before changes; identify the actual auto/manual bottleneck; implement a small bounded policy change only if measurements justify it, preserving manual settings and short-transfer behavior. Compare large, multiple-large, small and mixed workloads against manual TurboCopy, cp and rsync, using existing infrastructure and available same/separate devices; record medians, variability, workers, CPU/RAM and correctness/durability conditions. GPFS/NFS requires authorized accessible mounts. Test, document before/after results and limitations, and commit independently. See [policy, results and raw artifacts](automatic-workers.md). |
 
-Tasks 1 and 2 were authorized and implemented separately. Task 3 remains queued;
-earlier benchmark results below are historical, not Task 3's required
-current-HEAD baseline.
+Tasks 1–3 were authorized and implemented independently. Task 3 includes a fresh
+parent-commit baseline, final build confirmation and tmpfs controls. Earlier
+benchmark results below remain historical; current results are linked above.
 
 # Restart checkpoint — 2026-10-12
 

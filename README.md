@@ -46,6 +46,9 @@ dependencies.
 ```
 
 For a source build, use `./target/release/tcopy` in place of `./tcopy`.
+Automatic durable small-file copies can select up to 16 workers on confirmed
+shared NVMe, within CPU/memory limits; see [selection and measurements](docs/automatic-workers.md).
+
 Run `./tcopy --help` for all options, including worker controls, JSON output,
 sparse files, reflinks, resumable copies, and extended metadata preservation.
 Native GPFS mounts select the GPFS profile automatically; see the

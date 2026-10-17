@@ -3,7 +3,9 @@
 Current policy update: PSI is diagnostic and no longer reduces admission. CLI
 storage selection is enabled by default; detected native GPFS selects its fixed
 profile. Only explicit `--tune` calibrates non-GPFS workload concurrency. The
-pressure-feedback design below records the original Phase 3 behavior.
+pressure-feedback design below records the original Phase 3 behavior. The
+[Task 3 policy](automatic-workers.md) adds a bounded small-file probe for shared
+NVMe, with no new active calibration.
 
 Implement hardware adaptation from `project.md` on the Phase 2 engine, with no
 new Rust dependencies and no changes to atomic replacement or destination mapping.

@@ -69,8 +69,9 @@ previews are sent to stderr so stdout contains one object.
 
 `hardware` reads CPU topology, available RAM, visible cgroup v2 ancestor limits,
 and CPU/I/O pressure. `tuner::select` combines these with the root storage pairs
-before the pool starts. Automatic workers have a conservative ceiling of eight,
-also bounded by CPU and buffer budgets. `copy_engine` selects automatic range
+before the pool starts. Automatic workers keep conservative CPU/buffer-bounded
+profiles, with a sampled durable small-file workload on confirmed shared NVMe
+permitting up to 16 I/O workers. See [worker selection](automatic-workers.md). `copy_engine` selects automatic range
 sizes from each eligible file's length and rechecks its storage pair, including
 mounted subdirectories. Explicit worker/chunk overrides retain precedence.
 

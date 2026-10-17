@@ -1,0 +1,28 @@
+{
+  "baseline_revision": "a9c71f9eab0fc32e3635a837e50b0d9dcf737903",
+  "baseline_binary_sha256": "f877cd37433a2db172b9951ae03561b9b7895ec6a4b5b10a8abec144d62687c6",
+  "independent_parent_rebuild_sha256": "f877cd37433a2db172b9951ae03561b9b7895ec6a4b5b10a8abec144d62687c6",
+  "final_binary_sha256": "251ea73ae4b7a9b8fc8990962019f75df031f99d08e37f654892e75a3000af4a",
+  "final_source_sha256": {
+    "src/cli.rs": "baced000bbeb2c49aac509c5ccb7b38d003b4536886ac1acccf96eb6ceb83e1b",
+    "src/copy_engine.rs": "48ae03d229a344551bd7ab48fa3205c190261e69c78da92e39cb4b035237856f",
+    "src/fsutil.rs": "ed34e959a7ed89752b0e6c1aa1018dacd024c798e35708be1ab103e99c731382",
+    "src/hardware.rs": "8b93ac988a04a328c107543a7d2e978d18ee2199b24de33f06375967051ab76d",
+    "src/main.rs": "24aa953b8490608c189800bbf4a516d63478dbd47b04909a54af3b902e113f59",
+    "src/metadata.rs": "d87bbaf3d4f91f179351ddd9893a9728279b059869bcb8c1be4336b72bae9256",
+    "src/progress.rs": "37fb46ece40fdb3718ad0af0e41bb3f884c425aff2522a7fdc8e60e41c5c71b3",
+    "src/remote/agent.rs": "8b83b7a287b7820bb075ba9755f258cb8002518bf2c82fa94b39f2ec03971847",
+    "src/remote/copy.rs": "2fcc789fee2781cb88f9c6e59aa59436a19bc8356415d1d68ee7ac8e0bb8308e",
+    "src/remote/mod.rs": "e94d8a9b112f1fd80126ac4b025392d75383bc979377a873d6a0a1efd069e32f",
+    "src/remote/tests.rs": "68a96b71b407cdc53d62005266c1e2798c8678169875ca2cce8e163f00edbe39",
+    "src/remote/transport.rs": "575e114e2dd327c41dfe22b0cac828269b09a3fad1c74a12ae87bc3c743d89c5",
+    "src/remote/wire.rs": "dbc187be80c3e082aa3c72b99389beccdf62f02bbac82272dc00c3cbc4e13720",
+    "src/resume.rs": "a1e94d1d320919ad857304a4c98d358a9cbff80f4908a797af536f40f27113c8",
+    "src/scanner.rs": "2a7930c6df9f89f964817df229429cc7510987e89a96c803bcc77186c80efb33",
+    "src/scheduler.rs": "4c2769eaf0e7f1ef41967fb7716898306d529c298f0101b59bf6312344db89ff",
+    "src/sparse.rs": "58f2726487e33c2b61247437139245424d2416bc62649410a8dce3b382a654ba",
+    "src/storage_detect.rs": "9da53dd7ffaaf1e3906ae1d9ef24718267419a0675191b8431818b6232d04a15",
+    "src/tuner.rs": "f858f705fda2355ea4632dcb7427c150d624896b1a881dabac762f16f669acea"
+  },
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14) (Fedora 1.95.0-5.fc42)"
+}

@@ -1,5 +1,12 @@
 # Benchmark methodology and results
 
+The latest [Task 3 worker-selection results](automatic-workers.md) include a
+verified parent-commit baseline and repeated before/after comparisons. On the
+measured shared Btrfs/NVMe device, 4,096 × 1 MiB improved from 209.3 to
+567.1 MiB/s median; this is not a universal speed claim. Older measurements below
+use different dataset sizes and sometimes an additional final sync, so do not
+pool their rates with the Task 3 matrix.
+
 The original Phase 1–5 measurements predate the removal of PSI-based admission
 throttling and automatic GPFS detection. The Phase 5 follow-up and
 [current rebenchmark](#phase-5-current-automatic-mode-rebenchmark) below measure

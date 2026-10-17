@@ -4,7 +4,35 @@ fn fast(storage: &Storage) -> bool {
     storage.chunks_allowed() && matches!(storage.kind, "ssd" | "nvme" | "memory")
 }
 
-pub fn select(mut options: Options, hardware: &Hardware, pairs: &[StoragePair]) -> Options {
+pub fn metadata_parallelism(options: Options, pairs: &[StoragePair]) -> bool {
+    options.auto
+        && !options.sync
+        && !options.resume
+        && !options.no_fsync
+        && !options.dry_run
+        && !options.manual_workers
+        && !options.gpfs
+        && !pairs.is_empty()
+        && pairs.iter().all(|p| {
+            p.source.kind == "nvme"
+                && p.destination.kind == "nvme"
+                && p.source.complete
+                && p.destination.complete
+                && p.source.chunks_allowed()
+                && p.destination.chunks_allowed()
+                && p.source.filesystem != "gpfs"
+                && p.destination.filesystem != "gpfs"
+                && p.source.shared_with(&p.destination) == Some(true)
+        })
+}
+
+pub fn select(
+    mut options: Options,
+    hardware: &Hardware,
+    pairs: &[StoragePair],
+    many_small_files: bool,
+) -> Options {
+    let overlap_metadata = many_small_files && metadata_parallelism(options, pairs);
     options.gpfs |= options.auto
         && pairs
             .iter()
@@ -26,7 +54,9 @@ pub fn select(mut options: Options, hardware: &Hardware, pairs: &[StoragePair]) 
             let storage_limit = pairs
                 .iter()
                 .map(|p| {
-                    if p.source.kind == "hdd" || p.destination.kind == "hdd" {
+                    if overlap_metadata {
+                        16
+                    } else if p.source.kind == "hdd" || p.destination.kind == "hdd" {
                         if p.source.shared_with(&p.destination) != Some(false) {
                             1
                         } else {
@@ -48,11 +78,16 @@ pub fn select(mut options: Options, hardware: &Hardware, pairs: &[StoragePair]) 
             let memory_limit = hardware
                 .memory_bytes
                 .map_or(2, |n| (n / 64 / (256 * 1024)).clamp(1, 128) as usize);
-            let cpus = hardware
-                .physical_cores
-                .unwrap_or(hardware.logical_cpus)
-                .min(hardware.logical_cpus)
-                .max(1);
+            // Small durable files wait on metadata I/O rather than occupying a CPU.
+            let cpus = if overlap_metadata {
+                hardware.logical_cpus.max(1).saturating_mul(2)
+            } else {
+                hardware
+                    .physical_cores
+                    .unwrap_or(hardware.logical_cpus)
+                    .min(hardware.logical_cpus)
+                    .max(1)
+            };
             let limit = storage_limit.min(memory_limit).min(cpus);
             options.workers = Some(limit);
         }
@@ -243,6 +278,7 @@ mod tests {
             },
             &host,
             &[pair],
+            false,
         );
         assert!(selected.gpfs);
         assert_eq!(selected.worker_count(), 32);
@@ -273,7 +309,7 @@ mod tests {
         };
         let mut host = hardware();
         host.logical_cpus = 1;
-        let selected = select(profile, &host, &[]);
+        let selected = select(profile, &host, &[], false);
         assert_eq!(selected.worker_count(), 32);
         assert_eq!(selected.chunk_size, Some(16 << 20));
         let mut remote = storage("unknown", 1);
@@ -285,7 +321,7 @@ mod tests {
         remote.filesystem = "nfs".into();
         assert_eq!(chunk_size(selected, &remote, &remote, 1 << 30, 32), None);
         host.memory_bytes = Some(128 << 20);
-        assert_eq!(select(profile, &host, &[]).worker_count(), 1);
+        assert_eq!(select(profile, &host, &[], false).worker_count(), 1);
         let manual = Options {
             workers: Some(7),
             manual_workers: true,
@@ -293,7 +329,7 @@ mod tests {
             manual_chunks: true,
             ..profile
         };
-        let selected = select(manual, &host, &[]);
+        let selected = select(manual, &host, &[], false);
         assert_eq!(selected.worker_count(), 7);
         assert_eq!(selected.chunk_size, Some(4 << 20));
     }
@@ -327,12 +363,12 @@ mod tests {
             auto: true,
             ..Options::default()
         };
-        let selected = select(auto, &hardware(), std::slice::from_ref(&pair));
+        let selected = select(auto, &hardware(), std::slice::from_ref(&pair), false);
         assert_eq!(selected.worker_count(), 8);
         assert_eq!(selected.chunk_size, Some(8 << 20));
         pair.destination.dev = 1;
         assert_eq!(
-            select(auto, &hardware(), std::slice::from_ref(&pair)).worker_count(),
+            select(auto, &hardware(), std::slice::from_ref(&pair), false).worker_count(),
             4
         );
         assert_eq!(
@@ -341,17 +377,17 @@ mod tests {
         );
         pair.source.kind = "hdd";
         assert_eq!(
-            select(auto, &hardware(), std::slice::from_ref(&pair)).worker_count(),
+            select(auto, &hardware(), std::slice::from_ref(&pair), false).worker_count(),
             1
         );
         pair.source.kind = "unknown";
         assert_eq!(
-            select(auto, &hardware(), std::slice::from_ref(&pair)).worker_count(),
+            select(auto, &hardware(), std::slice::from_ref(&pair), false).worker_count(),
             2
         );
         let mut limited = hardware();
         limited.memory_bytes = Some(16 << 20);
-        assert_eq!(select(auto, &limited, &[]).worker_count(), 1);
+        assert_eq!(select(auto, &limited, &[], false).worker_count(), 1);
         let manual = Options {
             workers: Some(12),
             chunk_size: Some(1024),
@@ -359,7 +395,7 @@ mod tests {
             manual_chunks: true,
             ..auto
         };
-        let selected = select(manual, &limited, &[pair]);
+        let selected = select(manual, &limited, &[pair], false);
         assert_eq!(selected.worker_count(), 12);
         assert_eq!(selected.chunk_size, Some(1024));
         assert_eq!(
@@ -377,7 +413,7 @@ mod tests {
         };
         network.source.filesystem = "nfs".into();
         assert_eq!(
-            select(auto, &hardware(), std::slice::from_ref(&network)).worker_count(),
+            select(auto, &hardware(), std::slice::from_ref(&network), false).worker_count(),
             2
         );
         assert_eq!(
@@ -386,11 +422,128 @@ mod tests {
         );
         let mut single_cpu = hardware();
         single_cpu.logical_cpus = 1;
-        assert_eq!(select(auto, &single_cpu, &[]).worker_count(), 1);
-        let ordinary = select(Options::default(), &hardware(), &[]);
+        assert_eq!(select(auto, &single_cpu, &[], false).worker_count(), 1);
+        let ordinary = select(Options::default(), &hardware(), &[], false);
         assert!(ordinary.worker_count() <= 4);
         assert_eq!(ordinary.chunk_size, None);
     }
+    #[test]
+    fn many_small_files_overlap_nvme_waits_with_bounded_workers() {
+        let auto = Options {
+            auto: true,
+            ..Options::default()
+        };
+        let pair = StoragePair {
+            source: storage("nvme", 1),
+            destination: storage("nvme", 1),
+            available_bytes: None,
+        };
+        let mut host = hardware();
+        host.physical_cores = Some(4);
+        host.logical_cpus = 8;
+        assert_eq!(
+            select(auto, &host, std::slice::from_ref(&pair), true).worker_count(),
+            16
+        );
+        assert_eq!(
+            select(auto, &host, std::slice::from_ref(&pair), false).worker_count(),
+            4
+        );
+        host.memory_bytes = Some(16 << 20);
+        assert_eq!(
+            select(auto, &host, std::slice::from_ref(&pair), true).worker_count(),
+            1
+        );
+        let manual = Options {
+            workers: Some(7),
+            manual_workers: true,
+            ..auto
+        };
+        assert_eq!(
+            select(manual, &host, std::slice::from_ref(&pair), true).worker_count(),
+            7
+        );
+    }
+
+    #[test]
+    fn small_file_policy_requires_confirmed_shared_nvme_and_keeps_other_profiles() {
+        let auto = Options {
+            auto: true,
+            ..Options::default()
+        };
+        for (kind, filesystem, complete, destination_dev, expected) in [
+            ("nvme", "ext4", true, 1, 16),
+            ("nvme", "btrfs", true, 1, 16),
+            ("nvme", "xfs", true, 1, 16),
+            ("nvme", "f2fs", true, 1, 16),
+            ("nvme", "nfs", true, 1, 2),
+            ("nvme", "ext4", false, 1, 4),
+            ("nvme", "ext4", true, 2, 8),
+            ("ssd", "ext4", true, 1, 4),
+            ("memory", "tmpfs", true, 1, 4),
+            ("unknown", "ext4", false, 1, 2),
+            ("hdd", "ext4", true, 1, 1),
+            ("unknown", "gpfs", false, 1, 32),
+        ] {
+            let mut pair = StoragePair {
+                source: storage(kind, 1),
+                destination: storage(kind, destination_dev),
+                available_bytes: None,
+            };
+            for side in [&mut pair.source, &mut pair.destination] {
+                side.filesystem = filesystem.into();
+                side.complete = complete;
+            }
+            assert_eq!(
+                select(auto, &hardware(), &[pair], true).worker_count(),
+                expected,
+                "{kind}/{filesystem}, complete={complete}, destination={destination_dev}"
+            );
+        }
+        let pair = StoragePair {
+            source: storage("nvme", 1),
+            destination: storage("nvme", 1),
+            available_bytes: None,
+        };
+        for options in [
+            Options { sync: true, ..auto },
+            Options {
+                no_fsync: true,
+                ..auto
+            },
+            Options {
+                dry_run: true,
+                ..auto
+            },
+        ] {
+            assert!(!metadata_parallelism(options, std::slice::from_ref(&pair)));
+            assert_eq!(
+                select(options, &hardware(), std::slice::from_ref(&pair), true).worker_count(),
+                4
+            );
+        }
+        let pair = StoragePair {
+            source: storage("nvme", 1),
+            destination: storage("nvme", 1),
+            available_bytes: None,
+        };
+        let mut host = hardware();
+        host.logical_cpus = 2;
+        host.physical_cores = Some(1);
+        assert_eq!(
+            select(auto, &host, std::slice::from_ref(&pair), true).worker_count(),
+            4
+        );
+        host.logical_cpus = 128;
+        host.physical_cores = Some(128);
+        assert_eq!(
+            select(auto, &host, std::slice::from_ref(&pair), true).worker_count(),
+            16
+        );
+        host.memory_bytes = None;
+        assert_eq!(select(auto, &host, &[pair], true).worker_count(), 2);
+    }
+
     #[test]
     fn calibration_requires_work_and_stops_on_measured_plateau() {
         let mut tuner = Controller::new(8, true);

@@ -1,0 +1,2860 @@
+{
+  "status": "completed",
+  "invocation": [
+    "benches/worker_selection.py",
+    "--before",
+    "target/task3/tcopy-before",
+    "--workload",
+    "many-1mib",
+    "--runs",
+    "5",
+    "--output",
+    "target/task3/gap"
+  ],
+  "started_utc": "2026-10-17T16:35:29.323543+00:00",
+  "revision": "a9c71f9eab0fc32e3635a837e50b0d9dcf737903",
+  "filesystem": {
+    "target": "/home/ewave/projects/turboCopy",
+    "source": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941[/home/ewave/projects/turboCopy]",
+    "fstype": "btrfs",
+    "options": "rw,nosuid,nodev,relatime,seclabel,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=256,subvol=/home",
+    "maj:min": "0:36",
+    "path": "/home/ewave/projects/turboCopy",
+    "st_dev": 44,
+    "total_bytes": 1022488477696,
+    "free_bytes": 585028231168,
+    "physical_devices": [
+      "nvme0n1"
+    ],
+    "btrfs_usage": {
+      "command": [
+        "btrfs",
+        "filesystem",
+        "usage",
+        "-b",
+        "/home/ewave/projects/turboCopy"
+      ],
+      "returncode": 0,
+      "stdout": "Overall:\n    Device size:\t\t     1022488477696\n    Device allocated:\t\t      664671354880\n    Device unallocated:\t\t      357817122816\n    Device missing:\t\t     1022488477696\n    Device slack:\t\t                 0\n    Used:\t\t\t      430652465152\n    Free (estimated):\t\t      585029279744\t(min: 406120718336)\n    Free (statfs, df):\t\t      585028231168\n    Data ratio:\t\t\t              1.00\n    Metadata ratio:\t\t              2.00\n    Global reserve:\t\t         536870912\t(used: 0)\n    Multiple profiles:\t\t                no\n\nData,single: Size:641032257536, Used:413820100608 (64.56%)\n\nMetadata,DUP: Size:11811160064, Used:8416083968 (71.26%)\n\nSystem,DUP: Size:8388608, Used:98304 (1.17%)",
+      "stderr": "WARNING: cannot read detailed chunk info, per-device usage will not be shown, run as root\nWARNING: failed to get device size for /dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941: No such file or directory"
+    },
+    "btrfs_devices": {
+      "command": [
+        "btrfs",
+        "filesystem",
+        "show",
+        "--raw",
+        "/home/ewave/projects/turboCopy"
+      ],
+      "returncode": 0,
+      "stdout": "Label: 'fedora_ewave'  uuid: e9e35cbc-79a6-4e5f-97a0-17b0c4a88684\n\tTotal devices 1 FS bytes used 422236282880\n\tdevid    1 size 0 used 0 path /dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941 MISSING",
+      "stderr": ""
+    }
+  },
+  "memory_available_bytes": 7859220480,
+  "binaries": {
+    "/home/ewave/projects/turboCopy/target/task3/tcopy-before": "f877cd37433a2db172b9951ae03561b9b7895ec6a4b5b10a8abec144d62687c6"
+  },
+  "script_sha256": "0e73a3b8ada49775aa064de74815072523ce3cdff7c19cdfaec811076259fcc8",
+  "runs": 5,
+  "seed": 20261017,
+  "samples": [
+    {
+      "workload": "many-1mib",
+      "run": 1,
+      "tool": "manual 4",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.3560703960029059
+      },
+      "copy_seconds": 16.511292135000986,
+      "user_cpu_seconds": 0.174333,
+      "system_cpu_seconds": 11.119019,
+      "cpu_percent_one_core": 68.39774808453733,
+      "max_rss_kib": 20188,
+      "process_io": {
+        "rchar": 4295017408,
+        "wchar": 4294968530,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4295016448,
+        "write_bytes": 4696772608,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 5.925499863224104e-05,
+      "seconds": 16.511351389999618,
+      "mib_s": 248.07176004265844,
+      "files_s": 248.07176004265844,
+      "cpu_percent": 68.39785273929817,
+      "sampled_peak_rss_kib": 3536,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "read_extent_buffer_pages": 1,
+        "futex_do_wait": 157,
+        "0": 107,
+        "barrier_all_devices": 77,
+        "wait_log_commit": 272,
+        "folio_wait_bit_common": 177,
+        "btrfs_btree_wait_writeback_range": 4,
+        "lookup_slow": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 16.508892,
+        "throughput_bytes_per_second": 260160842.676,
+        "worker_utilization": 0.998717,
+        "peak_active_workers": 4,
+        "metadata_seconds": 53.827554,
+        "transfer_seconds": 12.156789,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 580732637184
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 8001032192,
+          "cpu_pressure_avg10": 0.06,
+          "io_pressure_avg10": 6.17
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 1,
+      "tool": "rsync",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.2300450999973691
+      },
+      "copy_seconds": 9.19925079800305,
+      "user_cpu_seconds": 1.367978,
+      "system_cpu_seconds": 4.597047,
+      "cpu_percent_one_core": 64.8425087105449,
+      "max_rss_kib": 24280,
+      "process_io": {
+        "rchar": 8591409223,
+        "wchar": 8591352512,
+        "syscr": 308999,
+        "syscw": 151576,
+        "read_bytes": 4294967296,
+        "write_bytes": 4297080832,
+        "cancelled_write_bytes": 4096
+      },
+      "sync_seconds": 4.589190227001382,
+      "seconds": 13.788441025004431,
+      "mib_s": 297.06041405059307,
+      "files_s": 297.06041405059307,
+      "cpu_percent": 49.37850790856767,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 1,
+      "tool": "cp",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22620984999957727
+      },
+      "copy_seconds": 8.2977021350016,
+      "user_cpu_seconds": 0.046286,
+      "system_cpu_seconds": 3.398335,
+      "cpu_percent_one_core": 41.51295074174575,
+      "max_rss_kib": 24284,
+      "process_io": {
+        "rchar": 4294978475,
+        "wchar": 4294967297,
+        "syscr": 20497,
+        "syscw": 16385,
+        "read_bytes": 4294967296,
+        "write_bytes": 4296671232,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 4.415371433002292,
+      "seconds": 12.713073568003892,
+      "mib_s": 322.188019922166,
+      "files_s": 322.188019922166,
+      "cpu_percent": 33.436411614091135,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 1,
+      "tool": "manual 16",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.23114512499887496
+      },
+      "copy_seconds": 8.668306179002684,
+      "user_cpu_seconds": 0.17194399999999999,
+      "system_cpu_seconds": 16.642219,
+      "cpu_percent_one_core": 193.97287835458673,
+      "max_rss_kib": 24412,
+      "process_io": {
+        "rchar": 4295017414,
+        "wchar": 4294968533,
+        "syscr": 32880,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4433727488,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.264900002861395e-05,
+      "seconds": 8.668368828002713,
+      "mib_s": 472.52257965398127,
+      "files_s": 472.52257965398127,
+      "cpu_percent": 193.97218467080597,
+      "sampled_peak_rss_kib": 5448,
+      "sampled_peak_fds": 40,
+      "worker_wait_samples": {
+        "0": 227,
+        "futex_do_wait": 82,
+        "folio_wait_bit_common": 259,
+        "wait_log_commit": 771,
+        "barrier_all_devices": 29,
+        "btrfs_btree_wait_writeback_range": 10,
+        "lookup_slow": 9,
+        "open_last_lookups": 23,
+        "wait_current_trans": 12,
+        "btrfs_commit_transaction": 1,
+        "wait_for_commit": 1,
+        "btrfs_inode_lock": 3,
+        "btrfs_start_ordered_extent_nowriteback": 1,
+        "__start_renaming": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 16,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 8.666757,
+        "throughput_bytes_per_second": 495567990.885,
+        "worker_utilization": 0.997141,
+        "peak_active_workers": 16,
+        "metadata_seconds": 111.738268,
+        "transfer_seconds": 26.516984,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 577169567744
+          }
+        ],
+        "auto": true,
+        "final_workers": 16,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7976906752,
+          "cpu_pressure_avg10": 0.12,
+          "io_pressure_avg10": 9.69
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 1,
+      "tool": "auto before",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22111441699962597
+      },
+      "copy_seconds": 17.62927497000055,
+      "user_cpu_seconds": 0.188438,
+      "system_cpu_seconds": 11.372836,
+      "cpu_percent_one_core": 65.57997433061557,
+      "max_rss_kib": 24412,
+      "process_io": {
+        "rchar": 4295017493,
+        "wchar": 4294968525,
+        "syscr": 32887,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4706996224,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.187800318002701e-05,
+      "seconds": 17.62933684800373,
+      "mib_s": 232.339993007951,
+      "files_s": 232.339993007951,
+      "cpu_percent": 65.58008506320616,
+      "sampled_peak_rss_kib": 3648,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 125,
+        "futex_do_wait": 168,
+        "folio_wait_bit_common": 166,
+        "barrier_all_devices": 75,
+        "wait_log_commit": 301,
+        "btrfs_btree_wait_writeback_range": 10,
+        "open_last_lookups": 1,
+        "wait_for_commit": 2,
+        "btrfs_sync_log": 1,
+        "lookup_slow": 1,
+        "btrfs_inode_lock": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 17.627826,
+        "throughput_bytes_per_second": 243647026.681,
+        "worker_utilization": 0.998611,
+        "peak_active_workers": 4,
+        "metadata_seconds": 57.765696,
+        "transfer_seconds": 12.686959,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 578578853888
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7920214016,
+          "cpu_pressure_avg10": 4.71,
+          "io_pressure_avg10": 16.68
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 1,
+      "tool": "manual 8",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.2189811029966222
+      },
+      "copy_seconds": 12.241843516996596,
+      "user_cpu_seconds": 0.18228,
+      "system_cpu_seconds": 16.700194,
+      "cpu_percent_one_core": 137.90793826567332,
+      "max_rss_kib": 25352,
+      "process_io": {
+        "rchar": 4295017413,
+        "wchar": 4294968531,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4530262016,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.170000415295362e-05,
+      "seconds": 12.241905217000749,
+      "mib_s": 334.5884425172436,
+      "files_s": 334.5884425172436,
+      "cpu_percent": 137.90773282213172,
+      "sampled_peak_rss_kib": 4124,
+      "sampled_peak_fds": 24,
+      "worker_wait_samples": {
+        "0": 190,
+        "futex_do_wait": 121,
+        "wait_log_commit": 522,
+        "folio_wait_bit_common": 172,
+        "open_last_lookups": 2,
+        "btrfs_btree_wait_writeback_range": 6,
+        "barrier_all_devices": 43,
+        "btrfs_start_ordered_extent_nowriteback": 1,
+        "lookup_slow": 4,
+        "wait_current_trans": 2,
+        "btrfs_commit_transaction": 1,
+        "__start_renaming": 3,
+        "btrfs_inode_lock": 2
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 8,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 12.240435,
+        "throughput_bytes_per_second": 350883540.125,
+        "worker_utilization": 0.997609,
+        "peak_active_workers": 8,
+        "metadata_seconds": 80.668345,
+        "transfer_seconds": 17.041745,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 578591080448
+          }
+        ],
+        "auto": true,
+        "final_workers": 8,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7777177600,
+          "cpu_pressure_avg10": 0.88,
+          "io_pressure_avg10": 13.28
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 2,
+      "tool": "manual 4",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22058677099994384
+      },
+      "copy_seconds": 17.611598006005806,
+      "user_cpu_seconds": 0.176718,
+      "system_cpu_seconds": 11.47404,
+      "cpu_percent_one_core": 66.15389470067922,
+      "max_rss_kib": 25400,
+      "process_io": {
+        "rchar": 4295017416,
+        "wchar": 4294968528,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4295000064,
+        "write_bytes": 4742762496,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.389400368789211e-05,
+      "seconds": 17.611661900009494,
+      "mib_s": 232.5731678960855,
+      "files_s": 232.5731678960855,
+      "cpu_percent": 66.15400791332313,
+      "sampled_peak_rss_kib": 3712,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 113,
+        "futex_do_wait": 169,
+        "wait_log_commit": 322,
+        "folio_wait_bit_common": 145,
+        "barrier_all_devices": 87,
+        "btrfs_btree_wait_writeback_range": 7,
+        "btrfs_start_ordered_extent_nowriteback": 2,
+        "__start_renaming": 1,
+        "wait_for_commit": 2,
+        "btrfs_sync_log": 1,
+        "join_running_log_trans": 1,
+        "btrfs_inode_lock": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 17.610271,
+        "throughput_bytes_per_second": 243889907.778,
+        "worker_utilization": 0.998694,
+        "peak_active_workers": 4,
+        "metadata_seconds": 57.955927,
+        "transfer_seconds": 12.432384,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 578591887360
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7988895744,
+          "cpu_pressure_avg10": 2,
+          "io_pressure_avg10": 14.36
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 2,
+      "tool": "auto before",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22612173100060318
+      },
+      "copy_seconds": 20.573437551000097,
+      "user_cpu_seconds": 0.208147,
+      "system_cpu_seconds": 12.948122,
+      "cpu_percent_one_core": 63.94784035184465,
+      "max_rss_kib": 25356,
+      "process_io": {
+        "rchar": 4295017496,
+        "wchar": 4294968525,
+        "syscr": 32887,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4700098560,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.843799928901717e-05,
+      "seconds": 20.573505988999386,
+      "mib_s": 199.09100579114337,
+      "files_s": 199.09100579114337,
+      "cpu_percent": 63.94795144315539,
+      "sampled_peak_rss_kib": 3656,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 128,
+        "futex_do_wait": 196,
+        "barrier_all_devices": 93,
+        "folio_wait_bit_common": 201,
+        "btrfs_btree_wait_writeback_range": 8,
+        "wait_log_commit": 360,
+        "lookup_slow": 1,
+        "btrfs_inode_lock": 3,
+        "btrfs_start_ordered_extent_nowriteback": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 20.572017,
+        "throughput_bytes_per_second": 208777160.822,
+        "worker_utilization": 0.998776,
+        "peak_active_workers": 4,
+        "metadata_seconds": 67.978196,
+        "transfer_seconds": 14.253976,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 577516482560
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7857319936,
+          "cpu_pressure_avg10": 0.61,
+          "io_pressure_avg10": 13.32
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 2,
+      "tool": "rsync",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21842547599953832
+      },
+      "copy_seconds": 9.136381888994947,
+      "user_cpu_seconds": 1.201343,
+      "system_cpu_seconds": 4.746623,
+      "cpu_percent_one_core": 65.10198536211043,
+      "max_rss_kib": 25228,
+      "process_io": {
+        "rchar": 8591409223,
+        "wchar": 8591352512,
+        "syscr": 309413,
+        "syscw": 151576,
+        "read_bytes": 4294967296,
+        "write_bytes": 4296998912,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 15.024328002997208,
+      "seconds": 24.160709891992155,
+      "mib_s": 169.53144250772124,
+      "files_s": 169.53144250772124,
+      "cpu_percent": 29.80338217788298,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 2,
+      "tool": "manual 8",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21457646500493865
+      },
+      "copy_seconds": 10.260784774000058,
+      "user_cpu_seconds": 0.155905,
+      "system_cpu_seconds": 14.864505,
+      "cpu_percent_one_core": 146.38656136770766,
+      "max_rss_kib": 25356,
+      "process_io": {
+        "rchar": 4295017414,
+        "wchar": 4294968530,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4294983680,
+        "write_bytes": 4541779968,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.4420005502179265e-05,
+      "seconds": 10.26080919400556,
+      "mib_s": 399.18878935911926,
+      "files_s": 399.18878935911926,
+      "cpu_percent": 146.38644124456627,
+      "sampled_peak_rss_kib": 4228,
+      "sampled_peak_fds": 24,
+      "worker_wait_samples": {
+        "0": 156,
+        "futex_do_wait": 95,
+        "wait_log_commit": 411,
+        "barrier_all_devices": 39,
+        "folio_wait_bit_common": 162,
+        "btrfs_start_ordered_extent_nowriteback": 2,
+        "btrfs_btree_wait_writeback_range": 6,
+        "lookup_slow": 1,
+        "btrfs_inode_lock": 10,
+        "open_last_lookups": 3,
+        "wait_for_commit": 4,
+        "btrfs_commit_transaction": 1,
+        "wait_current_trans": 2
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 8,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 10.259729,
+        "throughput_bytes_per_second": 418623863.117,
+        "worker_utilization": 0.998149,
+        "peak_active_workers": 8,
+        "metadata_seconds": 66.663038,
+        "transfer_seconds": 15.280959,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 576755810304
+          }
+        ],
+        "auto": true,
+        "final_workers": 8,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 8049733632,
+          "cpu_pressure_avg10": 0.08,
+          "io_pressure_avg10": 9.77
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 2,
+      "tool": "cp",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21876703100133454
+      },
+      "copy_seconds": 8.419187054998474,
+      "user_cpu_seconds": 0.051873999999999997,
+      "system_cpu_seconds": 3.427138,
+      "cpu_percent_one_core": 41.32242195443929,
+      "max_rss_kib": 25228,
+      "process_io": {
+        "rchar": 4294978475,
+        "wchar": 4294967297,
+        "syscr": 20497,
+        "syscw": 16385,
+        "read_bytes": 4294967296,
+        "write_bytes": 4296687616,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 17.426466866003466,
+      "seconds": 25.84565392100194,
+      "mib_s": 158.47925583618638,
+      "files_s": 158.47925583618638,
+      "cpu_percent": 18.981595072019044,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 2,
+      "tool": "manual 16",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21529540899791755
+      },
+      "copy_seconds": 7.1658770959984395,
+      "user_cpu_seconds": 0.14231,
+      "system_cpu_seconds": 13.737884,
+      "cpu_percent_one_core": 193.69846585494693,
+      "max_rss_kib": 25400,
+      "process_io": {
+        "rchar": 4295017420,
+        "wchar": 4294968533,
+        "syscr": 32880,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4427042816,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.462699820986018e-05,
+      "seconds": 7.165941722996649,
+      "mib_s": 571.5927031412051,
+      "files_s": 571.5927031412051,
+      "cpu_percent": 193.69762170205826,
+      "sampled_peak_rss_kib": 5452,
+      "sampled_peak_fds": 40,
+      "worker_wait_samples": {
+        "0": 196,
+        "futex_do_wait": 67,
+        "wait_log_commit": 626,
+        "folio_wait_bit_common": 223,
+        "barrier_all_devices": 29,
+        "btrfs_btree_wait_writeback_range": 6,
+        "open_last_lookups": 7,
+        "lookup_slow": 9,
+        "btrfs_inode_lock": 4,
+        "__start_renaming": 7
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 16,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 7.164158,
+        "throughput_bytes_per_second": 599507622.72,
+        "worker_utilization": 0.99611,
+        "peak_active_workers": 16,
+        "metadata_seconds": 92.295024,
+        "transfer_seconds": 21.875302,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 576743211008
+          }
+        ],
+        "auto": true,
+        "final_workers": 16,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 8048713728,
+          "cpu_pressure_avg10": 0.08,
+          "io_pressure_avg10": 10.08
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 3,
+      "tool": "manual 4",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.2230121769971447
+      },
+      "copy_seconds": 16.490369585000735,
+      "user_cpu_seconds": 0.16086499999999998,
+      "system_cpu_seconds": 11.03284,
+      "cpu_percent_one_core": 67.88025545638189,
+      "max_rss_kib": 25356,
+      "process_io": {
+        "rchar": 4295017414,
+        "wchar": 4294968531,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4295213056,
+        "write_bytes": 4735946752,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.475499685620889e-05,
+      "seconds": 16.49043433999759,
+      "mib_s": 248.3864230346645,
+      "files_s": 248.3864230346645,
+      "cpu_percent": 67.8803727434243,
+      "sampled_peak_rss_kib": 3656,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 111,
+        "futex_do_wait": 158,
+        "btrfs_btree_wait_writeback_range": 8,
+        "folio_wait_bit_common": 161,
+        "wait_log_commit": 281,
+        "barrier_all_devices": 73,
+        "wait_for_commit": 2,
+        "btrfs_sync_log": 1,
+        "btrfs_start_ordered_extent_nowriteback": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 16.488958,
+        "throughput_bytes_per_second": 260475368.557,
+        "worker_utilization": 0.998489,
+        "peak_active_workers": 4,
+        "metadata_seconds": 53.978331,
+        "transfer_seconds": 11.918547,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 576743211008
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7826272256,
+          "cpu_pressure_avg10": 4.14,
+          "io_pressure_avg10": 16.14
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 3,
+      "tool": "auto before",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21938824399694568
+      },
+      "copy_seconds": 17.02524759899825,
+      "user_cpu_seconds": 0.186502,
+      "system_cpu_seconds": 13.605609,
+      "cpu_percent_one_core": 81.0097528379647,
+      "max_rss_kib": 25356,
+      "process_io": {
+        "rchar": 4295017496,
+        "wchar": 4294968525,
+        "syscr": 32887,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4768321536,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.494500121334568e-05,
+      "seconds": 17.025312543999462,
+      "mib_s": 240.58295490402773,
+      "files_s": 240.58295490402773,
+      "cpu_percent": 81.00981685567375,
+      "sampled_peak_rss_kib": 3656,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 132,
+        "futex_do_wait": 164,
+        "wait_log_commit": 272,
+        "folio_wait_bit_common": 161,
+        "barrier_all_devices": 77,
+        "btrfs_btree_wait_writeback_range": 10,
+        "btrfs_start_ordered_extent_nowriteback": 3,
+        "btrfs_tree_lock_nested": 1,
+        "btrfs_inode_lock": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 17.023911,
+        "throughput_bytes_per_second": 252290275.0,
+        "worker_utilization": 0.998396,
+        "peak_active_workers": 4,
+        "metadata_seconds": 54.820471,
+        "transfer_seconds": 13.213667,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 579687817216
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7691206656,
+          "cpu_pressure_avg10": 0.81,
+          "io_pressure_avg10": 13.01
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 3,
+      "tool": "manual 8",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22067760100617306
+      },
+      "copy_seconds": 13.150896696002746,
+      "user_cpu_seconds": 0.23110399999999998,
+      "system_cpu_seconds": 17.377334,
+      "cpu_percent_one_core": 133.89534118500174,
+      "max_rss_kib": 25356,
+      "process_io": {
+        "rchar": 4295017417,
+        "wchar": 4294968531,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4530376704,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.063000182621181e-05,
+      "seconds": 13.150957326004573,
+      "mib_s": 311.4602152879479,
+      "files_s": 311.4602152879479,
+      "cpu_percent": 133.89516968609686,
+      "sampled_peak_rss_kib": 4132,
+      "sampled_peak_fds": 24,
+      "worker_wait_samples": {
+        "0": 165,
+        "futex_do_wait": 125,
+        "folio_wait_bit_common": 190,
+        "btrfs_btree_wait_writeback_range": 7,
+        "wait_log_commit": 591,
+        "barrier_all_devices": 58,
+        "btrfs_start_ordered_extent_nowriteback": 2,
+        "lookup_slow": 1,
+        "__start_renaming": 2,
+        "btrfs_inode_lock": 2,
+        "btrfs_tree_read_lock_nested": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 8,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 13.149608,
+        "throughput_bytes_per_second": 326623226.564,
+        "worker_utilization": 0.997812,
+        "peak_active_workers": 8,
+        "metadata_seconds": 87.339531,
+        "transfer_seconds": 17.651637,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 577333944320
+          }
+        ],
+        "auto": true,
+        "final_workers": 8,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7970430976,
+          "cpu_pressure_avg10": 0.73,
+          "io_pressure_avg10": 12.44
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 3,
+      "tool": "rsync",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22222620699903928
+      },
+      "copy_seconds": 9.253059993003262,
+      "user_cpu_seconds": 1.3135729999999999,
+      "system_cpu_seconds": 4.520518,
+      "cpu_percent_one_core": 63.05039634900747,
+      "max_rss_kib": 25276,
+      "process_io": {
+        "rchar": 8591409223,
+        "wchar": 8591352512,
+        "syscr": 309485,
+        "syscw": 151576,
+        "read_bytes": 4294967296,
+        "write_bytes": 4296687616,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 17.577902365002956,
+      "seconds": 26.830962358006218,
+      "mib_s": 152.6594516196239,
+      "files_s": 152.6594516196239,
+      "cpu_percent": 26.974075277029367,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 3,
+      "tool": "cp",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21741293200466316
+      },
+      "copy_seconds": 8.315880299000128,
+      "user_cpu_seconds": 0.048204,
+      "system_cpu_seconds": 3.3106109999999997,
+      "cpu_percent_one_core": 40.39037214621586,
+      "max_rss_kib": 25276,
+      "process_io": {
+        "rchar": 4294978475,
+        "wchar": 4294967297,
+        "syscr": 20497,
+        "syscw": 16385,
+        "read_bytes": 4294967296,
+        "write_bytes": 4297064448,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 17.94129393700132,
+      "seconds": 26.257174236001447,
+      "mib_s": 155.9954610189522,
+      "files_s": 155.9954610189522,
+      "cpu_percent": 18.21295580787621,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 3,
+      "tool": "manual 16",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21646245999727398
+      },
+      "copy_seconds": 7.27475266699912,
+      "user_cpu_seconds": 0.166712,
+      "system_cpu_seconds": 13.39367,
+      "cpu_percent_one_core": 186.40334071445125,
+      "max_rss_kib": 25372,
+      "process_io": {
+        "rchar": 4295017416,
+        "wchar": 4294968532,
+        "syscr": 32880,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4441886720,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.313699850579724e-05,
+      "seconds": 7.274815803997626,
+      "mib_s": 563.0383105712701,
+      "files_s": 563.0383105712701,
+      "cpu_percent": 186.40256833098547,
+      "sampled_peak_rss_kib": 5484,
+      "sampled_peak_fds": 40,
+      "worker_wait_samples": {
+        "0": 149,
+        "futex_do_wait": 68,
+        "folio_wait_bit_common": 289,
+        "wait_log_commit": 634,
+        "barrier_all_devices": 27,
+        "btrfs_btree_wait_writeback_range": 5,
+        "open_last_lookups": 7,
+        "lookup_slow": 5,
+        "btrfs_inode_lock": 5,
+        "__start_renaming": 1,
+        "btrfs_start_ordered_extent_nowriteback": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 16,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 7.273028,
+        "throughput_bytes_per_second": 590533620.362,
+        "worker_utilization": 0.995827,
+        "peak_active_workers": 16,
+        "metadata_seconds": 93.556424,
+        "transfer_seconds": 22.325274,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 576625139712
+          }
+        ],
+        "auto": true,
+        "final_workers": 16,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7967760384,
+          "cpu_pressure_avg10": 0.04,
+          "io_pressure_avg10": 9.64
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 4,
+      "tool": "auto before",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22261674600304104
+      },
+      "copy_seconds": 18.33737143399776,
+      "user_cpu_seconds": 0.193661,
+      "system_cpu_seconds": 13.397215,
+      "cpu_percent_one_core": 74.1157261765572,
+      "max_rss_kib": 25288,
+      "process_io": {
+        "rchar": 4295017497,
+        "wchar": 4294968522,
+        "syscr": 32887,
+        "syscw": 32771,
+        "read_bytes": 4295081984,
+        "write_bytes": 4725641216,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 7.690000347793102e-05,
+      "seconds": 18.337448334001238,
+      "mib_s": 223.36804583684687,
+      "files_s": 223.36804583684687,
+      "cpu_percent": 74.11582902622118,
+      "sampled_peak_rss_kib": 3732,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 124,
+        "futex_do_wait": 174,
+        "barrier_all_devices": 75,
+        "wait_log_commit": 328,
+        "folio_wait_bit_common": 175,
+        "btrfs_btree_wait_writeback_range": 8,
+        "btrfs_inode_lock": 1,
+        "lookup_slow": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 18.335914,
+        "throughput_bytes_per_second": 234237966.809,
+        "worker_utilization": 0.998383,
+        "peak_active_workers": 4,
+        "metadata_seconds": 59.818599,
+        "transfer_seconds": 13.455668,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 576625139712
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7964172288,
+          "cpu_pressure_avg10": 4,
+          "io_pressure_avg10": 16.54
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 4,
+      "tool": "manual 8",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.23693994700443
+      },
+      "copy_seconds": 10.163689809000061,
+      "user_cpu_seconds": 0.16013,
+      "system_cpu_seconds": 14.240463,
+      "cpu_percent_one_core": 141.6866637079785,
+      "max_rss_kib": 25376,
+      "process_io": {
+        "rchar": 4295017417,
+        "wchar": 4294968531,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4561915904,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.169900007080287e-05,
+      "seconds": 10.163751508000132,
+      "mib_s": 403.00080110930895,
+      "files_s": 403.00080110930895,
+      "cpu_percent": 141.68639544822497,
+      "sampled_peak_rss_kib": 4240,
+      "sampled_peak_fds": 24,
+      "worker_wait_samples": {
+        "0": 159,
+        "futex_do_wait": 96,
+        "wait_log_commit": 408,
+        "folio_wait_bit_common": 166,
+        "barrier_all_devices": 41,
+        "btrfs_btree_wait_writeback_range": 13
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 8,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 10.162352,
+        "throughput_bytes_per_second": 422635157.334,
+        "worker_utilization": 0.997052,
+        "peak_active_workers": 8,
+        "metadata_seconds": 65.851346,
+        "transfer_seconds": 15.2305,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 580755132416
+          }
+        ],
+        "auto": true,
+        "final_workers": 8,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7581200384,
+          "cpu_pressure_avg10": 0.86,
+          "io_pressure_avg10": 12.75
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 4,
+      "tool": "manual 16",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22542533399973763
+      },
+      "copy_seconds": 7.861046198995609,
+      "user_cpu_seconds": 0.17984,
+      "system_cpu_seconds": 15.364105,
+      "cpu_percent_one_core": 197.73379530559203,
+      "max_rss_kib": 25380,
+      "process_io": {
+        "rchar": 4295017419,
+        "wchar": 4294968533,
+        "syscr": 32880,
+        "syscw": 32771,
+        "read_bytes": 4295131136,
+        "write_bytes": 4447375360,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.923099863342941e-05,
+      "seconds": 7.861115429994243,
+      "mib_s": 521.0456501340294,
+      "files_s": 521.0456501340294,
+      "cpu_percent": 197.7329174902014,
+      "sampled_peak_rss_kib": 5480,
+      "sampled_peak_fds": 40,
+      "worker_wait_samples": {
+        "0": 186,
+        "futex_do_wait": 74,
+        "wait_log_commit": 693,
+        "folio_wait_bit_common": 249,
+        "lookup_slow": 9,
+        "__start_renaming": 20,
+        "btrfs_btree_wait_writeback_range": 12,
+        "barrier_all_devices": 27,
+        "join_running_log_trans": 1,
+        "btrfs_sync_log": 1,
+        "open_last_lookups": 9,
+        "btrfs_tree_read_lock_nested": 2,
+        "btrfs_tree_lock_nested": 1,
+        "btrfs_inode_lock": 2,
+        "btrfs_commit_transaction": 1,
+        "wait_current_trans": 5,
+        "btrfs_start_ordered_extent_nowriteback": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 16,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 7.859242,
+        "throughput_bytes_per_second": 546486196.592,
+        "worker_utilization": 0.9968,
+        "peak_active_workers": 16,
+        "metadata_seconds": 102.218936,
+        "transfer_seconds": 23.128048,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 577633370112
+          }
+        ],
+        "auto": true,
+        "final_workers": 16,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7749025792,
+          "cpu_pressure_avg10": 1.94,
+          "io_pressure_avg10": 13.8
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 4,
+      "tool": "cp",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22311513499880675
+      },
+      "copy_seconds": 8.172743271999934,
+      "user_cpu_seconds": 0.058122,
+      "system_cpu_seconds": 3.264723,
+      "cpu_percent_one_core": 40.6576456571708,
+      "max_rss_kib": 25264,
+      "process_io": {
+        "rchar": 4294978475,
+        "wchar": 4294967297,
+        "syscr": 20497,
+        "syscw": 16385,
+        "read_bytes": 4294967296,
+        "write_bytes": 4296720384,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 15.206550770999456,
+      "seconds": 23.37929404299939,
+      "mib_s": 175.1977622791605,
+      "files_s": 175.1977622791605,
+      "cpu_percent": 19.731294150780048,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 4,
+      "tool": "rsync",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.22771807100070873
+      },
+      "copy_seconds": 9.65262814900052,
+      "user_cpu_seconds": 1.242866,
+      "system_cpu_seconds": 4.211879,
+      "cpu_percent_one_core": 56.510464464176124,
+      "max_rss_kib": 25244,
+      "process_io": {
+        "rchar": 8591409223,
+        "wchar": 8591352512,
+        "syscr": 309865,
+        "syscw": 151576,
+        "read_bytes": 4294967296,
+        "write_bytes": 4296982528,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.4708059650001815,
+      "seconds": 12.123434114000702,
+      "mib_s": 337.8580657496831,
+      "files_s": 337.8580657496831,
+      "cpu_percent": 50.103989339003306,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 4,
+      "tool": "manual 4",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.23316001999774016
+      },
+      "copy_seconds": 18.204088780003076,
+      "user_cpu_seconds": 0.173506,
+      "system_cpu_seconds": 11.503678,
+      "cpu_percent_one_core": 64.14594073407956,
+      "max_rss_kib": 25392,
+      "process_io": {
+        "rchar": 4295017411,
+        "wchar": 4294968530,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4295049216,
+        "write_bytes": 4705980416,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.0508995375130326e-05,
+      "seconds": 18.20414928899845,
+      "mib_s": 225.00364806804726,
+      "files_s": 225.00364806804726,
+      "cpu_percent": 64.14605076358644,
+      "sampled_peak_rss_kib": 3636,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 125,
+        "futex_do_wait": 176,
+        "folio_wait_bit_common": 167,
+        "wait_log_commit": 327,
+        "barrier_all_devices": 82,
+        "btrfs_btree_wait_writeback_range": 1,
+        "btrfs_sync_log": 1,
+        "wait_for_commit": 2
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 18.202728,
+        "throughput_bytes_per_second": 235951842.823,
+        "worker_utilization": 0.998881,
+        "peak_active_workers": 4,
+        "metadata_seconds": 59.827319,
+        "transfer_seconds": 12.93874,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 577723088896
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7863259136,
+          "cpu_pressure_avg10": 0.53,
+          "io_pressure_avg10": 4.97
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 5,
+      "tool": "rsync",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21545264700398548
+      },
+      "copy_seconds": 8.46335394300695,
+      "user_cpu_seconds": 1.216967,
+      "system_cpu_seconds": 4.463434,
+      "cpu_percent_one_core": 67.11761127151686,
+      "max_rss_kib": 25308,
+      "process_io": {
+        "rchar": 8591409223,
+        "wchar": 8591352512,
+        "syscr": 308518,
+        "syscw": 151576,
+        "read_bytes": 4294967296,
+        "write_bytes": 4296622080,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 13.108302585002093,
+      "seconds": 21.571656528009044,
+      "mib_s": 189.8787881534122,
+      "files_s": 189.8787881534122,
+      "cpu_percent": 31.70777436178321,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 5,
+      "tool": "auto before",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.204961984003603
+      },
+      "copy_seconds": 17.593226903001778,
+      "user_cpu_seconds": 0.17551799999999998,
+      "system_cpu_seconds": 11.650829,
+      "cpu_percent_one_core": 67.2210224150646,
+      "max_rss_kib": 25264,
+      "process_io": {
+        "rchar": 4295017488,
+        "wchar": 4294968524,
+        "syscr": 32887,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4717236224,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 7.831400580471382e-05,
+      "seconds": 17.593305217007583,
+      "mib_s": 232.81583247020382,
+      "files_s": 232.81583247020382,
+      "cpu_percent": 67.22115817991543,
+      "sampled_peak_rss_kib": 3616,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 108,
+        "futex_do_wait": 166,
+        "barrier_all_devices": 78,
+        "folio_wait_bit_common": 173,
+        "wait_log_commit": 317,
+        "btrfs_btree_wait_writeback_range": 4,
+        "btrfs_start_ordered_extent_nowriteback": 1,
+        "btrfs_sync_log": 2,
+        "wait_for_commit": 2
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 17.591967,
+        "throughput_bytes_per_second": 244143663.016,
+        "worker_utilization": 0.998888,
+        "peak_active_workers": 4,
+        "metadata_seconds": 57.720097,
+        "transfer_seconds": 12.606787,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 576813473792
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 8019738624,
+          "cpu_pressure_avg10": 0.07,
+          "io_pressure_avg10": 9.54
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 5,
+      "tool": "manual 8",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21039208200090798
+      },
+      "copy_seconds": 8.750550030003069,
+      "user_cpu_seconds": 0.157523,
+      "system_cpu_seconds": 14.61217,
+      "cpu_percent_one_core": 168.7858814515551,
+      "max_rss_kib": 25400,
+      "process_io": {
+        "rchar": 4295017412,
+        "wchar": 4294968530,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4534194176,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 5.194899858906865e-05,
+      "seconds": 8.750601979001658,
+      "mib_s": 468.08208279029805,
+      "files_s": 468.08208279029805,
+      "cpu_percent": 168.7854554742878,
+      "sampled_peak_rss_kib": 4224,
+      "sampled_peak_fds": 24,
+      "worker_wait_samples": {
+        "0": 170,
+        "futex_do_wait": 82,
+        "wait_log_commit": 323,
+        "folio_wait_bit_common": 136,
+        "btrfs_btree_wait_writeback_range": 13,
+        "lookup_slow": 5,
+        "barrier_all_devices": 24,
+        "btrfs_start_ordered_extent_nowriteback": 2,
+        "open_last_lookups": 2
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 8,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 8.74933,
+        "throughput_bytes_per_second": 490890990.003,
+        "worker_utilization": 0.99842,
+        "peak_active_workers": 8,
+        "metadata_seconds": 55.017206,
+        "transfer_seconds": 14.881922,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 576442617856
+          }
+        ],
+        "auto": true,
+        "final_workers": 8,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7369801728,
+          "cpu_pressure_avg10": 0.46,
+          "io_pressure_avg10": 12.55
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 5,
+      "tool": "manual 4",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.21851702399726491
+      },
+      "copy_seconds": 20.448852053006703,
+      "user_cpu_seconds": 0.192732,
+      "system_cpu_seconds": 12.978832,
+      "cpu_percent_one_core": 64.41224165472563,
+      "max_rss_kib": 25412,
+      "process_io": {
+        "rchar": 4295017413,
+        "wchar": 4294968531,
+        "syscr": 32879,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4709486592,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.300400127656758e-05,
+      "seconds": 20.44891505700798,
+      "mib_s": 200.30402535200875,
+      "files_s": 200.30402535200875,
+      "cpu_percent": 64.41234326750256,
+      "sampled_peak_rss_kib": 3700,
+      "sampled_peak_fds": 16,
+      "worker_wait_samples": {
+        "0": 134,
+        "futex_do_wait": 194,
+        "folio_wait_bit_common": 191,
+        "wait_log_commit": 370,
+        "barrier_all_devices": 86,
+        "btrfs_btree_wait_writeback_range": 8,
+        "btrfs_commit_transaction": 1,
+        "wait_current_trans": 1,
+        "btrfs_inode_lock": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 20.447457,
+        "throughput_bytes_per_second": 210048974.097,
+        "worker_utilization": 0.998657,
+        "peak_active_workers": 4,
+        "metadata_seconds": 67.589022,
+        "transfer_seconds": 14.134194,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 576442617856
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7849791488,
+          "cpu_pressure_avg10": 2.65,
+          "io_pressure_avg10": 14.42
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "run": 5,
+      "tool": "cp",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.20655679499759572
+      },
+      "copy_seconds": 7.587836142003653,
+      "user_cpu_seconds": 0.039903999999999995,
+      "system_cpu_seconds": 3.269965,
+      "cpu_percent_one_core": 43.6207231950846,
+      "max_rss_kib": 25340,
+      "process_io": {
+        "rchar": 4294978475,
+        "wchar": 4294967297,
+        "syscr": 20497,
+        "syscw": 16385,
+        "read_bytes": 4294967296,
+        "write_bytes": 4297064448,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 4.933720525004901,
+      "seconds": 12.521556667008554,
+      "mib_s": 327.11587775600026,
+      "files_s": 327.11587775600026,
+      "cpu_percent": 32.57439098404402,
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null,
+      "worker_wait_samples": {},
+      "tcopy": null
+    },
+    {
+      "workload": "many-1mib",
+      "run": 5,
+      "tool": "manual 16",
+      "cache": {
+        "mode": "storage",
+        "source_resident_fraction": 0.0,
+        "status": "controlled",
+        "preparation_seconds": 0.20966441799828317
+      },
+      "copy_seconds": 5.632350152998697,
+      "user_cpu_seconds": 0.138522,
+      "system_cpu_seconds": 11.552674,
+      "cpu_percent_one_core": 207.57225105714596,
+      "max_rss_kib": 25424,
+      "process_io": {
+        "rchar": 4295017420,
+        "wchar": 4294968532,
+        "syscr": 32881,
+        "syscw": 32771,
+        "read_bytes": 4294967296,
+        "write_bytes": 4435087360,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 6.678800127701834e-05,
+      "seconds": 5.632416940999974,
+      "mib_s": 727.2188907365938,
+      "files_s": 727.2188907365938,
+      "cpu_percent": 207.57094653089246,
+      "sampled_peak_rss_kib": 5312,
+      "sampled_peak_fds": 40,
+      "worker_wait_samples": {
+        "0": 150,
+        "futex_do_wait": 53,
+        "wait_log_commit": 439,
+        "folio_wait_bit_common": 205,
+        "btrfs_btree_wait_writeback_range": 10,
+        "barrier_all_devices": 18,
+        "open_last_lookups": 7,
+        "lookup_slow": 8,
+        "btrfs_start_ordered_extent_nowriteback": 1,
+        "__start_renaming": 9,
+        "btrfs_inode_lock": 6,
+        "wait_current_trans": 11,
+        "wait_for_commit": 1,
+        "btrfs_commit_transaction": 1
+      },
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 16,
+        "chunk_size": null,
+        "copied": 4096,
+        "skipped": 0,
+        "bytes": 4294967296,
+        "failures": 0,
+        "discovered": 4096,
+        "transferred_bytes": 4294967296,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 5.630621,
+        "throughput_bytes_per_second": 762787564.177,
+        "worker_utilization": 0.995827,
+        "peak_active_workers": 16,
+        "metadata_seconds": 70.198518,
+        "transfer_seconds": 19.507811,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "btrfs",
+              "device": "/dev/mapper/luks-1c427509-5f25-402f-afb4-11e9aa225941",
+              "kind": "nvme",
+              "backing_devices": [
+                "259:4"
+              ],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 577290825728
+          }
+        ],
+        "auto": true,
+        "final_workers": 16,
+        "concurrency_adjustments": 0,
+        "tuning_state": "manual-workers",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 8037330944,
+          "cpu_pressure_avg10": 0.27,
+          "io_pressure_avg10": 9.86
+        },
+        "workload": {
+          "small_files": 0,
+          "medium_files": 4096,
+          "large_files": 0
+        }
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "workload": "many-1mib",
+      "tool": "auto before",
+      "n": 5,
+      "seconds": {
+        "median": 17.62933684800373,
+        "min": 17.025312543999462,
+        "max": 20.573505988999386
+      },
+      "mib_s": {
+        "median": 232.339993007951,
+        "min": 199.09100579114337,
+        "max": 240.58295490402773
+      },
+      "files_s": {
+        "median": 232.339993007951,
+        "min": 199.09100579114337,
+        "max": 240.58295490402773
+      },
+      "cpu_percent": {
+        "median": 67.22115817991543,
+        "min": 63.94795144315539,
+        "max": 81.00981685567375
+      },
+      "max_rss_kib": {
+        "median": 25288,
+        "min": 24412,
+        "max": 25356
+      },
+      "sampled_peak_rss_kib": {
+        "median": 3656,
+        "min": 3616,
+        "max": 3732
+      },
+      "sampled_peak_fds": {
+        "median": 16,
+        "min": 16,
+        "max": 16
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "tool": "cp",
+      "n": 5,
+      "seconds": {
+        "median": 23.37929404299939,
+        "min": 12.521556667008554,
+        "max": 26.257174236001447
+      },
+      "mib_s": {
+        "median": 175.1977622791605,
+        "min": 155.9954610189522,
+        "max": 327.11587775600026
+      },
+      "files_s": {
+        "median": 175.1977622791605,
+        "min": 155.9954610189522,
+        "max": 327.11587775600026
+      },
+      "cpu_percent": {
+        "median": 19.731294150780048,
+        "min": 18.21295580787621,
+        "max": 33.436411614091135
+      },
+      "max_rss_kib": {
+        "median": 25264,
+        "min": 24284,
+        "max": 25340
+      },
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null
+    },
+    {
+      "workload": "many-1mib",
+      "tool": "manual 16",
+      "n": 5,
+      "seconds": {
+        "median": 7.274815803997626,
+        "min": 5.632416940999974,
+        "max": 8.668368828002713
+      },
+      "mib_s": {
+        "median": 563.0383105712701,
+        "min": 472.52257965398127,
+        "max": 727.2188907365938
+      },
+      "files_s": {
+        "median": 563.0383105712701,
+        "min": 472.52257965398127,
+        "max": 727.2188907365938
+      },
+      "cpu_percent": {
+        "median": 193.97218467080597,
+        "min": 186.40256833098547,
+        "max": 207.57094653089246
+      },
+      "max_rss_kib": {
+        "median": 25380,
+        "min": 24412,
+        "max": 25424
+      },
+      "sampled_peak_rss_kib": {
+        "median": 5452,
+        "min": 5312,
+        "max": 5484
+      },
+      "sampled_peak_fds": {
+        "median": 40,
+        "min": 40,
+        "max": 40
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "tool": "manual 4",
+      "n": 5,
+      "seconds": {
+        "median": 17.611661900009494,
+        "min": 16.49043433999759,
+        "max": 20.44891505700798
+      },
+      "mib_s": {
+        "median": 232.5731678960855,
+        "min": 200.30402535200875,
+        "max": 248.3864230346645
+      },
+      "files_s": {
+        "median": 232.5731678960855,
+        "min": 200.30402535200875,
+        "max": 248.3864230346645
+      },
+      "cpu_percent": {
+        "median": 66.15400791332313,
+        "min": 64.14605076358644,
+        "max": 68.39785273929817
+      },
+      "max_rss_kib": {
+        "median": 25392,
+        "min": 20188,
+        "max": 25412
+      },
+      "sampled_peak_rss_kib": {
+        "median": 3656,
+        "min": 3536,
+        "max": 3712
+      },
+      "sampled_peak_fds": {
+        "median": 16,
+        "min": 16,
+        "max": 16
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "tool": "manual 8",
+      "n": 5,
+      "seconds": {
+        "median": 10.26080919400556,
+        "min": 8.750601979001658,
+        "max": 13.150957326004573
+      },
+      "mib_s": {
+        "median": 399.18878935911926,
+        "min": 311.4602152879479,
+        "max": 468.08208279029805
+      },
+      "files_s": {
+        "median": 399.18878935911926,
+        "min": 311.4602152879479,
+        "max": 468.08208279029805
+      },
+      "cpu_percent": {
+        "median": 141.68639544822497,
+        "min": 133.89516968609686,
+        "max": 168.7854554742878
+      },
+      "max_rss_kib": {
+        "median": 25356,
+        "min": 25352,
+        "max": 25400
+      },
+      "sampled_peak_rss_kib": {
+        "median": 4224,
+        "min": 4124,
+        "max": 4240
+      },
+      "sampled_peak_fds": {
+        "median": 24,
+        "min": 24,
+        "max": 24
+      }
+    },
+    {
+      "workload": "many-1mib",
+      "tool": "rsync",
+      "n": 5,
+      "seconds": {
+        "median": 21.571656528009044,
+        "min": 12.123434114000702,
+        "max": 26.830962358006218
+      },
+      "mib_s": {
+        "median": 189.8787881534122,
+        "min": 152.6594516196239,
+        "max": 337.8580657496831
+      },
+      "files_s": {
+        "median": 189.8787881534122,
+        "min": 152.6594516196239,
+        "max": 337.8580657496831
+      },
+      "cpu_percent": {
+        "median": 31.70777436178321,
+        "min": 26.974075277029367,
+        "max": 50.103989339003306
+      },
+      "max_rss_kib": {
+        "median": 25244,
+        "min": 24280,
+        "max": 25308
+      },
+      "sampled_peak_rss_kib": null,
+      "sampled_peak_fds": null
+    }
+  ],
+  "finished_utc": "2026-10-17T17:54:21.133678+00:00"
+}

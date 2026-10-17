@@ -367,6 +367,11 @@ pub fn run(command: &Command, start: Instant) -> Arc<Summary> {
     let mut options = command.options;
     let mut summary = Summary::new(options, Vec::new(), start);
     summary.backend = "native-ssh";
+    summary.worker_policy = if options.manual_workers {
+        "manual"
+    } else {
+        "ssh-fixed"
+    };
     *summary.tuning_state.lock().unwrap() = "ssh-fixed";
     // Remote topology is unknown; keep a conservative, explicit budget.
     options.workers = Some(options.worker_count());

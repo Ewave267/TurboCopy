@@ -1,0 +1,1869 @@
+{
+  "status": "completed",
+  "invocation": [
+    "benches/worker_selection.py",
+    "--before",
+    "target/task3/tcopy-before",
+    "--after",
+    "target/task3/tcopy-final",
+    "--auto-only",
+    "--directory",
+    "/tmp",
+    "--cache",
+    "warm",
+    "--reserve-gib",
+    "1",
+    "--workload",
+    "mixed",
+    "--runs",
+    "9",
+    "--output",
+    "target/task3/memory-mixed"
+  ],
+  "started_utc": "2026-10-17T18:25:23.469245+00:00",
+  "revision": "a9c71f9eab0fc32e3635a837e50b0d9dcf737903",
+  "filesystem": {
+    "target": "/tmp",
+    "source": "tmpfs",
+    "fstype": "tmpfs",
+    "options": "rw,nosuid,nodev,seclabel,size=8021168k,nr_inodes=1048576,inode64",
+    "maj:min": "0:45",
+    "path": "/tmp",
+    "st_dev": 45,
+    "total_bytes": 8213676032,
+    "free_bytes": 8160825344,
+    "physical_devices": []
+  },
+  "memory_available_bytes": 8066629632,
+  "binaries": {
+    "/home/ewave/projects/turboCopy/target/task3/tcopy-before": "f877cd37433a2db172b9951ae03561b9b7895ec6a4b5b10a8abec144d62687c6",
+    "/home/ewave/projects/turboCopy/target/task3/tcopy-final": "251ea73ae4b7a9b8fc8990962019f75df031f99d08e37f654892e75a3000af4a"
+  },
+  "script_sha256": "329afc9c285f4644c431d75476e2898d0dd9a7f8f1e1e874989e1044bef7cfe7",
+  "runs": 9,
+  "seed": 20261017,
+  "cache": "warm",
+  "reserve_gib": 1.0,
+  "samples": [
+    {
+      "workload": "mixed",
+      "run": 1,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.1143266040016897
+      },
+      "copy_seconds": 0.07380806699802633,
+      "user_cpu_seconds": 0.025924,
+      "system_cpu_seconds": 0.267293,
+      "cpu_percent_one_core": 397.2695830224639,
+      "max_rss_kib": 22164,
+      "process_io": {
+        "rchar": 411091882,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 3.1144998501986265e-05,
+      "seconds": 0.07383921199652832,
+      "mib_s": 5308.832385947328,
+      "files_s": 29523.608676951975,
+      "cpu_percent": 397.1424383751378,
+      "sampled_peak_rss_kib": 2692,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.072759,
+        "throughput_bytes_per_second": 5649370976.95,
+        "worker_utilization": 0.967566,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.143199,
+        "transfer_seconds": 0.148234,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749783552
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7632216064,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 1,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11019951000344008
+      },
+      "copy_seconds": 0.0728270430045086,
+      "user_cpu_seconds": 0.03566,
+      "system_cpu_seconds": 0.25389,
+      "cpu_percent_one_core": 397.585825339736,
+      "max_rss_kib": 23884,
+      "process_io": {
+        "rchar": 411091877,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.271199628012255e-05,
+      "seconds": 0.07284975500078872,
+      "mib_s": 5380.937794447709,
+      "files_s": 29924.603040551036,
+      "cpu_percent": 397.4922111911908,
+      "sampled_peak_rss_kib": 2824,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.071826,
+        "throughput_bytes_per_second": 5722756649.216,
+        "worker_utilization": 0.964226,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.148886,
+        "transfer_seconds": 0.138876,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7538081792,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 2,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.10997313499683514
+      },
+      "copy_seconds": 0.06968767500075046,
+      "user_cpu_seconds": 0.016982999999999998,
+      "system_cpu_seconds": 0.262215,
+      "cpu_percent_one_core": 400.6418638546821,
+      "max_rss_kib": 23908,
+      "process_io": {
+        "rchar": 411091878,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.3106993467081338e-05,
+      "seconds": 0.06971078199421754,
+      "mib_s": 5623.233433710672,
+      "files_s": 31272.063483390983,
+      "cpu_percent": 400.54077434271363,
+      "sampled_peak_rss_kib": 2668,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.06873,
+        "throughput_bytes_per_second": 5980544719.851,
+        "worker_utilization": 0.970968,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.134077,
+        "transfer_seconds": 0.142939,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7529082880,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 2,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11060445399925811
+      },
+      "copy_seconds": 0.07028683299722616,
+      "user_cpu_seconds": 0.026496,
+      "system_cpu_seconds": 0.251743,
+      "cpu_percent_one_core": 395.8621951439761,
+      "max_rss_kib": 24064,
+      "process_io": {
+        "rchar": 411091881,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 1.9893996068276465e-05,
+      "seconds": 0.07030672699329443,
+      "mib_s": 5575.568893107304,
+      "files_s": 31006.990272892657,
+      "cpu_percent": 395.7771238967493,
+      "sampled_peak_rss_kib": 2692,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.069311,
+        "throughput_bytes_per_second": 5930413742.664,
+        "worker_utilization": 0.969584,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.129272,
+        "transfer_seconds": 0.148487,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7556853760,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 3,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.10996427899954142
+      },
+      "copy_seconds": 0.06982509799854597,
+      "user_cpu_seconds": 0.015650999999999998,
+      "system_cpu_seconds": 0.26342899999999997,
+      "cpu_percent_one_core": 399.68436565002963,
+      "max_rss_kib": 23948,
+      "process_io": {
+        "rchar": 411091881,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.021299587795511e-05,
+      "seconds": 0.06984531099442393,
+      "mib_s": 5612.402528085174,
+      "files_s": 31211.83038577979,
+      "cpu_percent": 399.59597720494384,
+      "sampled_peak_rss_kib": 2224,
+      "sampled_peak_fds": 4,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.06881,
+        "throughput_bytes_per_second": 5973560946.173,
+        "worker_utilization": 0.969755,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.132626,
+        "transfer_seconds": 0.145159,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7408873472,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 3,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11253905299963662
+      },
+      "copy_seconds": 0.06066841900610598,
+      "user_cpu_seconds": 0.016628,
+      "system_cpu_seconds": 0.21820499999999998,
+      "cpu_percent_one_core": 387.07618205176107,
+      "max_rss_kib": 24120,
+      "process_io": {
+        "rchar": 411091876,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.38150023506023e-05,
+      "seconds": 0.06069223400845658,
+      "mib_s": 6458.816459868333,
+      "files_s": 35918.92827171675,
+      "cpu_percent": 386.9615871567302,
+      "sampled_peak_rss_kib": 2800,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.059741,
+        "throughput_bytes_per_second": 6880381135.029,
+        "worker_utilization": 0.96849,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.096156,
+        "transfer_seconds": 0.143101,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7459581952,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 4,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11274881099961931
+      },
+      "copy_seconds": 0.05517371299356455,
+      "user_cpu_seconds": 0.011271,
+      "system_cpu_seconds": 0.211002,
+      "cpu_percent_one_core": 402.86032594167784,
+      "max_rss_kib": 24080,
+      "process_io": {
+        "rchar": 411091878,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.289700205437839e-05,
+      "seconds": 0.05519660999561893,
+      "mib_s": 7101.885424324318,
+      "files_s": 39495.17914547707,
+      "cpu_percent": 402.7337059606464,
+      "sampled_peak_rss_kib": 2644,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.054188,
+        "throughput_bytes_per_second": 7585451844.429,
+        "worker_utilization": 0.967265,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.080268,
+        "transfer_seconds": 0.13642,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7469236224,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 4,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11424462700233562
+      },
+      "copy_seconds": 0.0547883660037769,
+      "user_cpu_seconds": 0.011934,
+      "system_cpu_seconds": 0.20823699999999998,
+      "cpu_percent_one_core": 401.8572117752558,
+      "max_rss_kib": 24092,
+      "process_io": {
+        "rchar": 411091880,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.3167005565483123e-05,
+      "seconds": 0.054811533009342384,
+      "mib_s": 7151.779533938329,
+      "files_s": 39772.651489759075,
+      "cpu_percent": 401.72884046587177,
+      "sampled_peak_rss_kib": 2776,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.053776,
+        "throughput_bytes_per_second": 7643580275.03,
+        "worker_utilization": 0.967137,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.079557,
+        "transfer_seconds": 0.135436,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7435042816,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 5,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11473049600317609
+      },
+      "copy_seconds": 0.052894279004249256,
+      "user_cpu_seconds": 0.015241,
+      "system_cpu_seconds": 0.196979,
+      "cpu_percent_one_core": 401.2154130751103,
+      "max_rss_kib": 24092,
+      "process_io": {
+        "rchar": 411091879,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.773099549813196e-05,
+      "seconds": 0.05292200999974739,
+      "mib_s": 7407.1260710217,
+      "files_s": 41192.6909051717,
+      "cpu_percent": 401.05564206841984,
+      "sampled_peak_rss_kib": 2744,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.051885,
+        "throughput_bytes_per_second": 7922207133.012,
+        "worker_utilization": 0.962813,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.069342,
+        "transfer_seconds": 0.137392,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7423488000,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 5,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11340732999815373
+      },
+      "copy_seconds": 0.05336303100193618,
+      "user_cpu_seconds": 0.017221999999999998,
+      "system_cpu_seconds": 0.195747,
+      "cpu_percent_one_core": 399.09464661456883,
+      "max_rss_kib": 24096,
+      "process_io": {
+        "rchar": 411091880,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.2840002202428877e-05,
+      "seconds": 0.05338587100413861,
+      "mib_s": 7342.766777554518,
+      "files_s": 40834.77442619604,
+      "cpu_percent": 398.9644787915675,
+      "sampled_peak_rss_kib": 2716,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.052354,
+        "throughput_bytes_per_second": 7851141148.573,
+        "worker_utilization": 0.967593,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.074384,
+        "transfer_seconds": 0.134406,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7616880640,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 6,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11351342200214276
+      },
+      "copy_seconds": 0.05169935600133613,
+      "user_cpu_seconds": 0.01713,
+      "system_cpu_seconds": 0.191099,
+      "cpu_percent_one_core": 402.7690402847929,
+      "max_rss_kib": 24100,
+      "process_io": {
+        "rchar": 411091882,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.6945002900902182e-05,
+      "seconds": 0.05172630100423703,
+      "mib_s": 7578.349744511797,
+      "files_s": 42144.90419141765,
+      "cpu_percent": 402.6107994517941,
+      "sampled_peak_rss_kib": 2692,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.050706,
+        "throughput_bytes_per_second": 8106371283.439,
+        "worker_utilization": 0.96782,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.069402,
+        "transfer_seconds": 0.133598,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7529783296,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 6,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11274021599820117
+      },
+      "copy_seconds": 0.05385069499607198,
+      "user_cpu_seconds": 0.010818999999999999,
+      "system_cpu_seconds": 0.20465999999999998,
+      "cpu_percent_one_core": 400.1415395209247,
+      "max_rss_kib": 24112,
+      "process_io": {
+        "rchar": 411091877,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.470999606885016e-05,
+      "seconds": 0.05387540499214083,
+      "mib_s": 7276.047392259672,
+      "files_s": 40463.73294675022,
+      "cpu_percent": 400.0026023589726,
+      "sampled_peak_rss_kib": 2740,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.052854,
+        "throughput_bytes_per_second": 7776856207.854,
+        "worker_utilization": 0.96619,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.072932,
+        "transfer_seconds": 0.138114,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7513661440,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 7,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11213394699734636
+      },
+      "copy_seconds": 0.05410610399849247,
+      "user_cpu_seconds": 0.01611,
+      "system_cpu_seconds": 0.201018,
+      "cpu_percent_one_core": 401.30037824577,
+      "max_rss_kib": 24732,
+      "process_io": {
+        "rchar": 411091880,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.48869982897304e-05,
+      "seconds": 0.0541309909967822,
+      "mib_s": 7241.692656676141,
+      "files_s": 40272.67854988262,
+      "cpu_percent": 401.1586837804389,
+      "sampled_peak_rss_kib": 2740,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.053154,
+        "throughput_bytes_per_second": 7733053100.43,
+        "worker_utilization": 0.967842,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.076523,
+        "transfer_seconds": 0.135853,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7621513216,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 7,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11515538599633146
+      },
+      "copy_seconds": 0.05542284600232961,
+      "user_cpu_seconds": 0.010014,
+      "system_cpu_seconds": 0.212809,
+      "cpu_percent_one_core": 402.0417861447137,
+      "max_rss_kib": 24816,
+      "process_io": {
+        "rchar": 411091877,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.48809956246987e-05,
+      "seconds": 0.055447726997954305,
+      "mib_s": 7069.721722126905,
+      "files_s": 39316.30957713432,
+      "cpu_percent": 401.90403478256405,
+      "sampled_peak_rss_kib": 2708,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.054463,
+        "throughput_bytes_per_second": 7547216572.076,
+        "worker_utilization": 0.969896,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.076426,
+        "transfer_seconds": 0.14165,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7602991104,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 8,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11442752300354186
+      },
+      "copy_seconds": 0.05616038099833531,
+      "user_cpu_seconds": 0.017213,
+      "system_cpu_seconds": 0.20768499999999998,
+      "cpu_percent_one_core": 400.4566849478217,
+      "max_rss_kib": 24816,
+      "process_io": {
+        "rchar": 411091875,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.3278997105080634e-05,
+      "seconds": 0.056183659995440394,
+      "mib_s": 6977.117546842141,
+      "files_s": 38801.316969683336,
+      "cpu_percent": 400.3313899775372,
+      "sampled_peak_rss_kib": 2808,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.055137,
+        "throughput_bytes_per_second": 7454920038.968,
+        "worker_utilization": 0.968858,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.078969,
+        "transfer_seconds": 0.140933,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7481737216,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 8,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11417814000014914
+      },
+      "copy_seconds": 0.051875630000722595,
+      "user_cpu_seconds": 0.013160999999999999,
+      "system_cpu_seconds": 0.195682,
+      "cpu_percent_one_core": 402.58402644380595,
+      "max_rss_kib": 24816,
+      "process_io": {
+        "rchar": 411091880,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.5520006602164358e-05,
+      "seconds": 0.05190115000732476,
+      "mib_s": 7552.819156120383,
+      "files_s": 42002.92285801641,
+      "cpu_percent": 402.4342754843062,
+      "sampled_peak_rss_kib": 2884,
+      "sampled_peak_fds": 5,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.050846,
+        "throughput_bytes_per_second": 8084047292.572,
+        "worker_utilization": 0.966833,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.067548,
+        "transfer_seconds": 0.135764,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7465889792,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 9,
+      "tool": "auto before",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11410201599937864
+      },
+      "copy_seconds": 0.0547121529962169,
+      "user_cpu_seconds": 0.009966,
+      "system_cpu_seconds": 0.208084,
+      "cpu_percent_one_core": 398.5403389537187,
+      "max_rss_kib": 24816,
+      "process_io": {
+        "rchar": 411091880,
+        "wchar": 411042904,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 3.0422001145780087e-05,
+      "seconds": 0.05474257499736268,
+      "mib_s": 7160.788472571582,
+      "files_s": 39822.75221991339,
+      "cpu_percent": 398.3710466862537,
+      "sampled_peak_rss_kib": 2820,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.053618,
+        "throughput_bytes_per_second": 7666120425.64,
+        "worker_utilization": 0.967026,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.079646,
+        "transfer_seconds": 0.134114,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7473197056,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    },
+    {
+      "workload": "mixed",
+      "run": 9,
+      "tool": "auto after",
+      "cache": {
+        "mode": "warm",
+        "source_resident_fraction": 1.0,
+        "status": "controlled",
+        "preparation_seconds": 0.11326578199805226
+      },
+      "copy_seconds": 0.054783530002168845,
+      "user_cpu_seconds": 0.014685,
+      "system_cpu_seconds": 0.20579699999999998,
+      "cpu_percent_one_core": 402.46037447983224,
+      "max_rss_kib": 24816,
+      "process_io": {
+        "rchar": 411091878,
+        "wchar": 411042935,
+        "syscr": 5223,
+        "syscw": 5123,
+        "read_bytes": 0,
+        "write_bytes": 0,
+        "cancelled_write_bytes": 0
+      },
+      "sync_seconds": 2.373699680902064e-05,
+      "seconds": 0.054807266998977866,
+      "mib_s": 7152.336204016717,
+      "files_s": 39775.74725703174,
+      "cpu_percent": 402.3277898606274,
+      "sampled_peak_rss_kib": 2620,
+      "sampled_peak_fds": 6,
+      "worker_wait_samples": {},
+      "tcopy": {
+        "backend": "local",
+        "dry_run": false,
+        "gpfs": false,
+        "fsync": true,
+        "buffer_size": 131072,
+        "workers": 4,
+        "chunk_size": null,
+        "copied": 2180,
+        "skipped": 0,
+        "bytes": 411041792,
+        "failures": 0,
+        "discovered": 2180,
+        "transferred_bytes": 411041792,
+        "chunked_files": 0,
+        "positioned_fallbacks": 0,
+        "elapsed_seconds": 0.053708,
+        "throughput_bytes_per_second": 7653324814.615,
+        "worker_utilization": 0.965554,
+        "peak_active_workers": 4,
+        "metadata_seconds": 0.081557,
+        "transfer_seconds": 0.13344,
+        "storage": [
+          {
+            "source": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "destination": {
+              "filesystem": "tmpfs",
+              "device": "tmpfs",
+              "kind": "memory",
+              "backing_devices": [],
+              "topology_complete": true
+            },
+            "same_filesystem": true,
+            "shared_storage": true,
+            "available_bytes": 7749779456
+          }
+        ],
+        "auto": true,
+        "final_workers": 4,
+        "concurrency_adjustments": 0,
+        "tuning_state": "disabled",
+        "tuning_samples": 0,
+        "tuning_best_score": 0.0,
+        "worker_policy": "conservative",
+        "chunk_policy": "automatic",
+        "hardware": {
+          "logical_cpus": 8,
+          "physical_cores": 4,
+          "available_memory_bytes": 7415529472,
+          "cpu_pressure_avg10": 0,
+          "io_pressure_avg10": 0
+        },
+        "workload": {
+          "small_files": 2048,
+          "medium_files": 128,
+          "large_files": 4
+        }
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "workload": "mixed",
+      "tool": "auto after",
+      "n": 9,
+      "seconds": {
+        "median": 0.055447726997954305,
+        "min": 0.05292200999974739,
+        "max": 0.07284975500078872
+      },
+      "mib_s": {
+        "median": 7069.721722126905,
+        "min": 5380.937794447709,
+        "max": 7407.1260710217
+      },
+      "files_s": {
+        "median": 39316.30957713432,
+        "min": 29924.603040551036,
+        "max": 41192.6909051717
+      },
+      "cpu_percent": {
+        "median": 400.54077434271363,
+        "min": 386.9615871567302,
+        "max": 402.7337059606464
+      },
+      "max_rss_kib": {
+        "median": 24112,
+        "min": 23884,
+        "max": 24816
+      },
+      "sampled_peak_rss_kib": {
+        "median": 2740,
+        "min": 2620,
+        "max": 2824
+      },
+      "sampled_peak_fds": {
+        "median": 6,
+        "min": 6,
+        "max": 6
+      }
+    },
+    {
+      "workload": "mixed",
+      "tool": "auto before",
+      "n": 9,
+      "seconds": {
+        "median": 0.05474257499736268,
+        "min": 0.05172630100423703,
+        "max": 0.07383921199652832
+      },
+      "mib_s": {
+        "median": 7160.788472571582,
+        "min": 5308.832385947328,
+        "max": 7578.349744511797
+      },
+      "files_s": {
+        "median": 39822.75221991339,
+        "min": 29523.608676951975,
+        "max": 42144.90419141765
+      },
+      "cpu_percent": {
+        "median": 399.59597720494384,
+        "min": 395.7771238967493,
+        "max": 402.6107994517941
+      },
+      "max_rss_kib": {
+        "median": 24096,
+        "min": 22164,
+        "max": 24816
+      },
+      "sampled_peak_rss_kib": {
+        "median": 2716,
+        "min": 2224,
+        "max": 2884
+      },
+      "sampled_peak_fds": {
+        "median": 6,
+        "min": 4,
+        "max": 6
+      }
+    }
+  ],
+  "finished_utc": "2026-10-17T18:25:36.031900+00:00"
+}

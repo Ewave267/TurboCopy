@@ -107,6 +107,44 @@ impl Pool {
     }
 }
 
+// shortcut: shallow samples can miss nested/mixed trees; expand only with benchmark evidence.
+fn small_file_workload(roots: &[Task]) -> bool {
+    let mut remaining = 64;
+    let mut small = 0;
+    for root in roots {
+        if remaining == 0 {
+            break;
+        }
+        remaining -= 1;
+        if root.metadata.is_file() && root.metadata.len() <= 1 << 20 {
+            small += 1;
+        } else if root.metadata.is_dir() {
+            let Ok(directory) = root.source_parent.child(&root.source_name) else {
+                continue;
+            };
+            let Ok(entries) = std::fs::read_dir(directory.path()) else {
+                continue;
+            };
+            for entry in entries.take(remaining) {
+                remaining -= 1;
+                let Ok(entry) = entry else { continue };
+                if std::fs::symlink_metadata(directory.path().join(entry.file_name()))
+                    .is_ok_and(|m| m.is_file() && m.len() <= 1 << 20)
+                {
+                    small += 1;
+                    if small >= 16 {
+                        return true;
+                    }
+                }
+            }
+        }
+        if small >= 16 {
+            return true;
+        }
+    }
+    false
+}
+
 pub fn run(roots: Vec<Task>, options: Options, start: std::time::Instant) -> Arc<Summary> {
     use std::os::unix::fs::MetadataExt;
     let detector = Arc::new(crate::storage_detect::Detector::load());
@@ -134,7 +172,22 @@ pub fn run(roots: Vec<Task>, options: Options, start: std::time::Instant) -> Arc
         })
         .collect();
     let mut summary = Summary::new(options, storage, start);
-    let options = crate::tuner::select(options, &summary.hardware, &summary.storage);
+    let small_files = crate::tuner::metadata_parallelism(options, &summary.storage)
+        && roots.iter().all(|root| {
+            !detector.has_nested_mount(&root.source_path)
+                && !detector.has_nested_mount(&root.destination)
+        })
+        && small_file_workload(&roots);
+    let options = crate::tuner::select(options, &summary.hardware, &summary.storage, small_files);
+    summary.worker_policy = if options.manual_workers {
+        "manual"
+    } else if options.gpfs {
+        "gpfs"
+    } else if small_files {
+        "nvme-small-files"
+    } else {
+        "conservative"
+    };
     summary.options = options;
     let adaptive = options.tune
         && !options.gpfs
@@ -250,6 +303,50 @@ pub fn run(roots: Vec<Task>, options: Options, start: std::time::Instant) -> Arc
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn workload_probe_is_bounded_nonrecursive_and_does_not_follow_symlinks() {
+        use crate::fsutil::Directory;
+        use std::{fs, os::unix::fs::symlink, path::PathBuf};
+        let root = std::env::temp_dir().join(format!("tcopy-worker-probe-{}", std::process::id()));
+        fs::create_dir(&root).unwrap();
+        fs::create_dir(root.join("source")).unwrap();
+        let directory = Directory::open(&root).unwrap();
+        let task = |name: &str| Task {
+            source_parent: directory.clone(),
+            source_name: name.into(),
+            source_path: root.join(name),
+            parent: directory.clone(),
+            name: "dest".into(),
+            destination: PathBuf::from("dest"),
+            metadata: fs::symlink_metadata(root.join(name)).unwrap(),
+        };
+        for n in 0..15 {
+            fs::write(root.join(format!("source/{n}")), b"x").unwrap();
+        }
+        assert!(!small_file_workload(&[task("source")]));
+        fs::write(root.join("source/15"), b"x").unwrap();
+        assert!(small_file_workload(&[task("source")]));
+        let stale = task("source");
+        fs::rename(root.join("source"), root.join("saved")).unwrap();
+        symlink(root.join("saved"), root.join("source")).unwrap();
+        assert!(!small_file_workload(&[stale]));
+        fs::create_dir(root.join("nested")).unwrap();
+        symlink(root.join("saved"), root.join("nested/link")).unwrap();
+        fs::create_dir(root.join("nested/child")).unwrap();
+        for n in 0..16 {
+            fs::write(root.join(format!("nested/child/{n}")), b"x").unwrap();
+        }
+        assert!(!small_file_workload(&[task("nested")]));
+        fs::File::create(root.join("large"))
+            .unwrap()
+            .set_len(2 << 20)
+            .unwrap();
+        let mut roots: Vec<_> = (0..64).map(|_| task("large")).collect();
+        roots.push(task("saved"));
+        assert!(!small_file_workload(&roots));
+        fs::remove_dir_all(root).unwrap();
+    }
+
     #[test]
     fn permit_budget_bounds_concurrent_work_and_returns_slots() {
         let summary = Arc::new(Summary::new(

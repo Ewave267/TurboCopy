@@ -49,6 +49,12 @@ pub struct Detector {
     mounts: Vec<Mount>,
 }
 impl Detector {
+    pub fn has_nested_mount(&self, root: &Path) -> bool {
+        self.mounts
+            .iter()
+            .any(|mount| mount.point != root && mount.point.starts_with(root))
+    }
+
     pub fn cgroup_path(&self, group: &Path) -> Option<(PathBuf, PathBuf)> {
         if !group.is_absolute()
             || group
@@ -380,6 +386,16 @@ fn parse_mounts(bytes: &[u8]) -> Vec<Mount> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn nested_mount_guard_uses_path_components_and_all_filesystem_types() {
+        let detector = Detector { mounts: parse_mounts(b"1 0 0:5 / /data rw - ext4 /dev/test rw\n2 1 0:6 / /data/network rw - nfs host:/export rw\n3 1 0:7 / /local/bind rw - ext4 /dev/test rw\n") };
+        assert!(detector.has_nested_mount(Path::new("/data")));
+        assert!(detector.has_nested_mount(Path::new("/local")));
+        assert!(!detector.has_nested_mount(Path::new("/data/network")));
+        assert!(!detector.has_nested_mount(Path::new("/dat")));
+        assert!(!detector.has_nested_mount(Path::new("/local/bind/child")));
+    }
+
     #[test]
     fn mount_escapes_longest_match_and_unknown_are_conservative() {
         let detector = Detector { mounts: parse_mounts(b"1 0 0:5 / / rw - tmpfs tmpfs rw\n2 1 0:6 / /space\\040dir rw shared:3 - ext4 /dev/absent rw\ninvalid\n3 1 0:7 / /bad\\777 rw - ext4 /dev/x rw\n") };
