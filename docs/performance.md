@@ -7,6 +7,46 @@ measured shared Btrfs/NVMe device, 4,096 × 1 MiB improved from 209.3 to
 use different dataset sizes and sometimes an additional final sync, so do not
 pool their rates with the Task 3 matrix.
 
+## Latest results — automatic workers, 2026-10-17
+
+Five randomized repetitions compared baseline `a9c71f9` with the policy shipped
+in `dec7969`, on one encrypted Btrfs/NVMe device with four physical/eight logical
+CPUs. Source pages were evicted; TurboCopy's file and directory fsync remained
+enabled. Values below are median MiB/s with observed min–max ranges, not
+confidence intervals.
+
+| Workload | Before | After | Configured workers |
+| --- | ---: | ---: | --- |
+| 1 × 512 MiB | 958.02 (922.19–999.65) | 1006.39 (985.62–1016.61) | 4 → 4 |
+| 8 × 64 MiB | 1408.87 (1376.70–1432.99) | 1417.52 (1388.83–1434.52) | 4 → 4 |
+| 4,096 × 64 KiB | 20.49 (16.28–32.60) | 63.34 (51.96–101.88) | 4 → 16 |
+| 4,096 × 1 MiB | 209.34 (197.21–214.97) | 567.07 (433.30–579.13) | 4 → 16 |
+| Mixed: 2,180 files / 392 MiB | 47.97 (43.44–189.98) | 479.78 (134.24–488.87) | 4 → 16 |
+
+The homogeneous many-file workloads improved **3.09×** and **2.71×** respectively,
+as more workers overlapped metadata and fsync waits. For the 1 MiB workload,
+median CPU increased from 64.3% to 201.6% (100% is one logical CPU), sampled peak
+RSS from 3.52 to 5.30 MiB, and sampled peak file descriptors from 16 to 40.
+Manual worker settings remain unchanged; automatic selection stays bounded by
+CPU and memory limits and applies this increase only to eligible sampled
+small-file copies on confirmed shared NVMe.
+
+Mixed-size results varied substantially: an earlier three-run comparison showed
+a slowdown, so the final median does not establish a reliable mixed-workload
+gain. A single 4 KiB copy took 6.39 → 6.95 ms median, with overlapping ranges
+and unchanged worker selection. Warm tmpfs controls also retained four workers;
+the nine-run mixed control changed 54.74 → 55.45 ms with overlapping ranges.
+Independent physical devices and GPFS/NFS were unavailable for validation.
+
+See [the complete policy, tool comparisons, reproduction commands and limitations](automatic-workers.md),
+the [final five-run report](benchmarks/task3/final-confirmation.md), and
+[raw measurements](benchmarks/task3/final-confirmation.json). Verification passed
+103 Rust tests, 10 benchmark tests, formatting, strict Clippy and the release build.
+The comparisons against manual TurboCopy, GNU cp and rsync are reported separately
+in the detailed results; they do not establish universal tool rankings.
+
+## Historical benchmark methodology and results
+
 The original Phase 1–5 measurements predate the removal of PSI-based admission
 throttling and automatic GPFS detection. The Phase 5 follow-up and
 [current rebenchmark](#phase-5-current-automatic-mode-rebenchmark) below measure

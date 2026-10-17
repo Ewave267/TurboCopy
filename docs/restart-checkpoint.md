@@ -10,6 +10,13 @@ Tasks 1–3 were authorized and implemented independently. Task 3 includes a fre
 parent-commit baseline, final build confirmation and tmpfs controls. Earlier
 benchmark results below remain historical; current results are linked above.
 
+Completed commits: resume recovery `cd8022c`, metadata synchronization `a9c71f9`,
+and automatic worker selection `dec7969`. The worker change improved the measured
+4,096 × 1 MiB workload from 209.3 to 567.1 MiB/s median and the 4,096 × 64 KiB
+workload from 20.49 to 63.34 MiB/s. See the
+[current performance summary](performance.md#latest-results--automatic-workers-2026-10-17)
+for variability, resource costs and validation limits.
+
 # Restart checkpoint — 2026-10-12
 
 User asked to stop and save progress, then offered to run the benchmark for later
